@@ -1,0 +1,29 @@
+﻿@model List<MessManagementSystem.Models.Shared.ContactMessage>
+@{
+    ViewData["Title"] = "Contact Messages";
+}
+
+<div class="container mt-4">
+    <h2><i class="fas fa-envelope me-2"></i> Contact Messages</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No messages yet.</div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var msg in Model)
+            {
+                <a asp-action="ViewMessage" asp-route-id="@msg.Id"
+                   class="list-group-item list-group-item-action @(msg.IsRead ? "text-muted" : "bg-light")">
+                    <div class="d-flex justify-content-between">
+                        <strong>@msg.Subject</strong>
+                        <small>@msg.CreatedAt.ToString("dd MMM")</small>
+                    </div>
+                    <div class="small">@msg.Email</div>
+                </a>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,56 @@
+﻿@model List<MessManagementSystem.Models.Shared.BillIssue>
+
+@{
+    ViewData["Title"] = "Bill Issues";
+}
+
+<div class="container-fluid mt-2 mt-md-0">
+    <h2 class="h4 mb-1">Bill Issues</h2>
+    <p class="text-muted">List of reported bill issues by teachers.</p>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">No issues reported.</div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Teacher</th>
+                    <th>Bill Period</th>
+                    <th>Description</th>
+                    <th>Created</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var issue in Model)
+                {
+                    <tr>
+                        <td>@issue.Teacher?.FullName</td>
+                        <td>@issue.Bill?.BillingPeriodStart.ToString("MMM yyyy")</td>
+                        <td>@issue.IssueDescription</td>
+                        <td>@issue.CreatedAt.ToString("dd MMM yyyy")</td>
+                        <td>
+                            @if (issue.IsResolved)
+                            {
+                                <span class="badge bg-success">Resolved</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Open</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="ResolveIssue" asp-route-id="@issue.Id" class="btn btn-sm btn-outline-primary">
+                                View / Resolve
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

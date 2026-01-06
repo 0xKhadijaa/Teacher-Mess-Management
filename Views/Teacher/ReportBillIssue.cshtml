@@ -1,0 +1,36 @@
+﻿@model MessManagementSystem.Models.Shared.BillIssue
+@{
+    var bill = ViewBag.Bill as MessManagementSystem.Models.Shared.Bill;
+    ViewData["Title"] = "Report Bill Issue";
+}
+
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 700px;">
+        <div class="card-header bg-warning text-white">
+            <h4>📝 Report Issue with Bill</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Bill Period:</strong> @bill?.BillingPeriodStart.ToString("MMM yyyy")</p>
+            <p><strong>Total Amount:</strong> ₹@bill?.TotalAmount</p>
+
+            <form asp-action="ReportBillIssue" method="post">
+                <!-- ✅ CRITICAL: Hidden fields for required FKs -->
+                <input type="hidden" asp-for="BillId" value="@bill?.Id" />
+                <input type="hidden" asp-for="TeacherId"
+                       value="@(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)" />
+
+                <div class="mb-3">
+                    <label asp-for="IssueDescription" class="form-label">Describe the issue</label>
+                    <textarea asp-for="IssueDescription" class="form-control" rows="4"
+                              placeholder="e.g., I was on medical leave this month..." required></textarea>
+                    <span asp-validation-for="IssueDescription" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-warning">📤 Submit to Admin</button>
+                    <a asp-action="MyBills" class="btn btn-secondary">← Back to Bills</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

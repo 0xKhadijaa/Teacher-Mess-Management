@@ -1,0 +1,22 @@
+﻿# Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Local secret files
+secrets.json
+appsettings.Development.json
+
+# Client-side libraries (use libman instead)
+wwwroot/lib/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

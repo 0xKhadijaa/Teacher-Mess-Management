@@ -1,0 +1,115 @@
+﻿@model List<MessManagementSystem.Models.Shared.ApplicationUser>
+@{
+    ViewData["Title"] = "User Management";
+    var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>>;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-users-cog me-2"></i>User Management</h2>
+        <a asp-action="CreateUser" class="btn btn-success">
+            <i class="fas fa-plus-circle me-1"></i>Add New Member
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Roles</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Department</td>
+                        <td>
+                            @if (userRoles != null && userRoles.TryGetValue(user.Id, out var roles))
+                            {
+                                <span>@string.Join(", ", roles)</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge bg-@(user.IsActive ? "success" : "warning")">
+                                @(user.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td>
+                            <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-danger js-delete-user"
+                                    data-user-id="@user.Id"
+                                    data-user-email="@user.Email">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // AJAX delete: avoid full page refresh
+        document.querySelectorAll('.js-delete-user').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var id = this.getAttribute('data-user-id');
+                var email = this.getAttribute('data-user-email');
+                if (!id) return;
+                if (!confirm('Are you sure you want to delete ' + email + '?')) return;
+
+                var row = this.closest('tr');
+                this.disabled = true;
+
+                fetch('@Url.Action("DeleteUser", "Admin")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                    },
+                    body: 'id=' + encodeURIComponent(id)
+                }).then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        if (data.success) {
+                            if (row) row.remove();
+                            if (window.messUI) messUI.showToast(data.message || 'User deleted.', 'success');
+                        } else {
+                            if (window.messUI) messUI.showToast(data.message || 'Failed to delete user.', 'danger');
+                        }
+                    })
+                    .catch(function () {
+                        if (window.messUI) messUI.showToast('Network error while deleting user.', 'danger');
+                    })
+                    .finally(() => { btn.disabled = false; });
+            });
+        });
+    </script>
+}

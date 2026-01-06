@@ -1,0 +1,27 @@
+﻿@model MessManagementSystem.Models.Shared.MenuItem
+
+@{
+    ViewData["Title"] = "Today's Menu";
+}
+
+<div class="container mt-4">
+    <div class="card" data-aos="fade-up">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="https://images.unsplash.com/photo-1481833761820-0509d3217039?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded-start" alt="menu" />
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3>Menu — @Model.Date.ToString("dd MMM yyyy")</h3>
+                    <p class="lead"><strong>Breakfast:</strong> @Model.Breakfast</p>
+                    <p class="lead"><strong>Lunch:</strong> @Model.Lunch</p>
+                    <p class="lead"><strong>Dinner:</strong> @Model.Dinner</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">← Back to Home</a>
+    </div>
+</div>

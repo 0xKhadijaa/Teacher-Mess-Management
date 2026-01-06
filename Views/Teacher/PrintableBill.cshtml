@@ -1,0 +1,94 @@
+@model MessManagementSystem.Models.Shared.BillDetailsViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ratePerMeal = Model.TotalMeals == 0 ? 0 : Model.MealTotal / Model.TotalMeals;
+}
+
+<style>
+    @@media print {
+        .navbar, .btn, .toast-container, footer { display: none !important; }
+        body { margin: 0; background: #ffffff !important; }
+        .print-header { display: block; }
+        .print-card { box-shadow: none !important; border: none !important; }
+    }
+
+    .print-header { display: none; margin-bottom: 10px; }
+</style>
+
+<div class="container mt-4">
+    <div class="print-header text-center">
+        <h4>Mess Bill - @Model.BillingPeriodStart.ToString("MMMM yyyy")</h4>
+        <p class="mb-0">Teacher: @Model.TeacherName (@Model.TeacherEmail)</p>
+        <p class="mb-0">Department: @Model.TeacherDepartment</p>
+    </div>
+
+    <div class="card print-card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h3 class="mb-0">Department Mess</h3>
+                    <small class="text-muted">Teacher’s Mess Billing Statement</small>
+                    <div class="mt-2 small text-muted">
+                        Teacher: <strong>@Model.TeacherName</strong><br />
+                        Email: @Model.TeacherEmail<br />
+                        Department: @Model.TeacherDepartment<br />
+                        Period: @Model.BillingPeriodStart.ToString("dd MMM yyyy")
+                        – @Model.BillingPeriodEnd.ToString("dd MMM yyyy")
+                    </div>
+                </div>
+                <div class="text-end mono small">
+                    <div><strong>Bill Month:</strong> @Model.BillingPeriodStart.ToString("MMMM yyyy")</div>
+                    <div><strong>Generated:</strong> @DateTime.UtcNow.ToString("dd MMM yyyy")</div>
+                </div>
+            </div>
+
+            <h5 class="mb-2">Attendance Summary</h5>
+            <p class="mb-3">
+                Total meals taken: <strong>@Model.TotalMeals</strong><br />
+                Per‑meal rate: <strong>Rs @String.Format("{0:0.00}", ratePerMeal)</strong>
+            </p>
+
+            <h5 class="mb-2">Bill Breakdown</h5>
+            <table class="table table-sm align-middle">
+                <tbody>
+                    <tr>
+                        <td>Meals (@Model.TotalMeals × Rs @String.Format("{0:0.00}", ratePerMeal))</td>
+                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.MealTotal)</td>
+                    </tr>
+                    <tr>
+                        <td>Utility Charge</td>
+                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.UtilityCharge)</td>
+                    </tr>
+                    <tr>
+                        <td>Previous Dues</td>
+                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.PreviousDues)</td>
+                    </tr>
+                    <tr class="fw-bold border-top">
+                        <td>Total Payable</td>
+                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.TotalAmount)</td>
+                    </tr>
+                    <tr>
+                        <td>Amount Paid</td>
+                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.AmountPaid)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row mt-4">
+                <div class="col-md-6 small text-muted">
+                    This is a computer‑generated bill and does not require a physical signature.
+                </div>
+                <div class="col-md-6 text-end small mt-3 mt-md-0">
+                    ___________________________<br />
+                    Mess Manager
+                </div>
+            </div>
+
+            <div class="mt-4 text-end d-print-none">
+                <button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
+                <a asp-action="MyBills" class="btn btn-secondary ms-2">Back</a>
+            </div>
+        </div>
+    </div>
+</div>

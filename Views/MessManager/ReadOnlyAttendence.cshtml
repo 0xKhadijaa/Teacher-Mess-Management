@@ -1,0 +1,17 @@
+﻿@model MessManagementSystem.Models.Shared.Attendance
+
+@{
+    ViewData["Title"] = "Attendance - View Only";
+}
+
+<div class="container mt-4">
+    <div class="alert alert-info">
+        <h4>👁️ Attendance Records (Read-Only)</h4>
+        <p>Mess Managers can view attendance for meal planning, but <strong>cannot edit</strong> records.</p>
+        <p>Only <strong>Teachers</strong> can mark their own attendance. <strong>Admins</strong> can make corrections.</p>
+    </div>
+
+    <div class="text-center">
+        <a asp-action="Menu" class="btn btn-secondary">← Back to Menu</a>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿@model List<MessManagementSystem.Models.Shared.Attendance>
+
+@{
+    ViewData["Title"] = "All Teachers Attendance";
+    var canEdit = ViewBag.CanEdit ?? false;
+    var today = DateOnly.FromDateTime(DateTime.Today);
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>👥 All Teachers Attendance — @today</h2>
+        @if (canEdit)
+        {
+            <button type="submit" form="attendanceForm" class="btn btn-success">💾 Save All</button>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["Success"]</div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info text-center">No teachers found.</div>
+    }
+    else
+    {
+        <form id="attendanceForm" asp-action="AllAttendance" method="post">
+            <input type="hidden" name="Date" value="@today" />
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Breakfast</th>
+                            <th>Lunch</th>
+                            <th>Dinner</th>
+                            @if (canEdit)
+                            {
+                                <th>Reason (Optional)</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="[@i].Id" value="@Model[i].Id" />
+                                    <input type="hidden" name="[@i].TeacherId" value="@Model[i].TeacherId" />
+                                    @Model[i].Teacher?.FullName (@Model[i].Teacher?.Email)
+                                </td>
+                                <td>
+                                    @if (canEdit)
+                                    {
+                                        <input type="checkbox" name="[@i].HadBreakfast" @(Model[i].HadBreakfast ? "checked" : "") />
+                                    }
+                                    else
+                                    {
+                                        @(Model[i].HadBreakfast ? "✅" : "❌")
+                                    }
+                                </td>
+                                <td>
+                                    @if (canEdit)
+                                    {
+                                        <input type="checkbox" name="[@i].HadLunch" @(Model[i].HadLunch ? "checked" : "") />
+                                    }
+                                    else
+                                    {
+                                        @(Model[i].HadLunch ? "✅" : "❌")
+                                    }
+                                </td>
+                                <td>
+                                    @if (canEdit)
+                                    {
+                                        <input type="checkbox" name="[@i].HadDinner" @(Model[i].HadDinner ? "checked" : "") />
+                                    }
+                                    else
+                                    {
+                                        @(Model[i].HadDinner ? "✅" : "❌")
+                                    }
+                                </td>
+                                @if (canEdit)
+                                {
+                                    <td>
+                                        <input type="hidden" name="[@i].Date" value="@today" />
+                                        <textarea name="[@i].SkipReason" class="form-control" rows="1">@Model[i].SkipReason</textarea>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    }
+
+    <div class="text-center mt-3">
+        <a asp-action="Menu" class="btn btn-secondary">← Back to Menu</a>
+    </div>
+</div>

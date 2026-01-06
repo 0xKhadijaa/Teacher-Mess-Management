@@ -1,0 +1,133 @@
+@model MessManagementSystem.Models.Shared.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid mt-2 mt-md-0">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="h4 mb-1">Admin Dashboard</h2>
+            <small class="text-muted">Overview of teachers, billing and open issues.</small>
+        </div>
+        <div class="mt-2 mt-md-0">
+            <a asp-controller="Admin" asp-action="Bills" class="btn btn-outline-primary btn-sm me-1">
+                <i class="fas fa-file-invoice-dollar me-1"></i>Billing
+            </a>
+            <a asp-controller="Admin" asp-action="Users" class="btn btn-outline-secondary btn-sm me-1">
+                <i class="fas fa-users-cog me-1"></i>Users
+            </a>
+            <a asp-controller="Settings" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-sliders-h me-1"></i>Settings
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-1">
+        <div class="col-md-3" data-aos="fade-up">
+            <div class="card stat-card p-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon me-3"><i class="fas fa-users fa-lg text-primary"></i></div>
+                    <div>
+                        <div class="text-muted">Teachers</div>
+                        <div class="h4">@Model.TeacherCount</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" data-aos="fade-up">
+            <div class="card stat-card p-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon me-3"><i class="fas fa-file-invoice-dollar fa-lg text-success"></i></div>
+                    <div>
+                        <div class="text-muted">Total Bills</div>
+                        <div class="h4">@Model.TotalBills</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" data-aos="fade-up">
+            <div class="card stat-card p-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon me-3"><i class="fas fa-rupee-sign fa-lg text-warning"></i></div>
+                    <div>
+                        <div class="text-muted">Total Revenue</div>
+                        <div class="h4">Rs @Model.TotalRevenue</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" data-aos="fade-up">
+            <div class="card stat-card p-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon me-3"><i class="fas fa-exclamation-triangle fa-lg text-danger"></i></div>
+                    <div>
+                        <div class="text-muted">Open Issues</div>
+                        <div class="h4">@Model.OpenIssues</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-4" />
+
+    <div class="row g-3">
+        <div class="col-12 col-xl-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="card-title mb-0">Monthly Revenue (last 6 months)</h5>
+                    </div>
+                    <canvas id="revenueChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Insights</h5>
+                    <ul class="list-unstyled small mb-0">
+                        <li class="mb-1">
+                            <i class="fas fa-circle text-success me-1"></i>
+                            Revenue is calculated from <strong>paid amounts</strong> only.
+                        </li>
+                        <li class="mb-1">
+                            <i class="fas fa-circle text-warning me-1"></i>
+                            Unpaid amount includes all bills where <strong>AmountPaid &lt; TotalAmount</strong>.
+                        </li>
+                        <li>
+                            <i class="fas fa-circle text-primary me-1"></i>
+                            Open issues represent reported bill issues not yet marked as resolved.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        (function () {
+            var ctx = document.getElementById('revenueChart');
+            if (!ctx) return;
+            var labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyRevenue.Select(m => m.Month + '-' + m.Year)));
+            var data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyRevenue.Select(m => m.Revenue)));
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    }]
+                },
+                options: { responsive: true }
+            });
+        })();
+    </script>
+}

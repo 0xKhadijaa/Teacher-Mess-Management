@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="hero" data-aos="fade-up" style="background-image: linear-gradient(rgba(34,49,63,0.5), rgba(34,49,63,0.35)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80'); background-size: cover; background-position: center;">
+    <div class="overlay text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h1 class="display-5 fw-bold">Smart Mess Management</h1>
+                    <p class="lead">Track attendance, generate accurate monthly bills with carry-forward dues, report billing issues, and download clean PDF invoices. Built for universities and departments.</p>
+                    <p>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">Get Started</a>
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">Sign In</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Teacher" asp-action="Menu" class="btn btn-primary btn-lg me-2">Go to Dashboard</a>
+                        }
+                    </p>
+                </div>
+                <div class="col-md-5 text-center d-none d-md-block">
+                    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded shadow-sm" alt="mess" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row g-4">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-card p-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon me-3"><i class="fas fa-file-invoice fa-lg text-primary"></i></div>
+                    <div>
+                        <div class="text-muted">Billing</div>
+                        <div class="h5">Accurate & Transparent</div>
+                    </div>
+                </div>
+                <p class="mt-3 mb-0 text-muted">Carry-forward dues, clear breakdowns, and downloadable PDFs for each teacher.</p>
+            </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-card p-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon me-3"><i class="fas fa-clipboard-check fa-lg text-success"></i></div>
+                    <div>
+                        <div class="text-muted">Attendance</div>
+                        <div class="h5">Easy Daily Tracking</div>
+                    </div>
+                </div>
+                <p class="mt-3 mb-0 text-muted">Teachers can mark meals quickly and managers can view/edit attendance.</p>
+            </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="stat-card p-3">
+                <div class="d-flex align-items-center">
+                    <div class="icon me-3"><i class="fas fa-headset fa-lg text-warning"></i></div>
+                    <div>
+                        <div class="text-muted">Support</div>
+                        <div class="h5">Issue Resolution</div>
+                    </div>
+                </div>
+                <p class="mt-3 mb-0 text-muted">Teachers can report bill issues; admins can resolve disputes within the system.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5" />
+
+    <div class="row">
+        <div class="col-md-6" data-aos="fade-right">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Live Dashboard</h5>
+                    <p class="card-text">Admins can get a quick glance of outstanding dues and recent activity.</p>
+                    <img src="https://images.unsplash.com/photo-1541544184278-21a4f6de1f8b?auto=format&fit=crop&w=800&q=80" class="feature mt-3" alt="dashboard" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" data-aos="fade-left">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Professional PDF Invoices</h5>
+                    <p class="card-text">Download a printer-friendly invoice for record-keeping and approvals.</p>
+                    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80" class="feature mt-3" alt="pdf" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

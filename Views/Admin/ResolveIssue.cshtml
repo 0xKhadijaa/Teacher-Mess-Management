@@ -1,0 +1,42 @@
+@model MessManagementSystem.Models.Shared.BillIssue
+
+@{
+    ViewData["Title"] = "Resolve Issue";
+}
+
+<div class="container mt-4">
+    <h2>Resolve Bill Issue</h2>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>@Model.Bill?.BillingPeriodStart.ToString("MMMM yyyy") — ?@Model.Bill?.TotalAmount</h5>
+            <p><strong>Teacher:</strong> @Model.Teacher?.FullName (@Model.Teacher?.Email)</p>
+            <p><strong>Reported:</strong> @Model.CreatedAt.ToString("dd MMM yyyy")</p>
+            <hr />
+            <p>@Model.IssueDescription</p>
+        </div>
+    </div>
+
+    @if (Model.IsResolved)
+    {
+        <div class="alert alert-success">Resolved on @Model.ResolvedAt?.ToString("dd MMM yyyy")</div>
+        <div class="card">
+            <div class="card-body">
+                <h5>Resolution Notes</h5>
+                <p>@Model.ResolutionNotes</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <form asp-action="ResolveIssue" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <div class="mb-3">
+                <label class="form-label">Resolution Notes</label>
+                <textarea name="resolutionNotes" class="form-control" rows="6"></textarea>
+            </div>
+            <button class="btn btn-success">Mark as Resolved</button>
+            <a asp-action="BillIssues" class="btn btn-secondary ms-2">Cancel</a>
+        </form>
+    }
+</div>

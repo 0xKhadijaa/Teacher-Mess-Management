@@ -1,0 +1,102 @@
+﻿@model List<MessManagementSystem.Models.Shared.Notification>
+@{
+    bool isAdmin = User.IsInRole("Admin");
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-bell me-2"></i> Notifications</h2>
+
+        @if (Model?.Any() == true)
+        {
+            if (isAdmin)
+            {
+                <!-- ✅ Admin: Multi-select + Delete Selected -->
+                <form asp-action="DeleteSelected" method="post" id="deleteSelectedForm">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Delete selected notifications?');">
+                        <i class="fas fa-trash me-1"></i> Delete Selected
+                    </button>
+                </form>
+            }
+            else
+            {
+                <form asp-action="MarkAllRead" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-check-double me-1"></i> Mark All as Read
+                    </button>
+                </form>
+            }
+        }
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <i class="fas fa-inbox me-2"></i> No notifications.
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var n in Model.OrderByDescending(n => n.CreatedAt))
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-start
+                                     @(n.IsRead ? "text-muted" : "bg-light")">
+
+                    @if (isAdmin)
+                    {
+                        <!-- ✅ Checkbox for Admin -->
+                        <div class="form-check me-3 mt-1">
+                            <input class="form-check-input" type="checkbox"
+                                   name="selectedIds" value="@n.Id" form="deleteSelectedForm">
+                        </div>
+                    }
+
+                    <!-- Notification Content -->
+                    <div class="flex-grow-1">
+                        <a href="@Url.Action("Details", "Notifications", new { id = n.Id })"
+                           class="text-decoration-none text-dark">
+                            <div class="d-flex justify-content-between">
+                                <strong>@n.Title</strong>
+                                <small class="text-muted">@n.CreatedAt.ToString("dd MMM HH:mm")</small>
+                            </div>
+                            <p class="mb-1 mt-1">@n.Message</p>
+                        </a>
+                    </div>
+
+                    <!-- Single Delete (Admin only) -->
+                    @if (isAdmin)
+                    {
+                        <form asp-action="DeleteAny" method="post" class="ms-2">
+                            <input type="hidden" name="id" value="@n.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Delete this notification?');">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    }
+                    else if (!n.IsRead)
+                    {
+                        <!-- Mark as Read for non-Admin -->
+                        <form asp-action="MarkRead" method="post" class="ms-2">
+                            <input type="hidden" name="id" value="@n.Id" />
+                            <button type="submit" class="btn btn-sm btn-link p-0 text-primary">
+                                <i class="fas fa-check me-1"></i> Mark as read
+                            </button>
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Optional: "Select All" checkbox (add if needed)
+        // document.getElementById('selectAll').addEventListener('change', function () {
+        //     document.querySelectorAll('input[name="selectedIds"]').forEach(cb => cb.checked = this.checked);
+        // });
+    </script>
+}

@@ -1,0 +1,97 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.hero {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.hero .overlay {
+  padding: 60px 30px;
+}
+
+.stat-card {
+  border-radius: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: white;
+}
+
+.stat-card .icon {
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(52,152,219,0.12), rgba(46,204,113,0.06));
+}
+
+.card .card-body img.feature {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.footer-links a {
+  color: #495057;
+}
+
+/* small helper */
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Segoe UI Mono', 'Noto Mono', monospace; }
+
+/* Dashboard shell */
+.main-shell {
+  max-width: 100%;
+}
+
+.sidebar .nav-link {
+  color: #495057;
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.sidebar .nav-link i {
+  width: 18px;
+  text-align: center;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background-color: #f1f5f9;
+  color: #0d6efd;
+}
+
+.content-area {
+  min-height: calc(100vh - 70px);
+}
+
+@media (max-width: 767.98px) {
+  .content-area {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}

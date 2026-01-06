@@ -1,0 +1,45 @@
+@model MessManagementSystem.Models.Shared.MenuItem
+
+@{
+    ViewData["Title"] = "Edit Menu";
+}
+
+<div class="container mt-3">
+    <h2 class="h4 mb-3">Edit Menu for @Model.Date.ToString("dddd, dd MMM yyyy")</h2>
+
+    <form asp-action="Edit" method="post" class="card shadow-sm">
+        <div class="card-body">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Date" />
+
+            <div class="mb-3">
+                <label asp-for="Breakfast" class="form-label">Breakfast</label>
+                <input asp-for="Breakfast" class="form-control" />
+                <span asp-validation-for="Breakfast" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Lunch" class="form-label">Lunch</label>
+                <input asp-for="Lunch" class="form-control" />
+                <span asp-validation-for="Lunch" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Dinner" class="form-label">Dinner</label>
+                <input asp-for="Dinner" class="form-control" />
+                <span asp-validation-for="Dinner" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to Weekly Menu</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
