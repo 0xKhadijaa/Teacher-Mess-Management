@@ -4,15 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Mess Management System</title>
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <!-- AOS for scroll animations and Animate.css for simple animations -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
-          integrity="sha512-Gk8fZ3Z6Y5Yp6YzXq4U6q6P9s7G5Jj7Xz8g7j5y9M3Yk2h5Qq1kQw3Q6r6P5w=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- AOS & Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
@@ -86,17 +85,12 @@
             border-top: 1px solid #e9ecef;
         }
 
-        /* Responsive tweaks */
         @@media (max-width: 576px) {
             .hero {
                 padding: 40px 0;
             }
         }
     </style>
-
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-    @RenderSection("HeadContent", required: false)
 </head>
 
 <body>
@@ -184,7 +178,6 @@
                                         <i class="fas fa-envelope me-1"></i>Contact Messages
                                     </a>
                                 </li>
-                                <!-- ✅ FIXED NOTIFICATION LINK -->
                                 <li class="nav-item">
                                     <a class="nav-link position-relative" asp-controller="Notifications" asp-action="Index">
                                         <i class="fas fa-bell"></i>
@@ -229,11 +222,12 @@
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
-                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                            <button type="submit" class="dropdown-item">
-                                                <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                            </button>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" style="display:none;">
+                                            @Html.AntiForgeryToken()
                                         </form>
+                                        <a href="javascript:document.getElementById('logoutForm').submit();" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                        </a>
                                     </li>
                                 </ul>
                             </li>
@@ -257,7 +251,7 @@
         </nav>
     </header>
 
-    <div style="height:70px;"></div> <!-- spacer for fixed header -->
+    <div style="height:70px;"></div>
 
     <div class="container-fluid main-shell">
         <div class="row flex-nowrap">
@@ -354,7 +348,7 @@
         </div>
     </footer>
 
-    <!-- Toasts (TempData-driven) -->
+    <!-- Toasts -->
     <div class="toast-container">
         @if (TempData["Success"] != null)
         {
@@ -376,32 +370,27 @@
         }
     </div>
 
+    <!-- REQUIRED SCRIPTS (ONLY ONCE!) -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-        // Initialize AOS
-        if (window.AOS) {
-            AOS.init({ duration: 700, once: true });
-        }
-
-        // Show any toast elements
         document.addEventListener('DOMContentLoaded', function () {
-            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-            toastElList.forEach(function (toastEl) {
-                var toast = new bootstrap.Toast(toastEl);
-                toast.show();
+            // Initialize AOS
+            if (window.AOS) AOS.init({ duration: 700, once: true });
+
+            // Show toasts
+            document.querySelectorAll('.toast').forEach(toastEl => {
+                new bootstrap.Toast(toastEl).show();
             });
 
-            // Navbar shadow on scroll
-            var nav = document.querySelector('.navbar');
+            // Navbar scroll effect
+            const nav = document.querySelector('.navbar');
             if (nav) {
-                window.addEventListener('scroll', function () {
-                    if (window.scrollY > 10) nav.classList.add('scrolled');
-                    else nav.classList.remove('scrolled');
+                window.addEventListener('scroll', () => {
+                    nav.classList.toggle('scrolled', window.scrollY > 10);
                 });
             }
         });

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MessManagementSystem.Models.Shared;
 using MessManagementSystem.Services;
 using System.Threading.Tasks;
+using MessManagementSystem.Models.Account;
 
 namespace MessManagementSystem.Controllers
 {
@@ -155,9 +156,10 @@ namespace MessManagementSystem.Controllers
 
             return View();
         }
-        
+
 
         // ===== Forgot / Reset Password (no email sending) =====
+        // GET: /Account/ForgotPassword
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -165,84 +167,91 @@ namespace MessManagementSystem.Controllers
             return View();
         }
 
+        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(email))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Email is required.");
-                return View();
+                return View(model);
             }
 
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                // Don't reveal that the user does not exist
-                TempData["Success"] = "If an account exists for that email, a reset token was generated (displayed on screen for demo).";
+                // Don't reveal if email exists - but for demo, show error
+                ModelState.AddModelError("Email", "No account found with this email.");
+                return View(model);
+            }
+
+            // For demo: Store email in TempData and redirect to reset page
+            TempData["ResetEmail"] = model.Email;
+            return RedirectToAction(nameof(ResetPassword));
+        }
+
+        // GET: /Account/ResetPassword
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword()
+        {
+            var email = TempData["ResetEmail"]?.ToString();
+            if (string.IsNullOrEmpty(email))
+            {
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            // For demo purposes, show reset link/token on screen (no email).
-            var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { token = token, email = user.Email }, protocol: Request.Scheme);
-
-            ViewBag.ResetToken = token;
-            ViewBag.CallbackUrl = callbackUrl;
-            ViewBag.Email = user.Email;
-            return View("ForgotPasswordConfirmation");
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ForgotPasswordConfirmation()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ResetPassword(string token = null, string email = null)
-        {
-            if (token == null || email == null)
-            {
-                ModelState.AddModelError(string.Empty, "Invalid password reset token.");
-            }
-            ViewBag.Token = token;
             ViewBag.Email = email;
             return View();
         }
 
+        // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(string email, string token, string newPassword)
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(newPassword))
+            var email = TempData["ResetEmail"]?.ToString();
+            if (string.IsNullOrEmpty(email))
             {
-                ModelState.AddModelError(string.Empty, "All fields are required.");
-                return View();
+                ModelState.AddModelError("", "Session expired. Please try again.");
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Email = email;
+                return View(model);
             }
 
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                TempData["Error"] = "Invalid request.";
-                return RedirectToAction(nameof(Login));
+                ModelState.AddModelError("", "Invalid request.");
+                return RedirectToAction(nameof(ForgotPassword));
             }
 
-            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            // Remove old password token (not needed for demo)
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Reset password
+            var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+
             if (result.Succeeded)
             {
-                TempData["Success"] = "Password has been reset. You can now login.";
+                TempData["Success"] = "Your password has been updated successfully!";
                 return RedirectToAction(nameof(Login));
             }
 
-            foreach (var err in result.Errors)
-                ModelState.AddModelError(string.Empty, err.Description);
+            // Add errors to model
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
 
-            return View();
+            ViewBag.Email = email;
+            return View(model);
         }
     }
 }

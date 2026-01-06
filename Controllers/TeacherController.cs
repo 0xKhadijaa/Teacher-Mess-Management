@@ -209,7 +209,6 @@ namespace MessManagementSystem.Controllers
             TempData["Success"] = "All attendance records updated!";
             return RedirectToAction(nameof(AllAttendance));
         }
-
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> MyBills()
         {
@@ -221,6 +220,18 @@ namespace MessManagementSystem.Controllers
                 .ToListAsync();
 
             var teacher = await _context.Users.FirstOrDefaultAsync(u => u.Id == teacherId);
+
+            // ✅ GET DYNAMIC SETTINGS FROM DATABASE
+            var mealRate = BillingConstants.MealRate;
+            var utilityCharge = BillingConstants.UtilityCharge;
+
+            var mealSetting = await _context.AppSettings.FirstOrDefaultAsync(s => s.Key == "MealRate");
+            var utilSetting = await _context.AppSettings.FirstOrDefaultAsync(s => s.Key == "UtilityCharge");
+
+            if (mealSetting != null && decimal.TryParse(mealSetting.Value, out var m))
+                mealRate = m;
+            if (utilSetting != null && decimal.TryParse(utilSetting.Value, out var u))
+                utilityCharge = u;
 
             var vm = new List<BillDetailsViewModel>();
             foreach (var bill in bills)
@@ -236,7 +247,7 @@ namespace MessManagementSystem.Controllers
                     (a.HadLunch ? 1 : 0) +
                     (a.HadDinner ? 1 : 0));
 
-                var mealTotal = totalMeals * BillingConstants.MealRate;
+                var mealTotal = totalMeals * mealRate; // ✅ USE DYNAMIC RATE
 
                 vm.Add(new BillDetailsViewModel
                 {
@@ -248,7 +259,7 @@ namespace MessManagementSystem.Controllers
                     TeacherDepartment = teacher?.Department ?? string.Empty,
                     TotalMeals = totalMeals,
                     MealTotal = mealTotal,
-                    UtilityCharge = BillingConstants.UtilityCharge,
+                    UtilityCharge = utilityCharge, // ✅ USE DYNAMIC CHARGE
                     PreviousDues = bill.PreviousDues,
                     TotalAmount = bill.TotalAmount,
                     AmountPaid = bill.AmountPaid,
@@ -285,13 +296,14 @@ namespace MessManagementSystem.Controllers
             var issue = new BillIssue { BillId = billId };
             return View(issue);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> ReportBillIssue(BillIssue model)
         {
             var teacherId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // ✅ VALIDATE FIRST
             if (!ModelState.IsValid)
             {
                 ViewBag.Bill = await _context.Bills.FindAsync(model.BillId);
@@ -305,27 +317,21 @@ namespace MessManagementSystem.Controllers
                 return RedirectToAction(nameof(MyBills));
             }
 
+            // ✅ SET REQUIRED PROPERTIES
             model.TeacherId = teacherId;
             model.CreatedAt = DateTime.UtcNow;
             model.IsResolved = false;
 
+            // ✅ SAVE BILL ISSUE FIRST
             _context.BillIssues.Add(model);
-            if (!ModelState.IsValid)
-            {
-                var errors = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
-                System.Diagnostics.Debug.WriteLine("ModelError: " + errors);
-                ViewBag.Bill = await _context.Bills.FindAsync(model.BillId);
-                return View(model);
-            }
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // 👈 NOW model.Id is valid
 
-            // 🔔 DEBUG: Check if Admin exists
+            // ✅ CREATE NOTIFICATION
             var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
             var adminId = adminUsers.FirstOrDefault()?.Id;
 
             if (string.IsNullOrEmpty(adminId))
             {
-                // Log to console (visible in VS Output)
                 System.Diagnostics.Debug.WriteLine("⚠️ NO ADMIN USER FOUND! Notification not sent.");
                 TempData["Warning"] = "Issue saved, but no admin found to notify.";
             }
@@ -336,11 +342,10 @@ namespace MessManagementSystem.Controllers
                     UserId = adminId,
                     Title = "New bill issue reported",
                     Message = $"{User.Identity?.Name} reported an issue for bill {bill.BillingPeriodStart:MMMM yyyy}.",
-                    BillIssueId = model.Id, // 👈 Link to issue
+                    BillIssueId = model.Id, // ✅ NOW VALID
                     CreatedAt = DateTime.UtcNow
                 };
                 _context.Notifications.Add(notif);
-
                 await _context.SaveChangesAsync();
                 System.Diagnostics.Debug.WriteLine($"✅ Notification sent to Admin ID: {adminId}");
             }

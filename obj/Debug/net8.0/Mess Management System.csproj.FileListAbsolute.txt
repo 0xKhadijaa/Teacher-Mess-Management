@@ -181,3 +181,4 @@ C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win-x86\native\zlib1.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.sourcelink.json
