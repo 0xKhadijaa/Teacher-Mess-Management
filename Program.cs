@@ -1,4 +1,4 @@
-using MessManagementSystem.Data;
+﻿using MessManagementSystem.Data;
 using MessManagementSystem.Models.Shared;
 using MessManagementSystem.Services;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +20,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+// ✅ ADD SESSION SERVICE
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 // JWT configuration
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
@@ -74,7 +82,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.  
     app.UseHsts();
 }
 
@@ -83,8 +91,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// ✅ ADD SESSION MIDDLEWARE (must be before authentication)
+app.UseSession();
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -96,6 +108,5 @@ using (var scope = app.Services.CreateScope())
 
     await RoleInitializer.InitializeAsync(userManager, roleManager);
 }
-// ================================
 
 await app.RunAsync();

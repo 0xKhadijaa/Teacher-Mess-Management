@@ -206,12 +206,25 @@ namespace MessManagementSystem.Controllers
             return View();
         }
 
-        // POST: /Account/ResetPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+
+            // 🔍 DEBUG: Check if session exists
+            var sessionEmail = HttpContext.Session.GetString("ResetEmail");
+            System.Diagnostics.Debug.WriteLine($"Session Email: '{sessionEmail}'");
+            System.Diagnostics.Debug.WriteLine($"Session Keys: {string.Join(", ", HttpContext.Session.Keys)}");
+
+            if (string.IsNullOrEmpty(sessionEmail))
+            {
+                System.Diagnostics.Debug.WriteLine("❌ Session email is null - redirecting to ForgotPassword");
+                ModelState.AddModelError("", "Session expired. Please try again.");
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+
             var email = TempData["ResetEmail"]?.ToString();
             if (string.IsNullOrEmpty(email))
             {
@@ -232,10 +245,7 @@ namespace MessManagementSystem.Controllers
                 return RedirectToAction(nameof(ForgotPassword));
             }
 
-            // Remove old password token (not needed for demo)
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            // Reset password
             var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
 
             if (result.Succeeded)
@@ -244,14 +254,16 @@ namespace MessManagementSystem.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            // Add errors to model
+            // ✅ CRITICAL: Add Identity errors to ModelState
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error.Description);
+                ModelState.AddModelError(string.Empty, error.Description);
             }
 
             ViewBag.Email = email;
-            return View(model);
+            var errors = result.Errors.Select(e => e.Description).ToList();
+            System.Diagnostics.Debug.WriteLine("Password errors: " + string.Join(", ", errors));
+            return View(model); // Now shows WHY it failed
         }
     }
 }
