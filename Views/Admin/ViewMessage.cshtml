@@ -1,30 +1,88 @@
 ﻿@model MessManagementSystem.Models.Shared.ContactMessage
 @{
-    ViewData["Title"] = "Contact Message";
+    ViewData["Title"] = "Inquiry Detail";
 }
 
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header bg-info text-white">
-            <h4><i class="fas fa-envelope me-2"></i> Contact Message Details</h4>
-        </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <p><strong>Email:</strong> @Model.Email</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p><strong>Sent:</strong> @Model.CreatedAt.ToString("dd MMM yyyy HH:mm")</p>
-                </div>
-            </div>
-            <p><strong>Subject:</strong> @Model.Subject</p>
-            <div class="alert alert-light mt-3">
-                <strong>Message:</strong><br />
-                @Model.Message
-            </div>
-            <a asp-action="ContactMessages" class="btn btn-secondary">
-                <i class="fas fa-arrow-left me-1"></i> Back to Messages
+<div class="container-fluid py-2">
+    <div class="mb-4" data-aos="fade-down">
+        <div class="d-flex align-items-center gap-3">
+            <a asp-action="ContactMessages" class="btn btn-sm btn-light rounded-circle border-0 shadow-sm" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <i class="fas fa-arrow-left text-muted"></i>
             </a>
+            <div>
+                <h2 class="fw-800 mb-0 text-dark-emphasis">Inquiry Details</h2>
+                <p class="text-muted small mb-0">Conversation with <span class="text-primary fw-700">@Model.Email</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-9 col-lg-10">
+            <div class="card border-0 shadow-lg animate__animated animate__fadeIn" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(20px);">
+
+                <div class="card-body p-4 p-md-5">
+                    <div class="row g-4 mb-5 pb-4 border-bottom border-opacity-10">
+                        <div class="col-md-6">
+                            <label class="form-label fw-800 small text-uppercase opacity-50 ls-1 mb-2">Sender Email</label>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-700">
+                                    <i class="fas fa-envelope me-2"></i>@Model.Email
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <label class="form-label fw-800 small text-uppercase opacity-50 ls-1 mb-2">Timestamp</label>
+                            <div class="text-dark-emphasis fw-600">
+                                <i class="far fa-clock me-1 text-primary"></i> @Model.CreatedAt.ToString("f")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-800 small text-uppercase opacity-50 ls-1 mb-2">Subject Header</label>
+                        <h4 class="fw-800 text-dark-emphasis mb-0">@Model.Subject</h4>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-800 small text-uppercase opacity-50 ls-1 mb-2">Message Body</label>
+                        <div class="p-4 rounded-4 bg-white bg-opacity-60 border border-white shadow-sm">
+                            <p class="mb-0 text-dark-emphasis" style="line-height: 1.8; white-space: pre-line;">@Model.Message</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-5 pt-4 border-top border-opacity-10">
+                        <div class="small text-muted">
+                            <i class="fas fa-shield-halved me-1 opacity-50"></i> This message is stored securely in the Messly database.
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="mailto:@Model.Email?subject=Re: @Model.Subject" class="btn btn-primary rounded-pill px-4 py-2 fw-800 shadow-lg hover-lift">
+                                <i class="fas fa-reply me-2"></i> Reply via Email
+                            </a>
+                            <a asp-action="ContactMessages" class="btn btn-light rounded-pill px-4 py-2 fw-bold text-muted">
+                                Back to List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3) !important;
+    }
+
+    /* Message body link styling */
+    .bg-opacity-60 p a {
+        color: var(--primary-purple);
+        text-decoration: underline;
+        font-weight: 600;
+    }
+</style>

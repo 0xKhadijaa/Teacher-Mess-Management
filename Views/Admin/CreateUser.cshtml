@@ -1,42 +1,106 @@
+@* Redesigned Create User Form for Admin *@
 @{
     ViewData["Title"] = "Create User";
 }
 
-<div class="container mt-4">
-    <h2>Create User</h2>
+<div class="container-fluid py-4">
+    <div class="mb-4" data-aos="fade-down">
+        <h2 class="fw-800 mb-0 text-dark-emphasis">
+            <i class="fas fa-user-plus me-2 text-primary"></i> Onboard New User
+        </h2>
+        <p class="text-muted small">Register new faculty members or staff with specific system permissions.</p>
+    </div>
 
-    <form asp-action="CreateUser" method="post">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" required />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Full Name</label>
-                    <input type="text" name="fullName" class="form-control" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Department</label>
-                    <input type="text" name="department" class="form-control" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Roles</label>
-                    <select name="roles" class="form-control" multiple>
-                        @foreach (var r in (ViewBag.Roles as List<string> ?? new List<string>()))
-                        {
-                            <option value="@r">@r</option>
-                        }
-                    </select>
-                </div>
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(20px);">
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="CreateUser" method="post">
+                        @Html.AntiForgeryToken()
 
-                <button class="btn btn-primary">Create</button>
-                <a asp-action="Users" class="btn btn-secondary ms-2">Cancel</a>
+                        <div class="row g-4">
+                            <div class="col-md-6 border-end border-white border-opacity-50">
+                                <h5 class="fw-800 mb-4 text-primary small text-uppercase ls-1">1. Account Credentials</h5>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-700 small opacity-75">Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0 rounded-start-3"><i class="fas fa-envelope text-muted"></i></span>
+                                        <input type="email" name="email" class="form-control bg-light border-0 py-3 rounded-end-3" placeholder="email@university.edu" required />
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-700 small opacity-75">Initial Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-0 rounded-start-3"><i class="fas fa-lock text-muted"></i></span>
+                                        <input type="password" name="password" class="form-control bg-light border-0 py-3 rounded-end-3" placeholder="••••••••" required />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h5 class="fw-800 mb-4 text-primary small text-uppercase ls-1">2. Profile & Permissions</h5>
+
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label fw-700 small opacity-75">Full Name</label>
+                                        <input type="text" name="fullName" class="form-control bg-light border-0 py-3 rounded-3" placeholder="e.g. Dr. John Smith" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-700 small opacity-75">Department</label>
+                                        <input type="text" name="department" class="form-control bg-light border-0 py-3 rounded-3" placeholder="e.g. Computer Science" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-700 small opacity-75">Access Roles</label>
+                                        <select name="roles" class="form-select bg-light border-0 rounded-3 py-3" multiple style="height: 100px;">
+                                            @foreach (var r in (ViewBag.Roles as List<string> ?? new List<string>()))
+                                            {
+                                                <option value="@r" class="py-2 px-3">@r</option>
+                                            }
+                                        </select>
+                                        <small class="text-muted mt-2 d-block" style="font-size: 0.7rem;">
+                                            <i class="fas fa-info-circle me-1"></i> Use <strong>Ctrl + Click</strong> to select multiple.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-5 opacity-10">
+
+                        <div class="d-flex flex-column flex-md-row justify-content-end gap-3">
+                            <a asp-action="Users" class="btn btn-light rounded-pill px-4 py-2 fw-bold text-muted">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-800 shadow-lg hover-lift">
+                                <i class="fas fa-user-plus me-2"></i> Confirm & Create
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </form>
+    </div>
 </div>
+
+<style>
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: #fff !important;
+        box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Custom scroll for multi-select */
+    select[multiple]::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    select[multiple]::-webkit-scrollbar-thumb {
+        background: var(--primary-purple);
+        border-radius: 10px;
+    }
+</style>

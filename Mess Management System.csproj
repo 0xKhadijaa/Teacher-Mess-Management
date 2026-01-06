@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Profile\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

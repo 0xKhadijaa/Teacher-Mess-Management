@@ -1,57 +1,119 @@
-@model MessManagementSystem.Models.Shared.Bill
+﻿@model MessManagementSystem.Models.Shared.Bill
 
 @{
-    ViewData["Title"] = "Demo Online Payment";
+    ViewData["Title"] = "Digital Payment Demo";
 }
 
-<div class="container mt-4" data-aos="fade-up">
-    <h2 class="h4 mb-3">Demo Online Payment</h2>
-    <p class="text-muted small">
-        This is a <strong>demo</strong> payment screen. No real money is transferred; confirming will simply mark the bill as paid in the system.
-    </p>
+<div class="container-fluid py-2">
+    <div class="mb-4" data-aos="fade-down">
+        <h2 class="fw-800 mb-0 text-dark-emphasis">Secure Checkout</h2>
+        <p class="text-muted small">Complete your payment for the billing cycle of @Model.BillingPeriodStart.ToString("MMMM yyyy")</p>
+    </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title mb-1">@Model.BillingPeriodStart.ToString("MMMM yyyy")</h5>
-            <p class="text-muted mb-3">
-                Total Amount: <strong>Rs @Model.TotalAmount</strong><br />
-                Previous Dues: Rs @Model.PreviousDues
-            </p>
+    <div class="row justify-content-center">
+        <div class="col-xl-9 col-lg-11">
+            <div class="card border-0 shadow-lg" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(20px);">
+                <div class="card-body p-4 p-lg-5">
 
-            <form asp-action="PayBillDemoConfirmed" method="post">
-                <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="alert border-0 rounded-4 mb-5 d-flex align-items-center py-3 bg-white bg-opacity-50 shadow-sm">
+                        <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
+                            <i class="fas fa-flask text-primary"></i>
+                        </div>
+                        <div class="small fw-600">
+                            <span class="text-primary">Demo Environment:</span> This is a simulated payment gateway. No actual funds will be moved.
+                        </div>
+                    </div>
 
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Cardholder Name (demo)</label>
-                        <input class="form-control" placeholder="e.g. @Model.Student?.FullName" />
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Card Number (demo)</label>
-                        <input class="form-control" placeholder="1111 2222 3333 4444" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Expiry (demo)</label>
-                        <input class="form-control" placeholder="12/30" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">CVV (demo)</label>
-                        <input class="form-control" placeholder="123" />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Amount</label>
-                        <input class="form-control" value="@Model.TotalAmount" readonly />
-                    </div>
+                    <form asp-action="PayBillDemoConfirmed" asp-controller="Teacher" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+
+                        <div class="row g-5">
+                            <div class="col-md-5 order-2 order-md-1" data-aos="fade-right">
+                                <div class="p-4 rounded-4 text-white position-relative overflow-hidden shadow-lg mb-4"
+                                     style="background: var(--primary-gradient); height: 220px;">
+                                    <div class="position-relative" style="z-index: 2;">
+                                        <div class="d-flex justify-content-between align-items-start mb-4">
+                                            <i class="fas fa-sim-card fa-2x opacity-50"></i>
+                                            <i class="fab fa-visa fa-3x"></i>
+                                        </div>
+                                        <h4 class="fw-bold mb-3" style="letter-spacing: 2px;">•••• •••• •••• 4444</h4>
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <div>
+                                                <small class="opacity-50 d-block text-uppercase" style="font-size: 0.6rem;">Card Holder</small>
+                                                <span class="fw-bold">@User.Identity.Name</span>
+                                            </div>
+                                            <div class="text-end">
+                                                <small class="opacity-50 d-block text-uppercase" style="font-size: 0.6rem;">Expiry</small>
+                                                <span class="fw-bold">12/30</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <i class="fas fa-bolt-lightning position-absolute end-0 bottom-0 opacity-10" style="font-size: 10rem; transform: translate(30%, 30%);"></i>
+                                </div>
+
+                                <div class="card bg-light border-0 p-3 rounded-4">
+                                    <h6 class="fw-800 small text-uppercase opacity-50 mb-3">Order Summary</h6>
+                                    <div class="d-flex justify-content-between mb-2 small">
+                                        <span class="text-muted">Monthly Bill</span>
+                                        <span class="fw-bold text-dark">₹@((Model.TotalAmount - Model.PreviousDues).ToString("N2"))</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-3 small">
+                                        <span class="text-muted">Previous Dues</span>
+                                        <span class="fw-bold text-dark">₹@Model.PreviousDues.ToString("N2")</span>
+                                    </div>
+                                    <hr class="opacity-10">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-800">Total Payable</span>
+                                        <span class="h4 fw-800 text-primary mb-0">₹@Model.TotalAmount.ToString("N2")</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-7 order-1 order-md-2" data-aos="fade-left">
+                                <h5 class="fw-800 mb-4">Payment Information</h5>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small opacity-75">Cardholder Name (Demo)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white border-end-0 rounded-start-3"><i class="fas fa-user text-muted small"></i></span>
+                                        <input class="form-control border-start-0 rounded-end-3 py-2" placeholder="Enter name on card" />
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small opacity-75">Card Number (Demo)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white border-end-0 rounded-start-3"><i class="fas fa-credit-card text-muted small"></i></span>
+                                        <input class="form-control border-start-0 rounded-end-3 py-2" placeholder="0000 0000 0000 0000" />
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-5">
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold small opacity-75">Expiry Date</label>
+                                        <input class="form-control rounded-3 py-2" placeholder="MM/YY" />
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label fw-bold small opacity-75">CVV</label>
+                                        <input class="form-control rounded-3 py-2" placeholder="123" />
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
+                                    <a asp-action="MyBills" class="text-decoration-none small fw-bold text-muted hover-primary">
+                                        <i class="fas fa-arrow-left me-2"></i> Cancel & Return
+                                    </a>
+                                    <button type="submit" class="btn btn-primary px-5 py-2 fw-bold shadow-lg transition-all rounded-pill">
+                                        Confirm Payment ₹@Model.TotalAmount.ToString("N0")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
-
-                <div class="mt-4 d-flex justify-content-between">
-                    <a asp-action="MyBills" class="btn btn-outline-secondary">Back to Bills</a>
-                    <button type="submit" class="btn btn-success">
-                        Confirm Demo Payment
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-

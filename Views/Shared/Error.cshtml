@@ -3,21 +3,57 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+    .error-icon { width: 80px; height: 80px; margin: 0 auto 1.5rem; }
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+<div class="min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card border-0 shadow text-center" style="border-radius: 8px; border: 1px solid #e5e7eb; animation: fadeIn 0.3s ease;">
+                    <div class="card-body p-5">
+                        <div class="mb-4">
+                            <i class="fas fa-exclamation-triangle fa-5x text-danger mb-3"></i>
+                            <h1 class="display-6 fw-bold text-danger">Oops!</h1>
+                            <h2 class="h4 text-muted mb-3">An error occurred</h2>
+                        </div>
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
+                        <p class="text-muted mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            An error occurred while processing your request. Please try again or contact support.
+                        </p>
+
+                        @if (Model.ShowRequestId)
+                        {
+                            <div class="alert alert-light border-start border-danger ps-3 mb-4" style="border-width: 3px;">
+                                <small class="text-muted"><strong>Request ID:</strong></small>
+                                <br />
+                                <code class="text-break">@Model.RequestId</code>
+                            </div>
+                        }
+
+                        <div class="alert alert-info mb-4" style="border-radius: 8px;">
+                            <small class="text-muted"><i class="fas fa-lightbulb me-2"></i>Try refreshing the page or going back to the previous page.</small>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="javascript:history.back()" class="btn btn-outline-primary btn-lg fw-bold" style="border-radius: 10px;">
+                                <i class="fas fa-arrow-left me-2"></i>Go Back
+                            </a>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg fw-bold" style="border-radius: 10px;">
+                                <i class="fas fa-home me-2"></i>Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
     It can result in displaying sensitive information from exceptions to end users.
     For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>

@@ -1,27 +1,111 @@
 ﻿@model MessManagementSystem.Models.Shared.MenuItem
 
 @{
-    ViewData["Title"] = "Today's Menu";
+    ViewData["Title"] = "Mess Menu";
 }
 
-<div class="container mt-4">
-    <div class="card" data-aos="fade-up">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="https://images.unsplash.com/photo-1481833761820-0509d3217039?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded-start" alt="menu" />
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h3>Menu — @Model.Date.ToString("dd MMM yyyy")</h3>
-                    <p class="lead"><strong>Breakfast:</strong> @Model.Breakfast</p>
-                    <p class="lead"><strong>Lunch:</strong> @Model.Lunch</p>
-                    <p class="lead"><strong>Dinner:</strong> @Model.Dinner</p>
-                </div>
-            </div>
+<style>
+    /* Premium Hover & Shadow Logic */
+    .menu-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.08); /* Soft initial shadow */
+    }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.15); /* Purple-tinted glow shadow */
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+    .icon-box {
+        transition: transform 0.3s ease;
+    }
+
+    .menu-card:hover .icon-box {
+        transform: scale(1.1) rotate(5deg);
+    }
+</style>
+
+<div class="container-fluid py-1">
+    <div class="d-flex align-items-center justify-content-between mb-3" data-aos="fade-down">
+        <div>
+            <h3 class="fw-800 mb-0 text-dark-emphasis">Today's Menu</h3>
+            <p class="text-muted small mb-0">Mess Hall &bull; @Model.Date.ToString("dddd, dd MMM")</p>
+        </div>
+        <div class="d-none d-sm-block">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-sm btn-light rounded-pill border fw-bold px-3">
+                <i class="fas fa-arrow-left me-1"></i> Dashboard
+            </a>
         </div>
     </div>
 
-    <div class="text-center mt-4">
-        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">← Back to Home</a>
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card menu-card border-0 h-100 overflow-hidden" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(10px);">
+                <div class="p-3 d-flex align-items-center gap-3 border-bottom border-opacity-10" style="background: rgba(99, 102, 241, 0.04);">
+                    <div class="icon-box bg-primary bg-opacity-10 p-2 rounded-3 text-primary">
+                        <i class="fas fa-mug-saucer"></i>
+                    </div>
+                    <h6 class="fw-800 mb-0 text-uppercase small" style="letter-spacing: 1px;">Breakfast</h6>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <h4 class="fw-700 text-dark-emphasis mb-0">@Model.Breakfast</h4>
+                    <span class="badge mt-3 bg-light text-muted border-0 fw-500 rounded-pill px-3 py-2">
+                        <i class="far fa-clock me-1"></i> 07:30 - 09:00 AM
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="card menu-card border-0 h-100 overflow-hidden" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(10px);">
+                <div class="p-3 d-flex align-items-center gap-3 border-bottom border-opacity-10" style="background: rgba(34, 197, 94, 0.04);">
+                    <div class="icon-box bg-success bg-opacity-10 p-2 rounded-3 text-success">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h6 class="fw-800 mb-0 text-uppercase small" style="letter-spacing: 1px;">Lunch</h6>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <h4 class="fw-700 text-dark-emphasis mb-0">@Model.Lunch</h4>
+                    <span class="badge mt-3 bg-light text-muted border-0 fw-500 rounded-pill px-3 py-2">
+                        <i class="far fa-clock me-1"></i> 01:00 - 02:30 PM
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card menu-card border-0 h-100 overflow-hidden" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(10px);">
+                <div class="p-3 d-flex align-items-center gap-3 border-bottom border-opacity-10" style="background: rgba(245, 158, 11, 0.04);">
+                    <div class="icon-box bg-warning bg-opacity-10 p-2 rounded-3 text-warning">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <h6 class="fw-800 mb-0 text-uppercase small" style="letter-spacing: 1px;">Dinner</h6>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <h4 class="fw-700 text-dark-emphasis mb-0">@Model.Dinner</h4>
+                    <span class="badge mt-3 bg-light text-muted border-0 fw-500 rounded-pill px-3 py-2">
+                        <i class="far fa-clock me-1"></i> 08:00 - 09:30 PM
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-2" data-aos="fade-up" data-aos-delay="400">
+            <div class="card border-0 shadow-sm p-3" style="border-radius: 20px; background: var(--primary-gradient);">
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 text-white">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-white bg-opacity-20 p-2 rounded-circle">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <p class="mb-0 small fw-500">Don't forget to update your attendance before the 09:00 AM cutoff.</p>
+                    </div>
+                    <a asp-action="Attendance" asp-controller="Teacher" class="btn btn-white bg-white text-primary rounded-pill px-4 fw-800 shadow-sm border-0">
+                        Mark Attendance <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,93 +1,213 @@
 @model MessManagementSystem.Models.Shared.BillDetailsViewModel
 
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Bill Statement";
     var ratePerMeal = Model.TotalMeals == 0 ? 0 : Model.MealTotal / Model.TotalMeals;
 }
 
 <style>
-    @@media print {
-        .navbar, .btn, .toast-container, footer { display: none !important; }
-        body { margin: 0; background: #ffffff !important; }
-        .print-header { display: block; }
-        .print-card { box-shadow: none !important; border: none !important; }
+    /* Digital Screen View Styling */
+    .invoice-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        box-shadow: var(--accent-glow);
     }
 
-    .print-header { display: none; margin-bottom: 10px; }
+    .invoice-header {
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 24px 24px 0 0;
+        padding: 2rem;
+    }
+
+    /* --- PRINT OPTIMIZATION --- */
+    @@media print {
+        /* 1. Reset Page and Body */
+        @@page {
+            size: auto;
+            margin: 5mm; /* Minimum margin to maximize space */
+        }
+
+        body {
+            background: white !important;
+            color: black !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: 11pt; /* Slightly smaller for single page fit */
+        }
+        /* 2. Remove all UI distractions and spacing */
+        .navbar, .sidebar-container, .btn, .no-print, footer, .content-spacer {
+            display: none !important;
+        }
+
+        .container {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .main-shell {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        /* 3. Collapse Invoice Spacing */
+        .invoice-card {
+            box-shadow: none !important;
+            border: 1px solid #000 !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            page-break-inside: avoid; /* Forces one-page logic */
+        }
+
+        .invoice-header {
+            background: #f0f0f0 !important;
+            color: black !important;
+            border-bottom: 2px solid #000 !important;
+            padding: 1rem !important; /* Tight header */
+        }
+
+        .card-body {
+            padding: 0.5rem 1rem !important; /* Minimal internal padding */
+        }
+
+        .row {
+            margin-bottom: 0.5rem !important;
+        }
+
+        .mb-5, .mb-4 {
+            margin-bottom: 0.5rem !important; /* Collapse large gaps */
+        }
+
+        .mt-5 {
+            margin-top: 1rem !important;
+        }
+        /* 4. Table Tweaks */
+        .table {
+            margin-bottom: 0.5rem !important;
+        }
+
+            .table td, .table th {
+                padding: 4px !important; /* Tight cell spacing */
+                border-bottom: 1px solid #ddd !important;
+            }
+
+        .text-primary {
+            color: black !important;
+        }
+
+        .bg-light {
+            background-color: #f9f9f9 !important;
+            border: 1px solid #eee !important;
+        }
+    }
 </style>
 
-<div class="container mt-4">
-    <div class="print-header text-center">
-        <h4>Mess Bill - @Model.BillingPeriodStart.ToString("MMMM yyyy")</h4>
-        <p class="mb-0">Teacher: @Model.TeacherName (@Model.TeacherEmail)</p>
-        <p class="mb-0">Department: @Model.TeacherDepartment</p>
+<div class="container py-2">
+    <div class="d-flex justify-content-between align-items-center mb-3 no-print">
+        <a asp-action="MyBills" asp-controller="Teacher" class="btn btn-link text-decoration-none text-muted fw-bold p-0">
+            <i class="fas fa-arrow-left me-2"></i> Back to History
+        </a>
+        <button class="btn btn-primary rounded-pill shadow-sm px-4 fw-bold" onclick="window.print()">
+            <i class="fas fa-print me-2"></i> Print Bill
+        </button>
     </div>
 
-    <div class="card print-card">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-4">
-                <div>
-                    <h3 class="mb-0">Department Mess</h3>
-                    <small class="text-muted">Teacher’s Mess Billing Statement</small>
-                    <div class="mt-2 small text-muted">
-                        Teacher: <strong>@Model.TeacherName</strong><br />
-                        Email: @Model.TeacherEmail<br />
-                        Department: @Model.TeacherDepartment<br />
-                        Period: @Model.BillingPeriodStart.ToString("dd MMM yyyy")
-                        – @Model.BillingPeriodEnd.ToString("dd MMM yyyy")
+    <div class="card invoice-card overflow-hidden">
+        <div class="invoice-header">
+            <div class="row align-items-center">
+                <div class="col-7">
+                    <h3 class="fw-800 mb-0">MESSLY STATEMENT</h3>
+                    <p class="small opacity-75 mb-0">Faculty Dining Invoice</p>
+                </div>
+                <div class="col-5 text-end">
+                    <div class="d-inline-block text-start">
+                        <small class="d-block text-uppercase fw-800 opacity-75" style="font-size: 0.6rem;">Period</small>
+                        <span class="fw-800">@Model.BillingPeriodStart.ToString("MMMM yyyy")</span>
                     </div>
                 </div>
-                <div class="text-end mono small">
-                    <div><strong>Bill Month:</strong> @Model.BillingPeriodStart.ToString("MMMM yyyy")</div>
-                    <div><strong>Generated:</strong> @DateTime.UtcNow.ToString("dd MMM yyyy")</div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <h6 class="text-uppercase fw-800 opacity-50 small mb-1">Bill To:</h6>
+                    <h6 class="fw-bold mb-0">@Model.TeacherName</h6>
+                    <p class="small text-muted mb-0">@Model.TeacherEmail | @Model.TeacherDepartment</p>
+                </div>
+                <div class="col-6 text-end">
+                    <h6 class="text-uppercase fw-800 opacity-50 small mb-1">Statement Info:</h6>
+                    <p class="small mb-0">Date: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+                    <p class="small mb-0">Cycle: @Model.BillingPeriodStart.ToString("dd MMM") - @Model.BillingPeriodEnd.ToString("dd MMM")</p>
                 </div>
             </div>
 
-            <h5 class="mb-2">Attendance Summary</h5>
-            <p class="mb-3">
-                Total meals taken: <strong>@Model.TotalMeals</strong><br />
-                Per‑meal rate: <strong>Rs @String.Format("{0:0.00}", ratePerMeal)</strong>
-            </p>
-
-            <h5 class="mb-2">Bill Breakdown</h5>
-            <table class="table table-sm align-middle">
+            <table class="table align-middle small">
+                <thead class="table-light">
+                    <tr>
+                        <th>Item Description</th>
+                        <th class="text-center">Rate</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
-                        <td>Meals (@Model.TotalMeals × Rs @String.Format("{0:0.00}", ratePerMeal))</td>
-                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.MealTotal)</td>
+                        <td>
+                            <span class="fw-700">Monthly Meals</span><br>
+                            <small class="text-muted">Total meals consumed in current cycle</small>
+                        </td>
+                        <td class="text-center">@Model.TotalMeals × ₹@ratePerMeal.ToString("F2")</td>
+                        <td class="text-end fw-bold">₹@Model.MealTotal.ToString("F2")</td>
                     </tr>
                     <tr>
-                        <td>Utility Charge</td>
-                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.UtilityCharge)</td>
+                        <td>
+                            <span class="fw-700">Utility & Maintenance</span><br>
+                            <small class="text-muted">Fixed service charges</small>
+                        </td>
+                        <td class="text-center">Fixed</td>
+                        <td class="text-end fw-bold">₹@Model.UtilityCharge.ToString("F2")</td>
                     </tr>
                     <tr>
-                        <td>Previous Dues</td>
-                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.PreviousDues)</td>
-                    </tr>
-                    <tr class="fw-bold border-top">
-                        <td>Total Payable</td>
-                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.TotalAmount)</td>
-                    </tr>
-                    <tr>
-                        <td>Amount Paid</td>
-                        <td class="text-end">Rs @String.Format("{0:0.00}", Model.AmountPaid)</td>
+                        <td class="text-danger fw-700">Arrears / Previous Dues</td>
+                        <td class="text-center">-</td>
+                        <td class="text-end fw-bold text-danger">₹@Model.PreviousDues.ToString("F2")</td>
                     </tr>
                 </tbody>
             </table>
 
-            <div class="row mt-4">
-                <div class="col-md-6 small text-muted">
-                    This is a computer‑generated bill and does not require a physical signature.
-                </div>
-                <div class="col-md-6 text-end small mt-3 mt-md-0">
-                    ___________________________<br />
-                    Mess Manager
+            <div class="row justify-content-end mt-2">
+                <div class="col-5">
+                    <div class="p-3 bg-light rounded-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small opacity-75">Gross Total:</span>
+                            <span class="small fw-bold">₹@((Model.MealTotal + Model.UtilityCharge + Model.PreviousDues).ToString("F2"))</span>
+                        </div>
+                        <div class="d-flex justify-content-between text-success border-bottom pb-1 mb-1">
+                            <span class="small opacity-75">Paid:</span>
+                            <span class="small fw-bold">- ₹@Model.AmountPaid.ToString("F2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-800">Payable:</span>
+                            <span class="h5 fw-800 text-primary mb-0">₹@Model.TotalAmount.ToString("F2")</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="mt-4 text-end d-print-none">
-                <button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button>
-                <a asp-action="MyBills" class="btn btn-secondary ms-2">Back</a>
+            <div class="d-none d-print-block mt-4">
+                <div class="row pt-4">
+                    <div class="col-6">
+                        <div style="border-top: 1px solid #000; width: 150px; margin-top: 20px;"></div>
+                        <small>Receiver's Signature</small>
+                    </div>
+                    <div class="col-6 text-end">
+                        <div style="border-top: 1px solid #000; width: 150px; margin-top: 20px; margin-left: auto;"></div>
+                        <small>Authorized Manager</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

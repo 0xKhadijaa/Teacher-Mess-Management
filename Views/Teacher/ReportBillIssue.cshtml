@@ -4,33 +4,74 @@
     ViewData["Title"] = "Report Bill Issue";
 }
 
-<div class="container mt-4">
-    <div class="card mx-auto" style="max-width: 700px;">
-        <div class="card-header bg-warning text-white">
-            <h4>📝 Report Issue with Bill</h4>
-        </div>
-        <div class="card-body">
-            <p><strong>Bill Period:</strong> @bill?.BillingPeriodStart.ToString("MMM yyyy")</p>
-            <p><strong>Total Amount:</strong> ₹@bill?.TotalAmount</p>
+<div class="container py-3">
+    <div class="mb-3" data-aos="fade-down">
+        <a asp-action="MyBills" class="text-decoration-none small fw-bold text-muted hover-primary">
+            <i class="fas fa-chevron-left me-2"></i> Back to Bills
+        </a>
+    </div>
 
-            <form asp-action="ReportBillIssue" method="post">
-                <!-- ✅ CRITICAL: Hidden fields for required FKs -->
-                <input type="hidden" asp-for="BillId" value="@bill?.Id" />
-                <input type="hidden" asp-for="TeacherId"
-                       value="@(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)" />
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-xl-6">
+            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(20px);">
 
-                <div class="mb-3">
-                    <label asp-for="IssueDescription" class="form-label">Describe the issue</label>
-                    <textarea asp-for="IssueDescription" class="form-control" rows="4"
-                              placeholder="e.g., I was on medical leave this month..." required></textarea>
-                    <span asp-validation-for="IssueDescription" class="text-danger"></span>
+                <div class="p-4 border-bottom border-opacity-10 d-flex align-items-center gap-3" style="background: rgba(245, 158, 11, 0.05);">
+                    <div class="bg-warning bg-opacity-10 p-3 rounded-4 text-warning">
+                        <i class="fas fa-circle-exclamation fa-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-800 mb-0">Report an Issue</h4>
+                        <p class="text-muted small mb-0">Our admin team will review your discrepancy.</p>
+                    </div>
                 </div>
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-warning">📤 Submit to Admin</button>
-                    <a asp-action="MyBills" class="btn btn-secondary">← Back to Bills</a>
+                <div class="card-body p-4 p-md-5">
+                    <div class="bg-white bg-opacity-50 border border-white rounded-4 p-3 mb-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-uppercase fw-800 opacity-50 d-block" style="font-size: 0.6rem; letter-spacing: 1px;">Target Bill</small>
+                            <span class="fw-700">@bill?.BillingPeriodStart.ToString("MMMM yyyy")</span>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-uppercase fw-800 opacity-50 d-block" style="font-size: 0.6rem; letter-spacing: 1px;">Amount</small>
+                            <span class="fw-800 text-primary">₹@bill?.TotalAmount</span>
+                        </div>
+                    </div>
+
+                    <form asp-action="ReportBillIssue" asp-controller="Teacher" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="BillId" value="@bill?.Id" />
+                        <input type="hidden" asp-for="TeacherId" value="@(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)" />
+
+                        <div class="mb-4">
+                            <label asp-for="IssueDescription" class="form-label fw-bold small opacity-75">Describe the discrepancy</label>
+                            <div class="position-relative">
+                                <textarea asp-for="IssueDescription" class="form-control border-0 bg-light rounded-4 p-3" rows="5"
+                                          placeholder="Example: I was on medical leave from the 5th to the 10th, but the bill shows full attendance..." required></textarea>
+                            </div>
+                            <span asp-validation-for="IssueDescription" class="text-danger small mt-1 d-block"></span>
+                        </div>
+
+                        <div class="d-flex gap-2 mb-5 p-3 rounded-3 bg-light border-start border-warning border-4">
+                            <i class="fas fa-info-circle text-warning mt-1"></i>
+                            <p class="small text-muted mb-0">Please be specific about dates or missing transactions to help us resolve this faster.</p>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-primary py-3 rounded-pill fw-bold shadow-lg">
+                                <i class="fas fa-paper-plane me-2"></i> Submit Issue to Admin
+                            </button>
+                            <a asp-action="MyBills" class="btn btn-link text-decoration-none text-muted small fw-bold">Cancel</a>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,17 +1,77 @@
 ﻿@model MessManagementSystem.Models.Shared.Attendance
 
 @{
-    ViewData["Title"] = "Attendance - View Only";
+    ViewData["Title"] = "Attendance Access";
 }
 
-<div class="container mt-4">
-    <div class="alert alert-info">
-        <h4>👁️ Attendance Records (Read-Only)</h4>
-        <p>Mess Managers can view attendance for meal planning, but <strong>cannot edit</strong> records.</p>
-        <p>Only <strong>Teachers</strong> can mark their own attendance. <strong>Admins</strong> can make corrections.</p>
+<div class="container-fluid py-2">
+    <div class="mb-4" data-aos="fade-down">
+        <h2 class="fw-800 mb-0 text-dark-emphasis">Attendance Access</h2>
+        <p class="text-muted small">Access level and permission overview for Mess Managers.</p>
     </div>
 
-    <div class="text-center">
-        <a asp-action="Menu" class="btn btn-secondary">← Back to Menu</a>
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card border-0 shadow-lg overflow-hidden animate__animated animate__fadeIn" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(20px);">
+                <div class="card-body p-4 p-md-5">
+
+                    <div class="alert border-0 rounded-4 mb-5 d-flex align-items-center py-3 bg-white bg-opacity-50 shadow-sm border border-white">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="fas fa-lock text-primary h4 mb-0"></i>
+                        </div>
+                        <div class="small fw-600">
+                            <span class="text-primary d-block fw-800 text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Information Only</span>
+                            As a Mess Manager, you have <span class="text-primary">Read-Only</span> access to help with meal preparation and stock planning.
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="card h-100 border-0 shadow-sm p-4 text-center transition-all hover-lift" style="border-radius: 20px; background: rgba(255,255,255,0.4);">
+                                <div class="bg-success bg-opacity-10 p-3 rounded-4 text-success d-inline-block mx-auto mb-3">
+                                    <i class="fas fa-user-tie fa-2x"></i>
+                                </div>
+                                <h6 class="fw-800 text-uppercase small opacity-50 mb-2">Faculty</h6>
+                                <p class="fw-700 text-dark-emphasis mb-0">Individual Daily Attendance</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                            <div class="card h-100 border-0 shadow-lg p-4 text-center transition-all hover-lift" style="border-radius: 20px; background: var(--primary-gradient); color: white;">
+                                <div class="bg-white bg-opacity-20 p-3 rounded-4 d-inline-block mx-auto mb-3">
+                                    <i class="fas fa-eye fa-2x"></i>
+                                </div>
+                                <h6 class="text-white-50 text-uppercase small fw-800 mb-2">You (Manager)</h6>
+                                <p class="fw-700 mb-0">Master View & Meal Planning</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="card h-100 border-0 shadow-sm p-4 text-center transition-all hover-lift" style="border-radius: 20px; background: rgba(255,255,255,0.4);">
+                                <div class="bg-warning bg-opacity-10 p-3 rounded-4 text-warning d-inline-block mx-auto mb-3">
+                                    <i class="fas fa-shield-check fa-2x"></i>
+                                </div>
+                                <h6 class="fw-800 text-uppercase small opacity-50 mb-2">Admin</h6>
+                                <p class="fw-700 text-dark-emphasis mb-0">System-Wide Corrections</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center bg-light p-4 rounded-4 mb-5 border border-white">
+                        <p class="text-muted small mb-0 max-width-600 mx-auto">
+                            <i class="fas fa-circle-info me-2 text-primary"></i>
+                            Attendance data is used to calculate daily grocery requirements. If you notice persistent discrepancies, please contact the <strong>Administration Office</strong> for a manual audit.
+                        </p>
+                    </div>
+
+                    <div class="text-center">
+                        <a asp-action="Menu" asp-controller="Teacher" class="btn btn-primary btn-lg rounded-pill px-5 py-3 fw-800 shadow-lg transition-all">
+                            <i class="fas fa-arrow-left me-2"></i> Back to Main Menu
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>

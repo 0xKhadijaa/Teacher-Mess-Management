@@ -1,42 +1,109 @@
-@model MessManagementSystem.Models.Shared.BillIssue
+﻿@model MessManagementSystem.Models.Shared.BillIssue
 
 @{
-    ViewData["Title"] = "Resolve Issue";
+    ViewData["Title"] = "Issue Resolution";
 }
 
-<div class="container mt-4">
-    <h2>Resolve Bill Issue</h2>
-
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5>@Model.Bill?.BillingPeriodStart.ToString("MMMM yyyy") � ?@Model.Bill?.TotalAmount</h5>
-            <p><strong>Teacher:</strong> @Model.Teacher?.FullName (@Model.Teacher?.Email)</p>
-            <p><strong>Reported:</strong> @Model.CreatedAt.ToString("dd MMM yyyy")</p>
-            <hr />
-            <p>@Model.IssueDescription</p>
-        </div>
+<div class="container-fluid py-2">
+    <div class="mb-4" data-aos="fade-down">
+        <h2 class="fw-800 mb-0 text-dark-emphasis">
+            <i class="fas fa-ticket-alt me-2 text-primary"></i> Resolve Dispute
+        </h2>
+        <p class="text-muted small">Finalize billing corrections and notify the faculty member of the resolution.</p>
     </div>
 
-    @if (Model.IsResolved)
-    {
-        <div class="alert alert-success">Resolved on @Model.ResolvedAt?.ToString("dd MMM yyyy")</div>
-        <div class="card">
-            <div class="card-body">
-                <h5>Resolution Notes</h5>
-                <p>@Model.ResolutionNotes</p>
+    <div class="row justify-content-center">
+        <div class="col-xl-9 col-lg-10">
+            <div class="card border-0 shadow-lg animate__animated animate__fadeIn" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(20px);">
+
+                <div class="card-body p-4 p-md-5">
+                    <div class="p-4 rounded-4 mb-4 border border-white" style="background: rgba(255,255,255,0.4);">
+                        <div class="row g-4">
+                            <div class="col-md-3 col-6">
+                                <small class="text-uppercase fw-800 opacity-50 d-block mb-1" style="font-size: 0.65rem; letter-spacing: 1px;">Dispute ID</small>
+                                <span class="fw-700 text-primary">#@Model.Id</span>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <small class="text-uppercase fw-800 opacity-50 d-block mb-1" style="font-size: 0.65rem; letter-spacing: 1px;">Faculty Member</small>
+                                <span class="fw-700">@Model.Teacher?.FullName</span>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <small class="text-uppercase fw-800 opacity-50 d-block mb-1" style="font-size: 0.65rem; letter-spacing: 1px;">Billing Period</small>
+                                <span class="fw-700">@Model.Bill?.BillingPeriodStart.ToString("MMM yyyy")</span>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <small class="text-uppercase fw-800 opacity-50 d-block mb-1" style="font-size: 0.65rem; letter-spacing: 1px;">Total Amount</small>
+                                <span class="fw-700 text-dark">₹@Model.Bill?.TotalAmount</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="form-label fw-800 small text-uppercase text-danger opacity-75 mb-3" style="letter-spacing: 1px;">
+                            <i class="fas fa-exclamation-circle me-2"></i> Reported Issue
+                        </label>
+                        <div class="p-4 rounded-4 bg-white bg-opacity-50 border border-danger border-opacity-10">
+                            <p class="mb-0 fw-500 text-dark-emphasis" style="line-height: 1.6;">@Model.IssueDescription</p>
+                            <hr class="my-3 opacity-10">
+                            <small class="text-muted"><i class="far fa-calendar-alt me-1"></i> Reported on @Model.CreatedAt.ToString("f")</small>
+                        </div>
+                    </div>
+
+                    @if (Model.IsResolved)
+                    {
+                        <div class="animate__animated animate__pulse">
+                            <label class="form-label fw-800 small text-uppercase text-success opacity-75 mb-3" style="letter-spacing: 1px;">
+                                <i class="fas fa-check-circle me-2"></i> Resolution Status
+                            </label>
+                            <div class="p-4 rounded-4 bg-success bg-opacity-10 border border-success border-opacity-20">
+                                <h6 class="fw-800 text-success mb-2">Issue Resolved Successfully</h6>
+                                <p class="mb-0 fw-500">@Model.ResolutionNotes</p>
+                                <small class="text-muted d-block mt-2">Completed on @Model.ResolvedAt?.ToString("dd MMM yyyy")</small>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <form asp-action="ResolveIssue" method="post">
+                            <input type="hidden" name="id" value="@Model.Id" />
+
+                            <div class="mb-4">
+                                <label class="form-label fw-800 small text-uppercase text-primary opacity-75 mb-3" style="letter-spacing: 1px;">
+                                    <i class="fas fa-tools me-2"></i> Action Taken & Notes
+                                </label>
+                                <textarea name="resolutionNotes" class="form-control bg-light border-0 py-3 px-4 rounded-4 fw-500 shadow-inner"
+                                      style="min-height: 150px;" placeholder="Explain the findings and steps taken to resolve this bill dispute..."></textarea>
+                            </div>
+
+                            <div class="d-flex flex-column flex-md-row gap-3 mt-5">
+                                <button type="submit" class="btn btn-primary rounded-pill px-5 py-3 fw-800 shadow-lg hover-lift flex-grow-1">
+                                    <i class="fas fa-check-double me-2"></i> Confirm Resolution
+                                </button>
+                                <a asp-action="BillIssues" class="btn btn-light rounded-pill px-4 py-3 fw-bold text-muted">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <p class="small text-muted opacity-75">
+                    <i class="fas fa-info-circle me-1"></i> Once marked as resolved, the teacher will see these notes on their dashboard.
+                </p>
             </div>
         </div>
-    }
-    else
-    {
-        <form asp-action="ResolveIssue" method="post">
-            <input type="hidden" name="id" value="@Model.Id" />
-            <div class="mb-3">
-                <label class="form-label">Resolution Notes</label>
-                <textarea name="resolutionNotes" class="form-control" rows="6"></textarea>
-            </div>
-            <button class="btn btn-success">Mark as Resolved</button>
-            <a asp-action="BillIssues" class="btn btn-secondary ms-2">Cancel</a>
-        </form>
-    }
+    </div>
 </div>
+
+<style>
+    .shadow-inner {
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    textarea.form-control:focus {
+        background-color: #ffffff !important;
+        box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.2) !important;
+    }
+</style>

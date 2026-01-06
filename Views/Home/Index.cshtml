@@ -1,94 +1,292 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Welcome to Messly";
 }
 
-<div class="hero" data-aos="fade-up" style="background-image: linear-gradient(rgba(34,49,63,0.5), rgba(34,49,63,0.35)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80'); background-size: cover; background-position: center;">
-    <div class="overlay text-white">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-7">
-                    <h1 class="display-5 fw-bold">Smart Mess Management</h1>
-                    <p class="lead">Track attendance, generate accurate monthly bills with carry-forward dues, report billing issues, and download clean PDF invoices. Built for universities and departments.</p>
-                    <p>
-                        @if (!User.Identity.IsAuthenticated)
-                        {
-                            <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">Get Started</a>
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">Sign In</a>
-                        }
-                        else
-                        {
-                            <a asp-controller="Teacher" asp-action="Menu" class="btn btn-primary btn-lg me-2">Go to Dashboard</a>
-                        }
-                    </p>
+<style>
+    /* 3D Push-Pin Styling */
+    .push-pin {
+        width: 32px;
+        height: 32px;
+        background: radial-gradient(circle at 30% 30%, #ff4d4d, #b30000);
+        border-radius: 50%;
+        position: absolute;
+        top: -15px;
+        left: 60%;
+        z-index: 20;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset -3px -3px 6px rgba(0,0,0,0.5);
+    }
+
+        .push-pin::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 10px;
+            background: #888;
+        }
+
+    /* The "Pinned Paper" Effect */
+    .hero-image-wrapper {
+        position: relative;
+        padding: 20px;
+        transform: rotate(4deg);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+        .hero-image-wrapper:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+    .hero-image-card {
+        background: white;
+        padding: 12px;
+        border-radius: 15px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+        .hero-image-card img {
+            border-radius: 10px;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+    /* Gradient Text Style */
+    .text-gradient {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+
+    /* Process & Features Styling */
+    .step-number {
+        width: 45px;
+        height: 45px;
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.2rem;
+        box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05) !important;
+    }
+
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    .ls-2 {
+        letter-spacing: 2px;
+    }
+
+    .hover-primary:hover {
+        color: var(--primary-purple) !important;
+    }
+
+    .glass-stat-card {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(15px);
+        border-radius: 30px;
+    }
+</style>
+
+<div class="position-relative overflow-hidden mb-5" style="min-height: 90vh; background: #ffffff; display: flex; align-items: center;">
+    <div class="position-absolute" style="top: 10%; right: 5%; width: 400px; height: 400px; background: rgba(99, 102, 241, 0.08); filter: blur(100px); border-radius: 50%;"></div>
+    <div class="position-absolute" style="bottom: 10%; left: 5%; width: 300px; height: 300px; background: rgba(168, 85, 247, 0.08); filter: blur(100px); border-radius: 50%;"></div>
+
+    <div class="container position-relative" style="z-index: 5;">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-center text-lg-start" data-aos="fade-right">
+                <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 py-2 mb-4 fw-800">
+                    <i class="fas fa-sparkles me-2"></i> NEXT-GEN MESS MANAGEMENT
+                </span>
+                <h1 class="display-2 fw-800 mb-4 lh-1 text-dark">
+                    Faculty Dining,<br />
+                    <span class="text-gradient">Redefined.</span>
+                </h1>
+                <p class="lead text-muted mb-5" style="max-width: 500px; line-height: 1.6;">
+                    An intelligent portal for university departments, administrators, and teachers with a premium dining experience.
+                </p>
+
+                <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-800 shadow-lg">
+                            Get Started <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary btn-lg px-5 py-3 rounded-pill fw-800 border-2">
+                            Register
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Teacher" asp-action="Menu" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-800 shadow-lg">
+                            Go to Dashboard <i class="fas fa-gauge-high ms-2"></i>
+                        </a>
+                    }
                 </div>
-                <div class="col-md-5 text-center d-none d-md-block">
-                    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=600&q=80" class="img-fluid rounded shadow-sm" alt="mess" />
+            </div>
+
+            <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left" data-aos-delay="200">
+                <div class="hero-image-wrapper mx-auto" style="max-width: 480px;">
+                    <div class="push-pin"></div>
+                    <div class="hero-image-card">
+                        <img src="https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=800&q=80" alt="Gourmet Food Table">
+                        <div class="mt-3 text-center">
+                            <h6 class="fw-800 text-muted small text-uppercase mb-0" style="letter-spacing: 2px;">Healthy Dining. Every Day.</h6>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="container">
+<div class="container mb-5 mt-n5 position-relative" style="z-index: 10;">
+    <div class="card border-0 shadow-sm p-4" style="border-radius: 24px; background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5);">
+        <div class="row text-center g-4">
+            <div class="col-4 border-end border-opacity-10">
+                <h2 class="fw-800 mb-0 text-primary">100%</h2>
+                <p class="small text-muted mb-0 fw-600">Paperless Workflow</p>
+            </div>
+            <div class="col-4 border-end border-opacity-10">
+                <h2 class="fw-800 mb-0 text-primary">9 AM</h2>
+                <p class="small text-muted mb-0 fw-600">Daily Cutoff Timer</p>
+            </div>
+            <div class="col-4">
+                <h2 class="fw-800 mb-0 text-primary">Instant</h2>
+                <p class="small text-muted mb-0 fw-600">Billing Resolution</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="text-center mb-5" data-aos="fade-up">
+        <h6 class="text-primary fw-800 text-uppercase small ls-2">The Workflow</h6>
+        <h2 class="display-5 fw-800 text-dark-emphasis">How Messly Works</h2>
+    </div>
+
     <div class="row g-4">
         <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-            <div class="stat-card p-3">
-                <div class="d-flex align-items-center">
-                    <div class="icon me-3"><i class="fas fa-file-invoice fa-lg text-primary"></i></div>
-                    <div>
-                        <div class="text-muted">Billing</div>
-                        <div class="h5">Accurate & Transparent</div>
-                    </div>
-                </div>
-                <p class="mt-3 mb-0 text-muted">Carry-forward dues, clear breakdowns, and downloadable PDFs for each teacher.</p>
+            <div class="card border-0 shadow-sm h-100 p-4 transition-all hover-lift" style="border-radius: 28px;">
+                <div class="step-number mb-4">1</div>
+                <h5 class="fw-800 mb-3">Mark Attendance</h5>
+                <p class="text-muted small lh-lg">Faculty members select their meals before the morning cutoff. This allows the kitchen to prepare exact quantities, effectively eliminating food waste.</p>
             </div>
         </div>
         <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="stat-card p-3">
-                <div class="d-flex align-items-center">
-                    <div class="icon me-3"><i class="fas fa-clipboard-check fa-lg text-success"></i></div>
-                    <div>
-                        <div class="text-muted">Attendance</div>
-                        <div class="h5">Easy Daily Tracking</div>
-                    </div>
-                </div>
-                <p class="mt-3 mb-0 text-muted">Teachers can mark meals quickly and managers can view/edit attendance.</p>
+            <div class="card border-0 shadow-sm h-100 p-4 transition-all hover-lift" style="border-radius: 28px;">
+                <div class="step-number mb-4">2</div>
+                <h5 class="fw-800 mb-3">Automatic Billing</h5>
+                <p class="text-muted small lh-lg">At the end of each billing cycle, Messly's engine calculates totals based on specific meal rates, utility charges, and any carry-forward dues.</p>
             </div>
         </div>
         <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-            <div class="stat-card p-3">
-                <div class="d-flex align-items-center">
-                    <div class="icon me-3"><i class="fas fa-headset fa-lg text-warning"></i></div>
-                    <div>
-                        <div class="text-muted">Support</div>
-                        <div class="h5">Issue Resolution</div>
-                    </div>
-                </div>
-                <p class="mt-3 mb-0 text-muted">Teachers can report bill issues; admins can resolve disputes within the system.</p>
+            <div class="card border-0 shadow-sm h-100 p-4 transition-all hover-lift" style="border-radius: 28px;">
+                <div class="step-number mb-4">3</div>
+                <h5 class="fw-800 mb-3">Secure Settlement</h5>
+                <p class="text-muted small lh-lg">Review your detailed breakdown, process your payment through the digital portal, and download a printer-friendly PDF invoice instantly.</p>
             </div>
         </div>
     </div>
+</div>
 
-    <hr class="my-5" />
+<div class="container py-5">
+    <div class="card bg-dark text-white p-4 p-md-5 border-0 shadow-lg overflow-hidden position-relative" style="border-radius: 40px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+        <i class="fas fa-users position-absolute end-0 bottom-0 opacity-10" style="font-size: 20rem; transform: translate(10%, 20%);"></i>
 
-    <div class="row">
-        <div class="col-md-6" data-aos="fade-right">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Live Dashboard</h5>
-                    <p class="card-text">Admins can get a quick glance of outstanding dues and recent activity.</p>
-                    <img src="https://images.unsplash.com/photo-1541544184278-21a4f6de1f8b?auto=format&fit=crop&w=800&q=80" class="feature mt-3" alt="dashboard" />
+        <div class="row align-items-center position-relative" style="z-index: 2;">
+            <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                <h2 class="display-6 fw-800 mb-4">Tailored Experience <br />For Every User</h2>
+                <div class="d-flex flex-column gap-4">
+                    <div class="d-flex gap-3">
+                        <div class="bg-primary bg-opacity-20 p-3 rounded-4">
+                            <i class="fas fa-user-shield text-primary h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold">Admins</h6>
+                            <p class="small opacity-50 mb-0">Total control over system rates, user access, and dispute resolution logic.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="bg-success bg-opacity-20 p-3 rounded-4">
+                            <i class="fas fa-utensils text-success h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold">Mess Managers</h6>
+                            <p class="small opacity-50 mb-0">Easily curate weekly menus and access real-time meal counts for the kitchen.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="bg-info bg-opacity-20 p-3 rounded-4">
+                            <i class="fas fa-graduation-cap text-info h4 mb-0"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold">Faculty Members</h6>
+                            <p class="small opacity-50 mb-0">One-click attendance, transparent billing history, and PDF invoice downloads.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6" data-aos="fade-left">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Professional PDF Invoices</h5>
-                    <p class="card-text">Download a printer-friendly invoice for record-keeping and approvals.</p>
-                    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80" class="feature mt-3" alt="pdf" />
+
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="glass-stat-card p-4 mx-lg-4 shadow-lg">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-bold text-white small text-uppercase ls-1">Live Tracking</span>
+                        <span class="badge bg-success rounded-pill animate__animated animate__pulse animate__infinite">Live</span>
+                    </div>
+                    <h4 class="fw-800 mb-1 text-white">75% Capacity</h4>
+                    <p class="small text-white opacity-50 mb-4">Real-time lunch attendance for today.</p>
+                    <div class="progress bg-white bg-opacity-10 mb-3" style="height: 10px; border-radius: 5px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 75%; border-radius: 5px;"></div>
+                    </div>
+                    <p class="small text-white opacity-75 mb-0"><i class="fas fa-info-circle me-1"></i> Kitchen staff notified: <strong>48 meals</strong> to prepare.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="container py-5 text-center" data-aos="zoom-in">
+    <div class="p-5 rounded-4 shadow-sm border border-primary border-opacity-10" style="background: rgba(99, 102, 241, 0.03); border-radius: 40px !important;">
+        <h2 class="fw-800 mb-3 text-dark-emphasis">Ready to Modernize Your Mess?</h2>
+        <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">Join the growing number of departments utilizing Messly to automate logistics and improve dining transparency.</p>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-lg fw-bold hover-lift">
+            Enter Portal Now <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+    </div>
+</div>
+
+<footer class="mt-5 py-5 border-top border-opacity-10 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start mb-4 mb-md-0">
+                <h4 class="fw-800 mb-1 text-primary">Messly</h4>
+                <p class="small text-muted mb-0">Smart Mess Management for University Departments.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <div class="d-flex justify-content-center justify-content-md-end gap-4 mb-3">
+                    <a href="#" class="text-muted text-decoration-none small hover-primary transition-all fw-600">Privacy Policy</a>
+                    <a href="#" class="text-muted text-decoration-none small hover-primary transition-all fw-600">Support Hub</a>
+                    <a href="#" class="text-muted text-decoration-none small hover-primary transition-all fw-600">Terms of Service</a>
+                </div>
+                <p class="small text-muted mb-0">
+                    &copy; @DateTime.Now.Year <span class="fw-800 text-primary">Messly</span>. All rights reserved. <br />
+                    Designed for high-performance dining administration.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

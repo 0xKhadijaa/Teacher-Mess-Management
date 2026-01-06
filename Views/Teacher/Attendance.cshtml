@@ -1,99 +1,138 @@
 ﻿@model MessManagementSystem.Models.Shared.Attendance
 
 @{
-    ViewData["Title"] = "Attendance";
+    ViewData["Title"] = "Daily Attendance";
+    var canEdit = ViewBag.CanEdit ?? false;
+    // Pre-calculate the disabled/readonly strings to avoid the RZ1031 error
+    var disabledAttr = canEdit ? null : "disabled";
+    var readonlyAttr = canEdit ? null : "readonly";
 }
 
-<div class="container-fluid mt-2 mt-md-0">
-    <div class="row mb-3 align-items-center">
-        <div class="col">
-            <h2 class="h4 mb-0">Today’s Attendance</h2>
-            <small class="text-muted">Teacher: @ViewBag.TeacherName</small>
+<div class="container-fluid py-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-3">
+        <div data-aos="fade-right">
+            <h2 class="fw-800 mb-0">Daily Attendance</h2>
+            <p class="text-muted small mb-0">
+                <i class="fas fa-user-circle me-1 text-primary"></i> @ViewBag.TeacherName
+                <span class="mx-2 opacity-25">|</span>
+                <i class="fas fa-calendar-day me-1 text-primary"></i> @DateTime.Today.ToString("dd MMM yyyy")
+            </p>
         </div>
-        <div class="col-auto text-end">
-            <span class="badge bg-light text-dark">
-                @DateTime.Today.ToString("dddd, dd MMM yyyy")
-            </span>
-        </div>
+
+        @if (ViewBag.EditCutoffPassed)
+        {
+            <div class="badge bg-danger bg-opacity-10 text-danger p-2 px-3 rounded-pill border border-danger border-opacity-10 animate__animated animate__pulse" data-aos="fade-left">
+                <i class="fas fa-lock me-2"></i> Cutoff Passed (9:00 AM)
+            </div>
+        }
     </div>
 
     @if (ViewBag.EditCutoffPassed)
     {
-        <div class="alert alert-warning d-flex align-items-center" role="alert">
-            <i class="fas fa-clock me-2"></i>
-            <div>Attendance can only be updated before <strong>9:00 AM</strong>. You can still review today’s status.</div>
+        <div class="alert border-0 shadow-sm rounded-4 mb-4 d-flex align-items-center bg-white bg-opacity-50" style="backdrop-filter: blur(10px);">
+            <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+                <i class="fas fa-history text-warning h5 mb-0"></i>
+            </div>
+            <div class="small fw-500">
+                <strong>View-Only Mode:</strong> Today's attendance window is closed. Changes can no longer be saved.
+            </div>
         </div>
     }
 
-    <div class="card shadow-sm" data-aos="fade-up">
-        <div class="card-body">
-            <form asp-action="Attendance" method="post" id="attendanceForm">
-                <input type="hidden" asp-for="TeacherId" />
+    <form asp-action="Attendance" asp-controller="Teacher" method="post" id="attendanceForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="TeacherId" />
 
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="form-check form-switch">
-                            <input asp-for="HadBreakfast" class="form-check-input" />
-                            <label asp-for="HadBreakfast" class="form-check-label">
-                                Breakfast
-                                <small class="d-block text-muted">Morning meal</small>
-                            </label>
+        <div class="row g-3">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 p-3 border-0">
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="rounded-4 bg-primary bg-opacity-10 p-3 text-primary">
+                                <i class="fas fa-coffee fa-lg"></i>
+                            </div>
+                            <div class="form-check form-switch m-0">
+                                @* FIXED: Attribute passed as a variable to avoid RZ1031 *@
+                                <input asp-for="HadBreakfast" class="form-check-input h4 mb-0" type="checkbox" role="switch" disabled="@disabledAttr" style="cursor: pointer;">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-check form-switch">
-                            <input asp-for="HadLunch" class="form-check-input" />
-                            <label asp-for="HadLunch" class="form-check-label">
-                                Lunch
-                                <small class="d-block text-muted">Afternoon meal</small>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-check form-switch">
-                            <input asp-for="HadDinner" class="form-check-input" />
-                            <label asp-for="HadDinner" class="form-check-label">
-                                Dinner
-                                <small class="d-block text-muted">Evening meal</small>
-                            </label>
-                        </div>
+                        <h5 class="fw-bold mb-1 text-dark-emphasis">Breakfast</h5>
+                        <p class="text-muted small mb-0">Morning meal session</p>
                     </div>
                 </div>
+            </div>
 
-                <div class="mb-3 mt-4">
-                    <label asp-for="SkipReason" class="form-label">Reason for skipping meals (optional)</label>
-                    <input asp-for="SkipReason" class="form-control" placeholder="e.g. On leave, out of city" />
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 p-3 border-0">
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="rounded-4 bg-success bg-opacity-10 p-3 text-success">
+                                <i class="fas fa-utensils fa-lg"></i>
+                            </div>
+                            <div class="form-check form-switch m-0">
+                                <input asp-for="HadLunch" class="form-check-input h4 mb-0" type="checkbox" role="switch" disabled="@disabledAttr" style="cursor: pointer;">
+                            </div>
+                        </div>
+                        <h5 class="fw-bold mb-1 text-dark-emphasis">Lunch</h5>
+                        <p class="text-muted small mb-0">Mid-day meal session</p>
+                    </div>
                 </div>
+            </div>
 
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <small class="text-muted">
-                        Changes are logged with time and can be viewed by the mess manager.
-                    </small>
-                    <button id="attendanceSubmit"
-                            class="btn btn-primary"
-                            @(ViewBag.CanEdit ? "" : "disabled")>
-                        <span class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
-                        Save Attendance
-                    </button>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 p-3 border-0">
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="rounded-4 bg-warning bg-opacity-10 p-3 text-warning">
+                                <i class="fas fa-cloud-moon fa-lg"></i>
+                            </div>
+                            <div class="form-check form-switch m-0">
+                                <input asp-for="HadDinner" class="form-check-input h4 mb-0" type="checkbox" role="switch" disabled="@disabledAttr" style="cursor: pointer;">
+                            </div>
+                        </div>
+                        <h5 class="fw-bold mb-1 text-dark-emphasis">Dinner</h5>
+                        <p class="text-muted small mb-0">Evening meal session</p>
+                    </div>
                 </div>
-            </form>
+            </div>
+
+            <div class="col-12 mt-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="card p-3 border-0">
+                    <div class="card-body p-2">
+                        <label asp-for="SkipReason" class="form-label fw-bold small opacity-75 mb-2">Leave / Skip Reason (Optional)</label>
+                        <textarea asp-for="SkipReason" class="form-control bg-light border-0 rounded-3"
+                                  rows="2" placeholder="e.g. Out for official duty..." readonly="@readonlyAttr"></textarea>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+
+        @if (canEdit)
+        {
+            <div class="mt-4 text-end" data-aos="fade-up" data-aos-delay="500">
+                <button type="submit" id="attendanceSubmit" class="btn btn-primary px-5 py-2 fw-bold shadow-sm">
+                    <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
+                    Update Attendance
+                </button>
+            </div>
+        }
+    </form>
 </div>
 
 @section Scripts {
     <script>
-        // Lightweight async UX: button spinner + disable on submit
         (function () {
-            var form = document.getElementById('attendanceForm');
-            if (!form) return;
-            form.addEventListener('submit', function () {
-                var btn = document.getElementById('attendanceSubmit');
-                if (!btn) return;
-                var spinner = btn.querySelector('.spinner-border');
-                btn.setAttribute('disabled', 'disabled');
-                if (spinner) spinner.classList.remove('d-none');
-            });
+            const form = document.getElementById('attendanceForm');
+            if (form) {
+                form.addEventListener('submit', function () {
+                    const btn = document.getElementById('attendanceSubmit');
+                    if(btn) {
+                        const spinner = btn.querySelector('.spinner-border');
+                        btn.classList.add('disabled');
+                        if (spinner) spinner.classList.remove('d-none');
+                    }
+                });
+            }
         })();
     </script>
 }

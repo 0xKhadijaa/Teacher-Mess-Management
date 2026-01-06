@@ -1,106 +1,127 @@
 ﻿@model List<MessManagementSystem.Models.Shared.Bill>
 
 @{
-    ViewData["Title"] = "Billing Dashboard";
+    ViewData["Title"] = "Billing Management";
 }
 
-<div class="container-fluid mt-2 mt-md-0">
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-        <div>
-            <h2 class="h4 mb-1">Billing Dashboard</h2>
-            <small class="text-muted">Generate monthly bills, mark payments and review issues.</small>
+<div class="container-fluid py-2">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div data-aos="fade-right">
+            <h2 class="fw-800 mb-0 text-dark-emphasis">
+                <i class="fas fa-file-invoice-dollar me-2 text-primary"></i> Billing Hub
+            </h2>
+            <p class="text-muted small mb-0">Manage faculty invoices, track collections, and audit discrepancies.</p>
         </div>
-        <div class="mt-2 mt-md-0">
-            <a asp-action="BillIssues" class="btn btn-outline-secondary btn-sm me-1">
-                <i class="fas fa-bug me-1"></i>Bill Issues
+        <div class="d-flex gap-2" data-aos="fade-left">
+            <a asp-action="BillIssues" class="btn btn-sm btn-light rounded-pill border fw-bold px-3">
+                <i class="fas fa-bug me-1 text-warning"></i> Issues
             </a>
-            <a asp-controller="Settings" asp-action="Index" class="btn btn-outline-secondary btn-sm me-1">
-                <i class="fas fa-sliders-h me-1"></i>Rates &amp; Settings
-            </a>
-            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#generateModal">
-                <i class="fas fa-plus-circle me-1"></i>Generate Bills
+            <button class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#generateModal">
+                <i class="fas fa-plus-circle me-1"></i> Generate Bills
             </button>
         </div>
     </div>
 
-    <form method="get" class="card mb-3 shadow-sm border-0">
-        <div class="card-body row g-2 align-items-end">
-            <div class="col-md-4">
-                <label class="form-label small text-muted">Teacher</label>
-                <input type="text" name="search" value="@ViewBag.Search" class="form-control form-control-sm" placeholder="Name or email" />
-            </div>
-            <div class="col-md-3">
-                <label class="form-label small text-muted">Status</label>
-                <select name="status" class="form-select form-select-sm">
-                    <option value="">All</option>
-                    <option value="paid" selected="@(ViewBag.Status?.ToString() == "paid")">Paid</option>
-                    <option value="pending" selected="@(ViewBag.Status?.ToString() == "pending")">Pending</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label small text-muted">Month</label>
-                <input type="month" name="month" value="@ViewBag.Month" class="form-control form-control-sm" />
-            </div>
-            <div class="col-md-2 text-end">
-                <button type="submit" class="btn btn-sm btn-primary w-100 mb-1">
-                    <i class="fas fa-filter me-1"></i>Apply
-                </button>
-                <a asp-action="Bills" class="btn btn-sm btn-link w-100 text-muted">Reset</a>
+    <form method="get" class="card border-0 shadow-sm mb-4" style="border-radius: 20px; background: var(--glass-bg);">
+        <div class="card-body p-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-800 small text-uppercase opacity-50"><i class="fas fa-search me-1 text-primary"></i> Faculty Name</label>
+                    <input type="text" name="search" value="@ViewBag.Search" class="form-control border-0 bg-light rounded-3 py-2" placeholder="Search name or email..." />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-800 small text-uppercase opacity-50"><i class="fas fa-filter me-1 text-primary"></i> Status</label>
+                    <select name="status" class="form-select border-0 bg-light rounded-3 py-2">
+                        <option value="">All Payments</option>
+                        <option value="paid" selected="@(ViewBag.Status?.ToString() == "paid")">Paid</option>
+                        <option value="pending" selected="@(ViewBag.Status?.ToString() == "pending")">Pending</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-800 small text-uppercase opacity-50"><i class="fas fa-calendar-alt me-1 text-primary"></i> Cycle</label>
+                    <input type="month" name="month" value="@ViewBag.Month" class="form-control border-0 bg-light rounded-3 py-2" />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100 rounded-3 fw-bold py-2 mb-1">Apply</button>
+                    <a asp-action="Bills" class="d-block text-center text-muted small text-decoration-none fw-600 mt-1">Clear All</a>
+                </div>
             </div>
         </div>
     </form>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">@TempData["Success"]</div>
+        <div class="alert alert-success border-0 shadow-sm rounded-4 animate__animated animate__fadeIn">
+            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+        </div>
     }
 
     @if (Model.Count == 0)
     {
-        <div class="alert alert-info">No bills yet. Generate monthly bills using the button above.</div>
+        <div class="card border-0 shadow-sm p-5 text-center" style="border-radius: 24px;">
+            <i class="fas fa-receipt fa-3x opacity-10 mb-3"></i>
+            <h5 class="text-muted fw-700">No records found matching your filters.</h5>
+        </div>
     }
     else
     {
         <div class="row g-3">
             @foreach (var bill in Model)
             {
-                <div class="col-md-6" data-aos="fade-up">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <strong>@bill.Student?.FullName</strong>
-                                    <div class="text-muted">@bill.BillingPeriodStart.ToString("MMMM yyyy")</div>
+                <div class="col-md-6 col-xl-4" data-aos="fade-up">
+                    <div class="card border-0 shadow-sm transition-all hover-lift h-100" style="border-radius: 20px; background: white;">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-800 mb-0 text-dark-emphasis">@bill.Student?.FullName</h6>
+                                        <small class="text-muted fw-600">@bill.BillingPeriodStart.ToString("MMMM yyyy")</small>
+                                    </div>
                                 </div>
-                                <div class="text-end small">
-                                    <div class="fw-bold">₹@bill.TotalAmount</div>
-                                    <div class="text-muted">Paid: ₹@bill.AmountPaid</div>
-                                    @if (!bill.IsPaid && bill.PreviousDues > 0)
-                                    {
-                                        <div class="text-muted">Prev. dues: ₹@bill.PreviousDues</div>
-                                    }
-                                </div>
+                                @if (bill.IsPaid)
+                                {
+                                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2 fw-800">Paid</span>
+                                }
+                                else
+                                {
+                                    <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3 py-2 fw-800">Pending</span>
+                                }
                             </div>
-                            <div class="mt-3 d-flex justify-content-between align-items-center">
-                                <div>
-                                    @if (bill.IsPaid)
-                                    {
-                                        <span class="badge bg-success">Paid</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-warning text-dark">Pending</span>
-                                    }
+
+                            <div class="bg-light rounded-4 p-3 mb-4 border border-white">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small text-muted fw-600">Total Bill</span>
+                                    <span class="fw-800 text-dark">₹@bill.TotalAmount</span>
                                 </div>
-                                <div>
-                                    @if (!bill.IsPaid)
-                                    {
-                                        <button class="btn btn-sm btn-success js-mark-paid"
-                                                data-bill-id="@bill.Id">
-                                            Mark as Paid
-                                        </button>
-                                    }
+                                <div class="d-flex justify-content-between">
+                                    <span class="small text-muted fw-600">Collected</span>
+                                    <span class="fw-800 text-success">₹@bill.AmountPaid</span>
                                 </div>
+                                @if (!bill.IsPaid && bill.PreviousDues > 0)
+                                {
+                                    <div class="d-flex justify-content-between border-top mt-2 pt-2">
+                                        <span class="small text-muted fw-600">Arrears</span>
+                                        <span class="fw-800 text-danger">₹@bill.PreviousDues</span>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="d-grid">
+                                @if (!bill.IsPaid)
+                                {
+                                    <button class="btn btn-primary rounded-pill fw-bold js-mark-paid shadow-sm" data-bill-id="@bill.Id">
+                                        <i class="fas fa-check-circle me-1"></i> Mark as Paid
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-outline-light text-muted border rounded-pill fw-bold" disabled>
+                                        <i class="fas fa-lock me-1"></i> Transaction Closed
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>
@@ -118,57 +139,50 @@
 
     @if (totalPages > 1)
     {
-        <nav aria-label="Bills pagination" class="mt-3">
-            <ul class="pagination pagination-sm">
+        <nav class="mt-5 d-flex justify-content-center">
+            <ul class="pagination pagination-md gap-2">
                 <li class="page-item @(page <= 1 ? "disabled" : "")">
-                    <a class="page-link"
-                       asp-action="Bills"
-                       asp-route-page="@(page - 1)"
-                       asp-route-search="@ViewBag.Search"
-                       asp-route-status="@ViewBag.Status"
-                       asp-route-month="@ViewBag.Month">Previous</a>
+                    <a class="page-link border-0 rounded-circle shadow-sm" asp-action="Bills" asp-route-page="@(page - 1)" asp-route-search="@ViewBag.Search" asp-route-status="@ViewBag.Status" asp-route-month="@ViewBag.Month">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
                 </li>
                 @for (var i = 1; i <= totalPages; i++)
                 {
                     <li class="page-item @(i == page ? "active" : "")">
-                        <a class="page-link"
-                           asp-action="Bills"
-                           asp-route-page="@i"
-                           asp-route-search="@ViewBag.Search"
-                           asp-route-status="@ViewBag.Status"
-                           asp-route-month="@ViewBag.Month">@i</a>
+                        <a class="page-link border-0 rounded-circle shadow-sm @(i == page ? "bg-primary text-white" : "bg-white text-dark")" asp-action="Bills" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-status="@ViewBag.Status" asp-route-month="@ViewBag.Month">@i</a>
                     </li>
                 }
                 <li class="page-item @(page >= totalPages ? "disabled" : "")">
-                    <a class="page-link"
-                       asp-action="Bills"
-                       asp-route-page="@(page + 1)"
-                       asp-route-search="@ViewBag.Search"
-                       asp-route-status="@ViewBag.Status"
-                       asp-route-month="@ViewBag.Month">Next</a>
+                    <a class="page-link border-0 rounded-circle shadow-sm" asp-action="Bills" asp-route-page="@(page + 1)" asp-route-search="@ViewBag.Search" asp-route-status="@ViewBag.Status" asp-route-month="@ViewBag.Month">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
                 </li>
             </ul>
         </nav>
     }
 </div>
 
-<!-- Generate Modal -->
 <div class="modal fade" id="generateModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(15px);">
             <form asp-action="GenerateBills" method="post">
-                <div class="modal-header">
-                    <h5>Generate Monthly Bills</h5>
+                <div class="modal-header border-0 p-4 pb-0">
+                    <h5 class="fw-800 mb-0">Invoice Generation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-4 mb-4 text-primary d-flex gap-3 align-items-center">
+                        <i class="fas fa-circle-info fa-lg"></i>
+                        <p class="small mb-0 fw-600">This will calculate meals, utility rates, and previous dues for all active faculty.</p>
+                    </div>
                     <div class="mb-3">
-                        <label class="form-label">Select Month</label>
-                        <input type="month" name="month" class="form-control" required />
+                        <label class="form-label fw-800 small text-uppercase opacity-50">Target Billing Month</label>
+                        <input type="month" name="month" class="form-control border-0 bg-light py-3 rounded-4 fw-bold" required />
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Generate</button>
+                <div class="modal-footer border-0 p-4 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-lg">Start Process</button>
                 </div>
             </form>
         </div>
@@ -177,7 +191,6 @@
 
 @section Scripts {
     <script>
-        // AJAX mark-as-paid with toast feedback
         (function () {
             document.querySelectorAll('.js-mark-paid').forEach(function (btn) {
                 btn.addEventListener('click', function (e) {
@@ -186,6 +199,8 @@
                     var self = this;
                     if (!id) return;
                     self.disabled = true;
+                    self.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+
                     fetch('@Url.Action("MarkAsPaid", "Admin")', {
                         method: 'POST',
                         headers: {
@@ -195,16 +210,14 @@
                         body: 'id=' + encodeURIComponent(id)
                     }).then(function (res) {
                         if (res.ok) {
-                            if (window.messUI) window.messUI.showToast('Bill marked as paid.', 'success');
-                            // Soft reload just this card by refreshing page for now
                             window.location.reload();
                         } else {
-                            if (window.messUI) window.messUI.showToast('Failed to update bill.', 'danger');
                             self.disabled = false;
+                            self.innerText = 'Try Again';
                         }
                     }).catch(function () {
-                        if (window.messUI) window.messUI.showToast('Network error while updating bill.', 'danger');
                         self.disabled = false;
+                        self.innerText = 'Error';
                     });
                 });
             });

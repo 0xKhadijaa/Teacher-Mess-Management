@@ -1,92 +1,169 @@
 ﻿@model List<MessManagementSystem.Models.Shared.ApplicationUser>
 @{
-    ViewData["Title"] = "User Management";
+    ViewData["Title"] = "User Directory";
     var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>>;
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-users-cog me-2"></i>User Management</h2>
-        <a asp-action="CreateUser" class="btn btn-success">
-            <i class="fas fa-plus-circle me-1"></i>Add New Member
+<div class="container-fluid py-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div data-aos="fade-right">
+            <h2 class="fw-800 mb-0 text-dark-emphasis">
+                <i class="fas fa-users-gear me-2 text-primary"></i> Access Control
+            </h2>
+            <p class="text-muted small mb-0">Manage system permissions and account statuses for all campus members.</p>
+        </div>
+        <a asp-action="CreateUser" class="btn btn-primary px-4 rounded-pill fw-bold shadow-sm transition-all hover-lift" data-aos="fade-left">
+            <i class="fas fa-plus-circle me-1"></i> Add System Member
         </a>
     </div>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div class="alert alert-success border-0 shadow-sm rounded-4 animate__animated animate__slideInDown mb-4">
+            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
         </div>
     }
 
-    <div class="table-responsive">
-        <table class="table table-hover table-bordered">
-            <thead class="table-light">
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Department</th>
-                    <th>Roles</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 20px; background: var(--glass-bg);">
+        <div class="card-body p-2">
+            <ul class="nav nav-pills nav-fill small fw-800 text-uppercase ls-1" id="userTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active rounded-pill py-2" data-bs-toggle="pill" onclick="filterUsers('all')">All Members</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link text-muted rounded-pill py-2" data-bs-toggle="pill" onclick="filterUsers('Admin')">Admins</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link text-muted rounded-pill py-2" data-bs-toggle="pill" onclick="filterUsers('MessManager')">Managers</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link text-muted rounded-pill py-2" data-bs-toggle="pill" onclick="filterUsers('Teacher')">Faculty</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 24px; background: var(--glass-bg);" data-aos="fade-up">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="userTable">
+                <thead style="background: rgba(99, 102, 241, 0.04);">
                     <tr>
-                        <td>@user.FullName</td>
-                        <td>@user.Email</td>
-                        <td>@user.Department</td>
-                        <td>
-                            @if (userRoles != null && userRoles.TryGetValue(user.Id, out var roles))
-                            {
-                                <span>@string.Join(", ", roles)</span>
-                            }
-                        </td>
-                        <td>
-                            <span class="badge bg-@(user.IsActive ? "success" : "warning")">
-                                @(user.IsActive ? "Active" : "Inactive")
-                            </span>
-                        </td>
-                        <td>
-                            <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-sm btn-outline-primary me-1">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button type="button"
-                                    class="btn btn-sm btn-outline-danger js-delete-user"
-                                    data-user-id="@user.Id"
-                                    data-user-email="@user.Email">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
+                        <th class="ps-4 py-3 border-0 small text-uppercase fw-800 opacity-50">Profile Info</th>
+                        <th class="py-3 border-0 small text-uppercase fw-800 opacity-50">Department</th>
+                        <th class="py-3 border-0 small text-uppercase fw-800 opacity-50">Permission Level</th>
+                        <th class="py-3 border-0 small text-uppercase fw-800 opacity-50 text-center">Status</th>
+                        <th class="pe-4 py-3 border-0 small text-uppercase fw-800 opacity-50 text-end">Management</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="border-top-0">
+                    @foreach (var user in Model)
+                    {
+                        var roles = (userRoles != null && userRoles.TryGetValue(user.Id, out var r)) ? r : new List<string>();
+                        var roleData = string.Join(",", roles);
+
+                        <tr class="transition-all user-row" data-roles="@roleData">
+                            <td class="ps-4 py-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <span class="fw-800">@user.FullName.Substring(0, 1)</span>
+                                    </div>
+                                    <div>
+                                        <div class="fw-800 text-dark-emphasis">@user.FullName</div>
+                                        <div class="small text-muted">@user.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3">
+                                <span class="badge rounded-pill bg-light text-dark px-3 py-2 fw-600 border">
+                                    @user.Department
+                                </span>
+                            </td>
+                            <td class="py-3">
+                                @foreach (var role in roles)
+                                {
+                                    var roleClass = role == "Admin" ? "bg-danger" : (role == "MessManager" ? "bg-warning text-dark" : "bg-primary");
+                                    <span class="badge rounded-pill @roleClass bg-opacity-10 @(role == "MessManager" ? "text-warning" : "text-primary") px-3 py-1 fw-700 me-1" style="font-size: 0.7rem;">
+                                        @role
+                                    </span>
+                                }
+                            </td>
+                            <td class="py-3 text-center">
+                                @if (user.IsActive)
+                                {
+                                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2 fw-800">
+                                        <i class="fas fa-check-circle me-1 small"></i> Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge rounded-pill bg-light text-muted px-3 py-2 fw-800">
+                                        <i class="fas fa-lock me-1 small"></i> Suspended
+                                    </span>
+                                }
+                            </td>
+                            <td class="pe-4 py-3 text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-sm btn-light border rounded-circle hover-lift" style="width: 35px; height: 35px;">
+                                        <i class="fas fa-pencil-alt text-primary small"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-light border rounded-circle hover-lift js-delete-user"
+                                            data-user-id="@user.Id" data-user-email="@user.Email" style="width: 35px; height: 35px;">
+                                        <i class="fas fa-trash-alt text-danger small"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
+<style>
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    .nav-pills .nav-link.active {
+        background: var(--primary-gradient);
+        color: white !important;
+    }
+
+    .nav-pills .nav-link {
+        transition: 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(99, 102, 241, 0.02);
+    }
+</style>
+
 @section Scripts {
     <script>
-        // AJAX delete: avoid full page refresh
+        // Real-time Client-side Filter
+        function filterUsers(roleFilter) {
+            const rows = document.querySelectorAll('.user-row');
+            rows.forEach(row => {
+                const userRoles = row.getAttribute('data-roles');
+                if (roleFilter === 'all' || userRoles.includes(roleFilter)) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // AJAX Delete Logic
         document.querySelectorAll('.js-delete-user').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var id = this.getAttribute('data-user-id');
                 var email = this.getAttribute('data-user-email');
-                if (!id) return;
-                if (!confirm('Are you sure you want to delete ' + email + '?')) return;
+                if (!id || !confirm('Permanently remove access for ' + email + '?')) return;
 
                 var row = this.closest('tr');
-                this.disabled = true;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin small"></i>';
 
                 fetch('@Url.Action("DeleteUser", "Admin")', {
                     method: 'POST',
@@ -96,19 +173,19 @@
                         'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
                     },
                     body: 'id=' + encodeURIComponent(id)
-                }).then(function (res) { return res.json(); })
-                    .then(function (data) {
-                        if (data.success) {
-                            if (row) row.remove();
-                            if (window.messUI) messUI.showToast(data.message || 'User deleted.', 'success');
-                        } else {
-                            if (window.messUI) messUI.showToast(data.message || 'Failed to delete user.', 'danger');
-                        }
-                    })
-                    .catch(function () {
-                        if (window.messUI) messUI.showToast('Network error while deleting user.', 'danger');
-                    })
-                    .finally(() => { btn.disabled = false; });
+                }).then(res => res.json()).then(data => {
+                    if (data.success) {
+                        row.style.opacity = '0';
+                        setTimeout(() => row.remove(), 300);
+                    } else {
+                        alert(data.message || 'Error deleting user.');
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-trash-alt text-danger small"></i>';
+                    }
+                }).catch(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-trash-alt text-danger small"></i>';
+                });
             });
         });
     </script>

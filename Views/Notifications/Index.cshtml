@@ -1,102 +1,134 @@
 ﻿@model List<MessManagementSystem.Models.Shared.Notification>
 @{
+    ViewData["Title"] = "Notifications";
     bool isAdmin = User.IsInRole("Admin");
+    var unreadCount = Model?.Count(n => !n.IsRead) ?? 0;
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-bell me-2"></i> Notifications</h2>
+<div class="container-fluid py-1">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-2">
+        <div data-aos="fade-right">
+            <h3 class="fw-800 mb-0 text-dark-emphasis">Inbox</h3>
+            <p class="text-muted small mb-0">You have <span class="text-primary fw-bold">@unreadCount unread</span> messages</p>
+        </div>
 
-        @if (Model?.Any() == true)
-        {
-            if (isAdmin)
+        <div class="d-flex gap-2" data-aos="fade-left">
+            @if (Model?.Any() == true)
             {
-                <!-- ✅ Admin: Multi-select + Delete Selected -->
-                <form asp-action="DeleteSelected" method="post" id="deleteSelectedForm">
-                    <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('Delete selected notifications?');">
-                        <i class="fas fa-trash me-1"></i> Delete Selected
+                if (isAdmin)
+                {
+                    <button type="submit" form="deleteSelectedForm" class="btn btn-danger btn-sm px-3 rounded-pill fw-bold shadow-sm"
+                            onclick="return confirm('Delete selected?');">
+                        <i class="fas fa-trash-alt me-1"></i> Delete
                     </button>
-                </form>
+                }
+                else
+                {
+                    <form asp-action="MarkAllRead" method="post">
+                        <button type="submit" class="btn btn-primary bg-primary bg-opacity-10 text-primary border-0 btn-sm px-3 rounded-pill fw-bold">
+                            <i class="fas fa-check-double me-1"></i> Mark All Read
+                        </button>
+                    </form>
+                }
             }
-            else
-            {
-                <form asp-action="MarkAllRead" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-check-double me-1"></i> Mark All as Read
-                    </button>
-                </form>
-            }
-        }
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-3" style="border-radius: 15px; background: var(--glass-bg);">
+        <div class="card-body p-1">
+            <ul class="nav nav-pills nav-fill small fw-bold">
+                <li class="nav-item">
+                    <a class="nav-link active rounded-pill py-2" href="#" onclick="filterNotifications('all')">All</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-muted rounded-pill py-2" href="#" onclick="filterNotifications('unread')">
+                        Unread @if(unreadCount > 0){
+                        <span class="badge bg-primary ms-1">@unreadCount</span>
+                                                }
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-muted rounded-pill py-2" href="#" onclick="filterNotifications('read')">History</a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info text-center">
-            <i class="fas fa-inbox me-2"></i> No notifications.
+        <div class="text-center py-5" data-aos="fade-up">
+            <i class="fas fa-smile fa-3x text-muted opacity-25 mb-3"></i>
+            <h5 class="text-muted fw-600">All caught up!</h5>
         </div>
     }
     else
     {
-        <div class="list-group">
-            @foreach (var n in Model.OrderByDescending(n => n.CreatedAt))
-            {
-                <div class="list-group-item d-flex justify-content-between align-items-start
-                                     @(n.IsRead ? "text-muted" : "bg-light")">
+        <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 20px; background: var(--glass-bg);">
+            <div class="list-group list-group-flush">
+                @foreach (var n in Model.OrderByDescending(n => n.CreatedAt))
+                {
+                    <div class="list-group-item p-3 border-bottom transition-all notification-item @(n.IsRead ? "is-read" : "is-unread bg-white")"
+                         data-status="@(n.IsRead ? "read" : "unread")"
+                         style="border-color: rgba(0,0,0,0.05) !important;">
 
-                    @if (isAdmin)
-                    {
-                        <!-- ✅ Checkbox for Admin -->
-                        <div class="form-check me-3 mt-1">
-                            <input class="form-check-input" type="checkbox"
-                                   name="selectedIds" value="@n.Id" form="deleteSelectedForm">
-                        </div>
-                    }
+                        <div class="d-flex align-items-center gap-3">
+                            @if (isAdmin)
+                            {
+                                <input class="form-check-input mt-0" type="checkbox" name="selectedIds" value="@n.Id" form="deleteSelectedForm">
+                            }
 
-                    <!-- Notification Content -->
-                    <div class="flex-grow-1">
-                        <a href="@Url.Action("Details", "Notifications", new { id = n.Id })"
-                           class="text-decoration-none text-dark">
-                            <div class="d-flex justify-content-between">
-                                <strong>@n.Title</strong>
-                                <small class="text-muted">@n.CreatedAt.ToString("dd MMM HH:mm")</small>
+                            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                 style="width: 40px; height: 40px; background: @(n.IsRead ? "rgba(0,0,0,0.04)" : "rgba(99, 102, 241, 0.1)"); color: @(n.IsRead ? "#999" : "var(--primary-purple)")">
+                                <i class="fas fa-@(n.IsRead ? "envelope-open" : "envelope")"></i>
                             </div>
-                            <p class="mb-1 mt-1">@n.Message</p>
-                        </a>
-                    </div>
 
-                    <!-- Single Delete (Admin only) -->
-                    @if (isAdmin)
-                    {
-                        <form asp-action="DeleteAny" method="post" class="ms-2">
-                            <input type="hidden" name="id" value="@n.Id" />
-                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('Delete this notification?');">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </form>
-                    }
-                    else if (!n.IsRead)
-                    {
-                        <!-- Mark as Read for non-Admin -->
-                        <form asp-action="MarkRead" method="post" class="ms-2">
-                            <input type="hidden" name="id" value="@n.Id" />
-                            <button type="submit" class="btn btn-sm btn-link p-0 text-primary">
-                                <i class="fas fa-check me-1"></i> Mark as read
-                            </button>
-                        </form>
-                    }
-                </div>
-            }
+                            <div class="flex-grow-1 min-width-0">
+                                <a href="@Url.Action("Details", "Notifications", new { id = n.Id })" class="text-decoration-none text-dark">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="fw-700 mb-0 text-truncate @(n.IsRead ? "text-muted" : "text-dark")">@n.Title</h6>
+                                        <small class="text-muted flex-shrink-0 ms-2" style="font-size: 0.7rem;">@n.CreatedAt.ToString("HH:mm")</small>
+                                    </div>
+                                    <p class="mb-0 small text-muted text-truncate">@n.Message</p>
+                                </a>
+                            </div>
+
+                            @if (!isAdmin && !n.IsRead)
+                            {
+                                <form asp-action="MarkRead" method="post" class="ms-2">
+                                    <input type="hidden" name="id" value="@n.Id" />
+                                    <button type="submit" class="btn btn-sm btn-link text-primary p-0"><i class="fas fa-check"></i></button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     }
 </div>
 
 @section Scripts {
     <script>
-        // Optional: "Select All" checkbox (add if needed)
-        // document.getElementById('selectAll').addEventListener('change', function () {
-        //     document.querySelectorAll('input[name="selectedIds"]').forEach(cb => cb.checked = this.checked);
-        // });
+        function filterNotifications(filter) {
+            // Update UI tabs
+            document.querySelectorAll('.nav-link').forEach(el => {
+                el.classList.remove('active', 'text-white');
+                el.classList.add('text-muted');
+            });
+            event.currentTarget.classList.add('active');
+            event.currentTarget.classList.remove('text-muted');
+
+            // Filter Logic
+            const items = document.querySelectorAll('.notification-item');
+            items.forEach(item => {
+                if (filter === 'all') {
+                    item.style.display = 'block';
+                } else if (filter === 'unread') {
+                    item.style.display = item.dataset.status === 'unread' ? 'block' : 'none';
+                } else if (filter === 'read') {
+                    item.style.display = item.dataset.status === 'read' ? 'block' : 'none';
+                }
+            });
+        }
     </script>
 }

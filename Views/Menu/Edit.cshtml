@@ -4,42 +4,90 @@
     ViewData["Title"] = "Edit Menu";
 }
 
-<div class="container mt-3">
-    <h2 class="h4 mb-3">Edit Menu for @Model.Date.ToString("dddd, dd MMM yyyy")</h2>
+<div class="container-fluid py-2">
+    <div class="mb-4 text-center text-md-start" data-aos="fade-down">
+        <h2 class="fw-800 mb-0 text-dark-emphasis">
+            <i class="fas fa-edit me-2 text-primary"></i> Edit Daily Menu
+        </h2>
+        <p class="text-muted small">
+            Updating schedule for <span class="text-primary fw-bold">@Model.Date.ToString("dddd, dd MMMM yyyy")</span>
+        </p>
+    </div>
 
-    <form asp-action="Edit" method="post" class="card shadow-sm">
-        <div class="card-body">
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="Date" />
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-xl-6">
+            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(20px);">
 
-            <div class="mb-3">
-                <label asp-for="Breakfast" class="form-label">Breakfast</label>
-                <input asp-for="Breakfast" class="form-control" />
-                <span asp-validation-for="Breakfast" class="text-danger"></span>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Edit" method="post" id="editMenuForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Date" />
+
+                        <div class="mb-4" data-aos="fade-up" data-aos-delay="100">
+                            <label asp-for="Breakfast" class="form-label fw-800 small text-uppercase opacity-50 mb-2" style="letter-spacing: 1px;">
+                                <i class="fas fa-coffee me-2 text-primary"></i> Breakfast Selection
+                            </label>
+                            <input asp-for="Breakfast" class="form-control bg-light border-0 py-3 px-3 fw-600 rounded-4 transition-all"
+                                   placeholder="e.g. Omelette, Toast & Juice" />
+                            <span asp-validation-for="Breakfast" class="text-danger small mt-1 d-block fw-500"></span>
+                        </div>
+
+                        <div class="mb-4" data-aos="fade-up" data-aos-delay="200">
+                            <label asp-for="Lunch" class="form-label fw-800 small text-uppercase opacity-50 mb-2" style="letter-spacing: 1px;">
+                                <i class="fas fa-utensils me-2 text-success"></i> Lunch Selection
+                            </label>
+                            <input asp-for="Lunch" class="form-control bg-light border-0 py-3 px-3 fw-600 rounded-4 transition-all"
+                                   placeholder="e.g. Chicken Biryani & Salad" />
+                            <span asp-validation-for="Lunch" class="text-danger small mt-1 d-block fw-500"></span>
+                        </div>
+
+                        <div class="mb-5" data-aos="fade-up" data-aos-delay="300">
+                            <label asp-for="Dinner" class="form-label fw-800 small text-uppercase opacity-50 mb-2" style="letter-spacing: 1px;">
+                                <i class="fas fa-moon me-2 text-warning"></i> Dinner Selection
+                            </label>
+                            <input asp-for="Dinner" class="form-control bg-light border-0 py-3 px-3 fw-600 rounded-4 transition-all"
+                                   placeholder="e.g. Grilled Fish & Steamed Veg" />
+                            <span asp-validation-for="Dinner" class="text-danger small mt-1 d-block fw-500"></span>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-primary py-3 rounded-pill fw-800 shadow-lg transition-all hover-lift">
+                                <i class="fas fa-save me-2"></i> Update Menu Plan
+                            </button>
+                            <a asp-action="Index" class="btn btn-light py-2 rounded-pill fw-bold text-muted small">
+                                <i class="fas fa-times me-1"></i> Cancel Changes
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Lunch" class="form-label">Lunch</label>
-                <input asp-for="Lunch" class="form-control" />
-                <span asp-validation-for="Lunch" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Dinner" class="form-label">Dinner</label>
-                <input asp-for="Dinner" class="form-control" />
-                <span asp-validation-for="Dinner" class="text-danger"></span>
+            <div class="mt-4 text-center opacity-75" data-aos="fade-up" data-aos-delay="400">
+                <p class="small text-muted">
+                    <i class="fas fa-info-circle me-1"></i> Changes are reflected immediately on Teacher dashboards.
+                </p>
             </div>
         </div>
-        <div class="card-footer d-flex justify-content-between">
-            <a asp-action="Index" class="btn btn-outline-secondary">Back to Weekly Menu</a>
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
 
+    <script>
+        // Subtle focus effects
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.backgroundColor = '#fff';
+                this.style.boxShadow = '0 10px 20px -10px rgba(99, 102, 241, 0.2)';
+            });
+            input.addEventListener('blur', function() {
+                this.style.backgroundColor = '';
+                this.style.boxShadow = 'none';
+            });
+        });
+    </script>
+}

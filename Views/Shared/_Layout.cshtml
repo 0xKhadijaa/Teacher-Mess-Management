@@ -1,399 +1,241 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Mess Management System</title>
+    <title>@ViewData["Title"] - Messly</title>
 
-    <!-- Bootstrap CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-    <!-- AOS & Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #f8f9fa;
-            --dark: #22313f;
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --bg-app: #f3f4f6;
+            --text-main: #111827;
+            --accent-glow: 0 4px 20px 0 rgba(99, 102, 241, 0.1);
+        }
+
+        [data-bs-theme="dark"] {
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-app: #020617;
+            --text-main: #f8fafc;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-app);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* --- COMPACT GLASS NAV --- */
+        .navbar {
+            backdrop-filter: blur(15px);
+            background: var(--glass-bg) !important;
+            border: 1px solid var(--glass-border);
+            margin: 8px 15px; /* Reduced from 15px 25px */
+            border-radius: 15px;
+            box-shadow: var(--accent-glow);
+            z-index: 1050;
+            padding: 0.4rem 1rem; /* Compact padding */
         }
 
         .navbar-brand {
-            font-weight: 700;
-            color: var(--primary) !important;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.3rem;
         }
 
-        .navbar-nav .nav-link {
-            font-weight: 500;
-            color: #495057 !important;
-            padding: 0.5rem 1rem;
+        /* --- TIGHT SIDEBAR --- */
+        .sidebar-container {
+            position: sticky;
+            top: 75px; /* Reduced to sit higher */
+            height: calc(100vh - 90px);
+            padding: 0 10px 0 15px;
         }
 
-        .navbar {
-            transition: box-shadow 0.3s ease, background-color 0.3s ease;
+        .sidebar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            height: 100%;
+            padding: 1rem;
         }
 
-            .navbar.scrolled {
-                box-shadow: 0 8px 24px rgba(34, 49, 63, 0.08);
-                background-color: rgba(255, 255, 255, 0.98) !important;
-            }
-
-        .hero {
-            background-image: linear-gradient(rgba(34, 49, 63, 0.5), rgba(34, 49, 63, 0.35)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 80px 0;
-        }
-
-            .hero .lead {
-                opacity: 0.95;
-                max-width: 900px;
-            }
-
-        .stat-card {
+        .nav-link {
             border-radius: 12px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-            .stat-card:hover {
-                transform: translateY(-6px) scale(1.01);
-                box-shadow: 0 10px 30px rgba(46, 61, 73, 0.08);
-            }
-
-        .toast-container {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 2000;
-        }
-
-        footer {
-            background-color: #ffffff;
-            padding: 20px 0;
+            margin-bottom: 2px;
+            font-weight: 600;
+            color: var(--text-main) !important;
+            padding: 8px 15px; /* Compact padding */
             font-size: 0.9rem;
-            border-top: 1px solid #e9ecef;
+            transition: 0.2s ease;
         }
 
-        @@media (max-width: 576px) {
-            .hero {
-                padding: 40px 0;
+            .nav-link:hover {
+                background: rgba(99, 102, 241, 0.08);
+                transform: translateX(3px);
             }
+
+            .nav-link.active {
+                background: var(--primary-gradient) !important;
+                color: white !important;
+                box-shadow: 0 4px 15px -5px rgba(168, 85, 247, 0.4);
+            }
+
+        /* --- CONTENT AREA --- */
+        .main-shell {
+            margin-top: 5px;
+        }
+        /* Minimized gap below nav */
+
+        .sidebar-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+            opacity: 0.4;
+            margin: 1rem 0 0.5rem 0.8rem;
+        }
+
+        .theme-switch {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: #f59e0b;
         }
     </style>
 </head>
-
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
-            <div class="container">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    <i class="fas fa-utensils me-2"></i>Mess Management
-                </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    <nav class="navbar navbar-expand-lg fixed-top shadow-none">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                <i class="fas fa-bolt-lightning me-2"></i>MESSLY
+            </a>
 
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <!-- Left: Main Navigation -->
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">
-                                <i class="fas fa-home me-1"></i>Home
-                            </a>
-                        </li>
-                        @if (!User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Contact" asp-action="Index">
-                                    <i class="fas fa-envelope me-1"></i>Contact Us
-                                </a>
-                            </li>
-                        }
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            @if (User.IsInRole("Teacher"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Teacher" asp-action="Menu">
-                                        <i class="fas fa-calendar-day me-1"></i>Today's Menu
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Teacher" asp-action="Attendance">
-                                        <i class="fas fa-clipboard-check me-1"></i>My Attendance
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Teacher" asp-action="MyBills">
-                                        <i class="fas fa-file-invoice me-1"></i>My Bills
-                                    </a>
-                                </li>
-                            }
-
-                            @if (User.IsInRole("MessManager"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Menu" asp-action="Index">
-                                        <i class="fas fa-edit me-1"></i>Manage Menu
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Teacher" asp-action="AllAttendance">
-                                        <i class="fas fa-users me-1"></i>View All Attendance
-                                    </a>
-                                </li>
-                            }
-
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="Users">
-                                        <i class="fas fa-users-cog me-1"></i>User Management
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="Bills">
-                                        <i class="fas fa-file-invoice-dollar me-1"></i>Billing Dashboard
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">
-                                        <i class="fas fa-tachometer-alt me-1"></i>Admin Dashboard
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="ContactMessages">
-                                        <i class="fas fa-envelope me-1"></i>Contact Messages
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link position-relative" asp-controller="Notifications" asp-action="Index">
-                                        <i class="fas fa-bell"></i>
-                                        @if (ViewBag.UnreadCount != null && (int)ViewBag.UnreadCount > 0)
-                                        {
-                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.65em;">
-                                                @ViewBag.UnreadCount
-                                            </span>
-                                        }
-                                        <span class="ms-1">Notifications</span>
-                                    </a>
-                                </li>
-                            }
-                        }
-                    </ul>
-
-                    <!-- Right: Auth / User Info -->
-                    <ul class="navbar-nav">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user-circle me-1"></i>Hello, @User.Identity.Name!
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <span class="dropdown-item-text">
-                                            Role:
-                                            @if (User.IsInRole("Admin"))
-                                            {
-                                                <span class="badge bg-primary">Admin</span>
-                                            }
-                                            else if (User.IsInRole("MessManager"))
-                                            {
-                                                <span class="badge bg-warning text-dark">Mess Manager</span>
-                                            }
-                                            else if (User.IsInRole("Teacher"))
-                                            {
-                                                <span class="badge bg-success">Teacher</span>
-                                            }
-                                        </span>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" style="display:none;">
-                                            @Html.AntiForgeryToken()
-                                        </form>
-                                        <a href="javascript:document.getElementById('logoutForm').submit();" class="dropdown-item">
-                                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="btn btn-sm btn-outline-primary me-2" asp-controller="Account" asp-action="Register">
-                                    <i class="fas fa-user-plus me-1"></i>Register
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Login">
-                                    <i class="fas fa-sign-in-alt me-1"></i>Login
-                                </a>
-                            </li>
-                        }
-                    </ul>
+            <div class="ms-auto d-flex align-items-center">
+                <div class="theme-switch me-3" onclick="toggleTheme()">
+                    <i class="fas fa-sparkles" id="theme-icon"></i>
                 </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="dropdown">
+                        <button class="btn border-0 d-flex align-items-center gap-2 p-1 rounded-pill bg-white bg-opacity-10 pe-3" data-bs-toggle="dropdown">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                @User.Identity.Name.Substring(0, 1).ToUpper()
+                            </div>
+                            <span class="fw-bold small d-none d-md-inline">@User.Identity.Name</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2 rounded-4 p-2">
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="dropdown-item text-danger rounded-3 py-2">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-sm fw-bold text-primary me-2">Login</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-primary rounded-pill px-3">Join</a>
+                }
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <div style="height:70px;"></div>
+    <div style="height: 75px;"></div>
 
-    <div class="container-fluid main-shell">
-        <div class="row flex-nowrap">
+    <div class="container-fluid px-0">
+        <div class="row g-0">
             @if (User.Identity.IsAuthenticated)
             {
-                <aside class="col-auto col-md-3 col-lg-2 px-0 bg-white border-end d-none d-md-block sidebar">
-                    <div class="d-flex flex-column vh-100 p-3">
-                        <div class="mb-4 small text-uppercase text-muted fw-semibold">Navigation</div>
-                        <ul class="nav nav-pills flex-column gap-1">
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
-                                   asp-controller="Home" asp-action="Index">
-                                    <i class="fas fa-home me-2"></i>Overview
-                                </a>
-                            </li>
+                <aside class="col-md-3 col-lg-2 d-none d-md-block sidebar-container">
+                    <div class="sidebar">
+                        <div class="sidebar-label">Navigation</div>
+                        <nav class="nav flex-column">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+                               asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-th-large"></i> Home
+                            </a>
+
                             @if (User.IsInRole("Teacher"))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Teacher" asp-action="Attendance">
-                                        <i class="fas fa-clipboard-check me-2"></i>My Attendance
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Teacher" asp-action="MyBills">
-                                        <i class="fas fa-file-invoice me-2"></i>My Bills
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Teacher" asp-action="Menu">
-                                        <i class="fas fa-calendar-day me-2"></i>Today's Menu
-                                    </a>
-                                </li>
+                                <div class="sidebar-label">Faculty</div>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="Attendance"><i class="fas fa-calendar-check"></i> Attendance</a>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="MyBills"><i class="fas fa-wallet"></i> My Bills</a>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="Menu"><i class="fas fa-utensils"></i> Menu</a>
                             }
+
                             @if (User.IsInRole("MessManager"))
                             {
-                                <li class="nav-item mt-3 small text-uppercase text-muted fw-semibold">Mess Manager</li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Menu" asp-action="Index">
-                                        <i class="fas fa-utensils me-2"></i>Manage Menu
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Teacher" asp-action="AllAttendance">
-                                        <i class="fas fa-users me-2"></i>All Attendance
-                                    </a>
-                                </li>
+                                <div class="sidebar-label">Kitchen</div>
+                                <a class="nav-link" asp-controller="Menu" asp-action="Index"><i class="fas fa-clipboard-list"></i> Menu Manager</a>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="AllAttendance"><i class="fas fa-users"></i> All Attendance</a>
                             }
+
                             @if (User.IsInRole("Admin"))
                             {
-                                <li class="nav-item mt-3 small text-uppercase text-muted fw-semibold">Admin</li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">
-                                        <i class="fas fa-gauge-high me-2"></i>Dashboard
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="Users">
-                                        <i class="fas fa-users-cog me-2"></i>Users
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="Bills">
-                                        <i class="fas fa-file-invoice-dollar me-2"></i>Billing
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="ContactMessages">
-                                        <i class="fas fa-envelope-open-text me-2"></i>Contact Messages
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Settings" asp-action="Index">
-                                        <i class="fas fa-sliders-h me-2"></i>Settings
-                                    </a>
-                                </li>
+                                <div class="sidebar-label">Admin</div>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Dashboard"><i class="fas fa-chart-line"></i> Analytics</a>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Users"><i class="fas fa-user-shield"></i> Users</a>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Bills"><i class="fas fa-receipt"></i> Billing</a>
+                                <a class="nav-link" asp-controller="Settings" asp-action="Index"><i class="fas fa-cog"></i> Settings</a>
                             }
-                        </ul>
-                        <div class="mt-auto small text-muted">
-                            <span class="mono">Mess v1.0</span>
-                        </div>
+                        </nav>
                     </div>
                 </aside>
             }
 
-            <main role="main" class="col px-3 px-md-4 py-3 content-area">
+            <main role="main" class="@(User.Identity.IsAuthenticated ? "col-md-9 col-lg-10" : "col-12") px-4 main-shell">
                 @RenderBody()
             </main>
         </div>
     </div>
 
-    <footer class="text-muted mt-5">
-        <div class="container text-center py-3">
-            &copy; @DateTime.Now.Year - Mess Management System | Department of Computer Science
-        </div>
-    </footer>
-
-    <!-- Toasts -->
-    <div class="toast-container">
-        @if (TempData["Success"] != null)
-        {
-            <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000">
-                <div class="d-flex">
-                    <div class="toast-body">@TempData["Success"]</div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
-                <div class="d-flex">
-                    <div class="toast-body">@TempData["Error"]</div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        }
-    </div>
-
-    <!-- REQUIRED SCRIPTS (ONLY ONCE!) -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Initialize AOS
-            if (window.AOS) AOS.init({ duration: 700, once: true });
+        if (typeof AOS !== 'undefined') AOS.init({ duration: 600, once: true });
 
-            // Show toasts
-            document.querySelectorAll('.toast').forEach(toastEl => {
-                new bootstrap.Toast(toastEl).show();
-            });
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);
+            const icon = document.getElementById('theme-icon');
+            if (icon) icon.className = theme === 'dark' ? 'fas fa-sun text-warning' : 'fas fa-sparkles text-warning';
+        }
 
-            // Navbar scroll effect
-            const nav = document.querySelector('.navbar');
-            if (nav) {
-                window.addEventListener('scroll', () => {
-                    nav.classList.toggle('scrolled', window.scrollY > 10);
-                });
-            }
-        });
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-bs-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+        applyTheme(localStorage.getItem('theme') || 'light');
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
