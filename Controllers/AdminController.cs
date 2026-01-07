@@ -391,20 +391,44 @@ namespace MessManagementSystem.Controllers
 
             return RedirectToAction(nameof(Bills));
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkAsPaid(int id)
         {
-            var bill = await _context.Bills.FindAsync(id);
-            if (bill != null)
+            try
             {
+                var bill = await _context.Bills
+                    .Include(b => b.Student)
+                    .FirstOrDefaultAsync(b => b.Id == id);
+
+                if (bill == null)
+                {
+                    return Json(new { success = false, message = "Bill not found." });
+                }
+
+                if (bill.IsPaid) // This still works (computed property)
+                {
+                    return Json(new { success = false, message = "Bill is already paid." });
+                }
+
+                // ✅ JUST UPDATE AmountPaid - IsPaid will auto-compute
                 bill.AmountPaid = bill.TotalAmount;
                 bill.PaymentDate = DateTime.UtcNow;
+
                 await _context.SaveChangesAsync();
-                TempData["Success"] = "Bill marked as paid!";
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Bill marked as paid successfully!",
+                    billId = id,
+                    totalAmount = bill.TotalAmount.ToString("N2")
+                });
             }
-            return RedirectToAction(nameof(Bills));
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error: " + ex.Message });
+            }
         }
 
         // ============= BILL ISSUE REVIEW =============

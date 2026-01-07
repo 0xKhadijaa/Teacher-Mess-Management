@@ -12,7 +12,7 @@
         <p class="text-muted small">Update global parameters for meal calculations and billing utilities.</p>
     </div>
 
-    <form asp-action="Save" method="post" id="settingsForm">
+    <form id="settingsForm">
         @Html.AntiForgeryToken()
 
         <div class="row g-4">
@@ -79,7 +79,7 @@
                             <a href="javascript:history.back()" class="btn btn-light rounded-pill px-4 py-2 fw-800 text-muted border-0">
                                 <i class="fas fa-times me-2"></i> CANCEL
                             </a>
-                            <button type="submit" class="btn text-white rounded-pill px-5 py-2 fw-900 shadow-lg hover-lift transition-all" 
+                            <button type="submit" id="saveBtn" class="btn text-white rounded-pill px-5 py-2 fw-900 shadow-lg hover-lift transition-all"
                                     style="background: var(--primary-gradient); border: none;">
                                 <i class="fas fa-save me-2"></i> SAVE CONFIGURATION
                             </button>
@@ -92,9 +92,10 @@
 </div>
 
 <style>
-    .fw-900 { font-weight: 900; }
-    
-    /* Input focus override for Purple */
+    .fw-900 {
+        font-weight: 900;
+    }
+
     input:focus {
         border-color: var(--primary-purple) !important;
         box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.1) !important;
@@ -107,6 +108,62 @@
 
 @section Scripts {
     <script>
+        document.getElementById('settingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const saveBtn = document.getElementById('saveBtn');
+            const originalBtnHTML = saveBtn.innerHTML;
+
+            // Show loading state
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> SAVING...';
+
+            // Add anti-forgery token to formData
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            formData.append('__RequestVerificationToken', token);
+
+            fetch('@Url.Action("Save", "Settings")', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'RequestVerificationToken': token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Success: Show toast and keep user on page
+                    if (window.messUI && window.messUI.showToast) {
+                        window.messUI.showToast(data.message, 'success');
+                    } else {
+                        alert(data.message);
+                    }
+                } else {
+                    // Error: Show error toast
+                    if (window.messUI && window.messUI.showToast) {
+                        window.messUI.showToast(data.message || 'Failed to save settings', 'danger');
+                    } else {
+                        alert(data.message || 'Failed to save settings');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('AJAX Error:', error);
+                if (window.messUI && window.messUI.showToast) {
+                    window.messUI.showToast('Network error. Please try again.', 'danger');
+                } else {
+                    alert('Network error. Please try again.');
+                }
+            })
+            .finally(() => {
+                // Restore button state
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalBtnHTML;
+            });
+        });
+
+        // Keep your existing input validation
         document.querySelectorAll('input[name$=".Value"]').forEach(input => {
             input.addEventListener('keypress', function(e) {
                 if (!/[0-9.]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
@@ -114,19 +171,13 @@
                 }
             });
 
-            // FIXED: Added Javascript logic for Purple border focus
             input.addEventListener('focus', function() {
-                this.closest('.p-3').style.borderColor = '#6366f1'; 
+                this.closest('.p-3').style.borderColor = '#6366f1';
                 this.closest('.p-3').style.boxShadow = '0 10px 20px -10px rgba(99, 102, 241, 0.2)';
             });
 
             input.addEventListener('blur', function() {
                 this.closest('.p-3').style.borderColor = 'white';
-                this.closest('.p-3').style.boxShadow = 'none';
-            });
-        });
-    </script>
-}
                 this.closest('.p-3').style.boxShadow = 'none';
             });
         });

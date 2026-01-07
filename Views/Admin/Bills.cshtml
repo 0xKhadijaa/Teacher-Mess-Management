@@ -39,6 +39,25 @@
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(99, 102, 241, 0.1) !important;
         }
+
+    /* New: Success animation */
+    .bill-paid-badge {
+        animation: pulseBadge 0.5s ease-in-out;
+    }
+
+    @@keyframes pulseBadge {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
 </style>
 
 <div class="container-fluid py-2">
@@ -109,7 +128,7 @@
             @foreach (var bill in Model)
             {
                 <div class="col-md-6 col-xl-4" data-aos="fade-up">
-                    <div class="card border-0 shadow-sm transition-all hover-lift h-100" style="border-radius: 24px; background: white; border: 1px solid rgba(0,0,0,0.02);">
+                    <div class="card border-0 shadow-sm transition-all hover-lift h-100" style="border-radius: 24px; background: white; border: 1px solid rgba(0,0,0,0.02);" id="bill-card-@bill.Id">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start mb-4">
                                 <div class="d-flex align-items-center">
@@ -124,22 +143,22 @@
                                 </div>
                                 @if (bill.IsPaid)
                                 {
-                                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2 fw-800 border border-success border-opacity-10">SETTLED</span>
+                                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2 fw-800 border border-success border-opacity-10 bill-paid-badge">SETTLED</span>
                                 }
                                 else
                                 {
-                                    <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3 py-2 fw-800 border border-warning border-opacity-10">PENDING</span>
+                                    <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3 py-2 fw-800 border border-warning border-opacity-10" id="bill-status-@bill.Id">PENDING</span>
                                 }
                             </div>
 
                             <div class="p-3 rounded-4 mb-4 border border-light" style="background: #fafafa;">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="small text-muted fw-700 text-uppercase ls-1">Total Bill</span>
-                                    <span class="fw-800 text-dark">₹@bill.TotalAmount.ToString("N2")</span>
+                                    <span class="fw-800 text-dark" id="total-amount-@bill.Id">₹@bill.TotalAmount.ToString("N2")</span>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <span class="small text-muted fw-700 text-uppercase ls-1">Paid to Date</span>
-                                    <span class="fw-800 text-success">₹@bill.AmountPaid.ToString("N2")</span>
+                                    <span class="fw-800 text-success" id="paid-amount-@bill.Id">₹@bill.AmountPaid.ToString("N2")</span>
                                 </div>
                                 @if (!bill.IsPaid && bill.PreviousDues > 0)
                                 {
@@ -245,27 +264,70 @@
                     var id = this.getAttribute('data-bill-id');
                     var self = this;
                     if (!id) return;
+
+                    // Disable button and show loading
                     self.disabled = true;
-                    self.style.background = '#6366f1';
                     self.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Settling...';
+
+                    // Get anti-forgery token
+                    var token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
 
                     fetch('@Url.Action("MarkAsPaid", "Admin")', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
-                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                            'RequestVerificationToken': token
                         },
                         body: 'id=' + encodeURIComponent(id)
-                    }).then(function (res) {
+                    })
+                    .then(function (res) {
                         if (res.ok) {
-                            window.location.reload();
+                            return res.json();
                         } else {
-                            self.disabled = false;
-                            self.innerText = 'Try Again';
+                            throw new Error('Failed to mark as paid');
                         }
-                    }).catch(function () {
+                    })
+                    .then(function (data) {
+                        if (data.success) {
+                            // ✅ SUCCESS: Update UI without reload
+                            const card = document.getElementById('bill-card-' + id);
+                            const statusBadge = document.getElementById('bill-status-' + id);
+                            const paidAmount = document.getElementById('paid-amount-' + id);
+                            const totalAmount = document.getElementById('total-amount-' + id);
+
+                            // Update badge
+                            statusBadge.className = 'badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2 fw-800 border border-success border-opacity-10 bill-paid-badge';
+                            statusBadge.textContent = 'SETTLED';
+
+                            // Update paid amount
+                            paidAmount.textContent = totalAmount.textContent;
+                            paidAmount.className = 'fw-800 text-success bill-paid-badge';
+
+                            // Disable button
+                            self.outerHTML = '<button class="btn btn-light text-muted border-0 rounded-pill fw-800" disabled><i class="fas fa-lock me-2"></i> Transaction Closed</button>';
+
+                            // Show toast
+                            if (window.messUI && window.messUI.showToast) {
+                                window.messUI.showToast('Bill marked as paid!', 'success');
+                            } else {
+                                alert('Bill marked as paid!');
+                            }
+                        } else {
+                            throw new Error(data.message || 'Unknown error');
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error('Error:', error);
+                        // Restore button
                         self.disabled = false;
-                        self.innerText = 'Error';
+                        self.innerHTML = '<i class="fas fa-check-circle me-2"></i> Mark as Paid';
+
+                        // Show error
+                        if (window.messUI && window.messUI.showToast) {
+                            window.messUI.showToast('Failed to update bill. Please try again.', 'danger');
+                        } else {
+                            alert('Failed to update bill. Please try again.');
+                        }
                     });
                 });
             });

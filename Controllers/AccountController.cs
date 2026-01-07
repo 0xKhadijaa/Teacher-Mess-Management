@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using MessManagementSystem.Models.Account;
 using MessManagementSystem.Models.Shared;
 using MessManagementSystem.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 using System.Threading.Tasks;
-using MessManagementSystem.Models.Account;
 
 namespace MessManagementSystem.Controllers
 {
@@ -167,7 +169,6 @@ namespace MessManagementSystem.Controllers
             return View();
         }
 
-        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -181,89 +182,63 @@ namespace MessManagementSystem.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                // Don't reveal if email exists - but for demo, show error
-                ModelState.AddModelError("Email", "No account found with this email.");
-                return View(model);
-            }
-
-            // For demo: Store email in TempData and redirect to reset page
-            TempData["ResetEmail"] = model.Email;
-            return RedirectToAction(nameof(ResetPassword));
-        }
-
-        // GET: /Account/ResetPassword
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult ResetPassword()
-        {
-            var email = TempData["ResetEmail"]?.ToString();
-            if (string.IsNullOrEmpty(email))
-            {
-                return RedirectToAction(nameof(ForgotPassword));
-            }
-
-            ViewBag.Email = email;
-            return View();
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-
-            // 🔍 DEBUG: Check if session exists
-            var sessionEmail = HttpContext.Session.GetString("ResetEmail");
-            System.Diagnostics.Debug.WriteLine($"Session Email: '{sessionEmail}'");
-            System.Diagnostics.Debug.WriteLine($"Session Keys: {string.Join(", ", HttpContext.Session.Keys)}");
-
-            if (string.IsNullOrEmpty(sessionEmail))
-            {
-                System.Diagnostics.Debug.WriteLine("❌ Session email is null - redirecting to ForgotPassword");
-                ModelState.AddModelError("", "Session expired. Please try again.");
-                return RedirectToAction(nameof(ForgotPassword));
-            }
-
-
-            var email = TempData["ResetEmail"]?.ToString();
-            if (string.IsNullOrEmpty(email))
-            {
-                ModelState.AddModelError("", "Session expired. Please try again.");
-                return RedirectToAction(nameof(ForgotPassword));
-            }
-
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Email = email;
-                return View(model);
-            }
-
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                ModelState.AddModelError("", "Invalid request.");
-                return RedirectToAction(nameof(ForgotPassword));
-            }
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
-
-            if (result.Succeeded)
-            {
-                TempData["Success"] = "Your password has been updated successfully!";
+                // For demo: Still show success to avoid user enumeration
+                TempData["Success"] = "If an account exists with this email, you'll receive reset instructions.";
                 return RedirectToAction(nameof(Login));
             }
 
-            // ✅ CRITICAL: Add Identity errors to ModelState
+            // Generate reset token
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+            // For demo: Redirect directly to reset page (no email sent)
+            return RedirectToAction(nameof(ResetPassword), new { code = encodedCode, email = model.Email });
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null, string email = null)
+        {
+            if (code == null || email == null)
+            {
+                TempData["Error"] = "Invalid reset link.";
+                return RedirectToAction(nameof(ForgotPassword));
+            }
+
+            var model = new ResetPasswordViewModel
+            {
+                Code = code,
+                Email = email
+            };
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return RedirectToAction("ResetPasswordConfirmation");
+
+            // 1. Decode the token back to its original form
+            var decodedCode = System.Text.Encoding.UTF8.GetString(Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode(model.Code));
+
+            // 2. Perform the reset
+            var result = await _userManager.ResetPasswordAsync(user, decodedCode, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Login");
+            }
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-
-            ViewBag.Email = email;
-            var errors = result.Errors.Select(e => e.Description).ToList();
-            System.Diagnostics.Debug.WriteLine("Password errors: " + string.Join(", ", errors));
-            return View(model); // Now shows WHY it failed
+            return View(model);
         }
     }
-}
+   }

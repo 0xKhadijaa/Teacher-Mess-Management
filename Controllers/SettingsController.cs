@@ -54,52 +54,57 @@ namespace MessManagementSystem.Controllers
             }
 
             return View(existingInDb.OrderBy(s => s.Key).ToList());
-        }       // POST: /Settings/Save
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Save(List<AppSetting> settings)
         {
-            if (settings == null)
+            try
             {
-                TempData["Error"] = "No settings provided.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            foreach (var setting in settings)
-            {
-                if (string.IsNullOrWhiteSpace(setting.Key) || string.IsNullOrWhiteSpace(setting.Value))
-                    continue;
-
-                // Validate numeric values
-                if (setting.Key == "MealRate" || setting.Key == "UtilityCharge")
+                if (settings == null)
                 {
-                    if (!decimal.TryParse(setting.Value, out var numericValue) || numericValue < 0)
+                    return Json(new { success = false, message = "No settings provided." });
+                }
+
+                foreach (var setting in settings)
+                {
+                    if (string.IsNullOrWhiteSpace(setting.Key) || string.IsNullOrWhiteSpace(setting.Value))
+                        continue;
+
+                    // Validate numeric values
+                    if (setting.Key == "MealRate" || setting.Key == "UtilityCharge")
                     {
-                        TempData["Error"] = $"{setting.Key} must be a valid positive number.";
-                        return RedirectToAction(nameof(Index));
+                        if (!decimal.TryParse(setting.Value, out var numericValue) || numericValue < 0)
+                        {
+                            return Json(new { success = false, message = $"{setting.Key} must be a valid positive number." });
+                        }
+                    }
+
+                    var existing = await _context.AppSettings
+                        .FirstOrDefaultAsync(s => s.Key == setting.Key);
+
+                    if (existing != null)
+                    {
+                        existing.Value = setting.Value;
+                    }
+                    else
+                    {
+                        _context.AppSettings.Add(new AppSetting
+                        {
+                            Key = setting.Key,
+                            Value = setting.Value
+                        });
                     }
                 }
 
-                var existing = await _context.AppSettings
-                    .FirstOrDefaultAsync(s => s.Key == setting.Key);
-
-                if (existing != null)
-                {
-                    existing.Value = setting.Value;
-                }
-                else
-                {
-                    _context.AppSettings.Add(new AppSetting
-                    {
-                        Key = setting.Key,
-                        Value = setting.Value
-                    });
-                }
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Settings updated successfully!" });
             }
-
-            await _context.SaveChangesAsync();
-            TempData["Success"] = "Settings updated successfully!";
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error saving settings: " + ex.Message });
+            }
         }
+
     }
 }

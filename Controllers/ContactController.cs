@@ -9,22 +9,16 @@ namespace MessManagementSystem.Controllers
     public class ContactController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ContactController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ContactController(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
+        // ADDED: This is required to load the view initially
+        [HttpGet]
         public IActionResult Index()
         {
-            if (User.IsInRole("Admin"))
-            {
-                TempData["Info"] = "Contact messages are available in the Admin area.";
-                return RedirectToAction("ContactMessages", "Admin");
-            }
-
             return View();
         }
 
@@ -32,36 +26,33 @@ namespace MessManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ContactMessage model)
         {
-            if (User.IsInRole("Admin"))
+            if (!ModelState.IsValid)
             {
-                TempData["Info"] = "Admins can review contact messages directly from the Admin panel.";
-                return RedirectToAction("ContactMessages", "Admin");
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+                return Json(new { success = false, errors = errors });
             }
 
-            if (!ModelState.IsValid) return View(model);
-
-            // 1. SAVE ContactMessage FIRST → gets an ID
-            _context.ContactMessages.Add(model);
-            await _context.SaveChangesAsync(); // 👈 NOW model.Id is valid
-
-            // 2. Notify Admin
-            var admin = (await _userManager.GetUsersInRoleAsync("Admin")).FirstOrDefault();
-            if (admin != null)
+            try
             {
-                var notif = new Notification
-                {
-                    UserId = admin.Id,
-                    Title = "New Contact Message",
-                    Message = $"From: {model.Email}\nSubject: {model.Subject}",
-                    ContactMessageId = model.Id, // ✅ SET THIS
-                    CreatedAt = DateTime.UtcNow
-                };
-                _context.Notifications.Add(notif);
+                model.CreatedAt = DateTime.UtcNow;
+                _context.ContactMessages.Add(model);
                 await _context.SaveChangesAsync();
-            }
 
-            TempData["Success"] = "Message sent! Admin will respond soon.";
-            return RedirectToAction(nameof(Index));
+                return Json(new
+                {
+                    success = true,
+                    message = "Your message has been sent successfully! We'll get back to you soon."
+                });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Failed to send message." });
+            }
         }
     }
 }

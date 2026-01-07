@@ -4,14 +4,12 @@
 }
 
 <style>
-    /* Baddie Purple Theme Overrides */
     .glass-contact-card {
         background: var(--glass-bg);
         backdrop-filter: blur(25px);
         border: 1px solid rgba(255, 255, 255, 0.5);
         border-radius: 40px;
         box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.15);
-        overflow: hidden;
     }
 
     .contact-header-gradient {
@@ -19,7 +17,7 @@
         padding: 3rem 2rem;
         color: white;
         text-align: center;
-        position: relative;
+        border-radius: 40px 40px 0 0;
     }
 
     .baddie-input {
@@ -27,105 +25,66 @@
         border: 2px solid transparent !important;
         border-radius: 18px !important;
         padding: 0.8rem 1.2rem !important;
-        transition: all 0.3s ease;
-        font-weight: 500;
     }
 
         .baddie-input:focus {
-            background: #ffffff !important;
             border-color: var(--primary-purple) !important;
-            box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.3) !important;
-            transform: scale(1.01);
-            outline: none;
+            background: #fff !important;
         }
-
-    .floating-icon {
-        position: absolute;
-        opacity: 0.1;
-        font-size: 8rem;
-        bottom: -20px;
-        right: -10px;
-        transform: rotate(-15deg);
-    }
 
     .btn-purple-glow {
         background: var(--primary-gradient);
         color: white;
-        border: none;
         border-radius: 50px;
         padding: 1rem;
         font-weight: 800;
-        letter-spacing: 1px;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.5);
+        border: none;
     }
 
-        .btn-purple-glow:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.6);
-            color: white;
-        }
+    .form-error {
+        display: none;
+        color: #ef4444;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-top: 5px;
+    }
 </style>
 
-<div class="min-vh-100 d-flex align-items-center justify-content-center" style="background-color: #ffffff; padding: 60px 0;">
-    <div class="position-absolute" style="top: 10%; left: 5%; width: 300px; height: 300px; background: rgba(168, 85, 247, 0.1); filter: blur(100px); border-radius: 50%;"></div>
-    <div class="position-absolute" style="bottom: 10%; right: 5%; width: 400px; height: 400px; background: rgba(99, 102, 241, 0.1); filter: blur(100px); border-radius: 50%;"></div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="glass-contact-card" data-aos="zoom-in">
+                <div class="contact-header-gradient">
+                    <h2 class="fw-900 mb-0">Get in Touch</h2>
+                    <p class="opacity-75 small fw-600 mb-0">MESSLY SUPPORT HUB</p>
+                </div>
 
-    <div class="container position-relative" style="z-index: 2;">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-xl-5">
-                <div class="glass-contact-card" data-aos="zoom-in">
+                <div class="card-body p-4 p-md-5">
+                    <form id="contactForm">
+                        @Html.AntiForgeryToken()
 
-                    <div class="contact-header-gradient">
-                        <i class="fas fa-paper-plane floating-icon"></i>
-                        <h2 class="fw-900 mb-2">Get in Touch</h2>
-                        <p class="opacity-75 small fw-600 mb-0 text-uppercase ls-1">Messly Support Hub</p>
-                    </div>
-
-                    <div class="card-body p-4 p-md-5">
-                        <p class="text-muted text-center mb-4 small">Have a query regarding your bill or menu? Send us a direct message.</p>
-
-                        <form asp-action="Index" method="post">
-                            @Html.AntiForgeryToken()
-
-                            @if (!ViewData.ModelState.IsValid)
-                            {
-                                <div class="alert border-0 rounded-4 py-2 small mb-4" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border-left: 4px solid #ef4444 !important;">
-                                    <i class="fas fa-exclamation-circle me-2"></i> Please correct the errors below.
-                                </div>
-                            }
-
-                            <div class="mb-3">
-                                <label asp-for="Email" class="form-label fw-800 small text-uppercase opacity-50 ls-1 ms-2">Email Address</label>
-                                <div class="input-group">
-                                    <input asp-for="Email" class="form-control baddie-input shadow-sm" placeholder="your@university.edu" />
-                                </div>
-                                <span asp-validation-for="Email" class="text-danger small ms-2 fw-600"></span>
-                            </div>
-
-                            <div class="mb-3">
-                                <label asp-for="Subject" class="form-label fw-800 small text-uppercase opacity-50 ls-1 ms-2">Subject</label>
-                                <input asp-for="Subject" class="form-control baddie-input shadow-sm" placeholder="Dispute, Suggestion, etc." />
-                                <span asp-validation-for="Subject" class="text-danger small ms-2 fw-600"></span>
-                            </div>
-
-                            <div class="mb-4">
-                                <label asp-for="Message" class="form-label fw-800 small text-uppercase opacity-50 ls-1 ms-2">Your Message</label>
-                                <textarea asp-for="Message" class="form-control baddie-input shadow-sm" placeholder="How can we help you?" rows="4" style="min-height: 120px; resize: none;"></textarea>
-                                <span asp-validation-for="Message" class="text-danger small ms-2 fw-600"></span>
-                            </div>
-
-                            <button type="submit" class="btn btn-purple-glow w-100 py-3 mb-3 fw-900">
-                                SEND MESSAGE <i class="fas fa-location-arrow ms-2"></i>
-                            </button>
-                        </form>
-
-                        <div class="text-center mt-2">
-                            <a asp-action="Index" asp-controller="Home" class="text-decoration-none text-muted small fw-800 hover-lift d-inline-block">
-                                <i class="fas fa-chevron-left me-1 text-primary"></i> BACK TO HOME
-                            </a>
+                        <div class="mb-3">
+                            <label class="form-label fw-800 small text-uppercase opacity-50 ms-2">Email</label>
+                            <input asp-for="Email" id="emailInput" class="form-control baddie-input" placeholder="your@email.com" />
+                            <span id="emailError" class="form-error"></span>
                         </div>
-                    </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-800 small text-uppercase opacity-50 ms-2">Subject</label>
+                            <input asp-for="Subject" id="subjectInput" class="form-control baddie-input" placeholder="How can we help?" />
+                            <span id="subjectError" class="form-error"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-800 small text-uppercase opacity-50 ms-2">Message</label>
+                            <textarea asp-for="Message" id="messageInput" class="form-control baddie-input" rows="4"></textarea>
+                            <span id="messageError" class="form-error"></span>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn btn-purple-glow w-100 fw-900">
+                            SEND MESSAGE <i class="fas fa-location-arrow ms-2"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -133,7 +92,56 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        // Wrapping in an IIFE prevents Razor from misinterpreting brackets
+        (function() {
+            const form = document.querySelector('#contactForm');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Reset UI
+                document.querySelectorAll('.form-error').forEach(el => el.style.display = 'none');
+                const btn = document.querySelector('#submitBtn');
+                const originalText = btn.innerHTML;
+
+                btn.disabled = true;
+                btn.innerHTML = 'SENDING...';
+
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch('/Contact/Index', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert(result.message);
+                        form.reset();
+                    } else if (result.errors) {
+                        // Display validation errors
+                        for (const key in result.errors) {
+                            const errorId = key.toLowerCase() + 'Error';
+                            const errorEl = document.getElementById(errorId);
+                            if (errorEl) {
+                                errorEl.innerText = result.errors[key][0];
+                                errorEl.style.display = 'block';
+                            }
+                        }
+                    }
+                } catch (err) {
+                    alert("Connection error. Please try again.");
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            });
+        })();
+    </script>
 }

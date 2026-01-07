@@ -1,16 +1,26 @@
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.csproj.AssemblyReference.cache
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\rpswa.dswa.cache.json
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.AssemblyInfoInputs.cache
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.AssemblyInfo.cs
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.csproj.CoreCompileInputs.cache
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.RazorAssemblyInfo.cache
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.RazorAssemblyInfo.cs
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\appsettings.json
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Mess Management System.staticwebassets.runtime.json
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Mess Management System.staticwebassets.endpoints.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Black.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-BlackItalic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Bold.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-BoldItalic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ExtraBold.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ExtraBoldItalic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ExtraLight.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ExtraLightItalic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Italic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Light.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-LightItalic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Medium.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-MediumItalic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Regular.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-SemiBold.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-SemiBoldItalic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Thin.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ThinItalic.ttf
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\OFL.txt
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Mess Management System.exe
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Mess Management System.deps.json
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Mess Management System.runtimeconfig.json
@@ -19,6 +29,7 @@ C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Azure.Identity.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Humanizer.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
@@ -41,8 +52,10 @@ C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Mono.TextTemplating.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\QuestPDF.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Stripe.net.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.CodeDom.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Composition.AttributedModel.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Composition.Convention.dll
@@ -50,13 +63,10 @@ C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Composition.Runtime.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Composition.TypedParts.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Drawing.Common.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Memory.Data.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Runtime.Caching.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Security.Permissions.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\System.Windows.Extensions.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
@@ -115,48 +125,6 @@ C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\rjimswa.dswa.cache.json
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\scopedcss\bundle\Mess Management System.styles.css
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\scopedcss\projectbundle\Mess Management System.bundle.scp.css
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.build.json
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.build.json.cache
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.development.json
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Man.D4E9C850.Up2Date
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\refint\Mess Management System.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.pdb
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.genruntimeconfig.cache
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\ref\Mess Management System.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Black.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-BlackItalic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Bold.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-BoldItalic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ExtraBold.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ExtraBoldItalic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ExtraLight.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ExtraLightItalic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Italic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Light.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-LightItalic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Medium.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-MediumItalic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Regular.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-SemiBold.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-SemiBoldItalic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-Thin.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\Lato-ThinItalic.ttf
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\LatoFont\OFL.txt
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\QuestPDF.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\linux-arm64\native\libQuestPdfSkia.so
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\linux-arm64\native\libqpdf.so
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\linux-musl-x64\native\libQuestPdfSkia.so
@@ -179,6 +147,31 @@ C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win-x86\native\libwinpthread-1.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win-x86\native\qpdf.dll
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win-x86\native\zlib1.dll
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
-C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.csproj.AssemblyReference.cache
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.AssemblyInfoInputs.cache
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.AssemblyInfo.cs
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.csproj.CoreCompileInputs.cache
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.RazorAssemblyInfo.cache
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.RazorAssemblyInfo.cs
 C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.sourcelink.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\scopedcss\bundle\Mess Management System.styles.css
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\scopedcss\projectbundle\Mess Management System.bundle.scp.css
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Man.D4E9C850.Up2Date
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\refint\Mess Management System.dll
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.pdb
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\Mess Management System.genruntimeconfig.cache
+C:\Users\Khadija Sohail\Documents\Semester 5\CCP\EAD\Mess Management System\Mess Management System\obj\Debug\net8.0\ref\Mess Management System.dll
