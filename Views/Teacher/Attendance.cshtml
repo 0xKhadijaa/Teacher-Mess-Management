@@ -3,38 +3,83 @@
 @{
     ViewData["Title"] = "Daily Attendance";
     var canEdit = ViewBag.CanEdit ?? false;
-    // Pre-calculate the disabled/readonly strings to avoid the RZ1031 error
     var disabledAttr = canEdit ? null : "disabled";
     var readonlyAttr = canEdit ? null : "readonly";
 }
 
-<div class="container-fluid py-2">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-3">
+<style>
+    /* Premium Switch Styling to replace blue */
+    .form-check-input:checked {
+        background-color: var(--primary-purple) !important;
+        border-color: var(--primary-purple) !important;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+    }
+
+    .attendance-card {
+        border-radius: 28px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.5);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+        .attendance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.1) !important;
+        }
+
+    .icon-shape {
+        width: 55px;
+        height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+    }
+
+    .text-purple {
+        color: var(--primary-purple) !important;
+    }
+
+    .bg-purple-light {
+        background: rgba(99, 102, 241, 0.1);
+    }
+</style>
+
+<div class="container-fluid py-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div data-aos="fade-right">
-            <h2 class="fw-800 mb-0">Daily Attendance</h2>
-            <p class="text-muted small mb-0">
-                <i class="fas fa-user-circle me-1 text-primary"></i> @ViewBag.TeacherName
+            <h2 class="fw-800 mb-0 text-dark-emphasis">Daily Attendance</h2>
+            <p class="text-muted small mb-0 fw-600">
+                <i class="fas fa-user-circle me-1 text-purple"></i> @ViewBag.TeacherName
                 <span class="mx-2 opacity-25">|</span>
-                <i class="fas fa-calendar-day me-1 text-primary"></i> @DateTime.Today.ToString("dd MMM yyyy")
+                <i class="fas fa-calendar-day me-1 text-purple"></i> @DateTime.Today.ToString("dd MMM yyyy")
             </p>
         </div>
 
         @if (ViewBag.EditCutoffPassed)
         {
-            <div class="badge bg-danger bg-opacity-10 text-danger p-2 px-3 rounded-pill border border-danger border-opacity-10 animate__animated animate__pulse" data-aos="fade-left">
-                <i class="fas fa-lock me-2"></i> Cutoff Passed (9:00 AM)
+            <div class="badge bg-danger bg-opacity-10 text-danger p-2 px-4 rounded-pill border border-danger border-opacity-10 animate__animated animate__pulse animate__infinite" data-aos="fade-left">
+                <i class="fas fa-lock me-2"></i> CUTOFF PASSED (9:00 AM)
+            </div>
+        }
+        else
+        {
+            <div class="badge bg-purple-light text-purple p-2 px-4 rounded-pill border border-primary border-opacity-10" data-aos="fade-left">
+                <i class="fas fa-clock me-2"></i> WINDOW OPEN
             </div>
         }
     </div>
 
     @if (ViewBag.EditCutoffPassed)
     {
-        <div class="alert border-0 shadow-sm rounded-4 mb-4 d-flex align-items-center bg-white bg-opacity-50" style="backdrop-filter: blur(10px);">
-            <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-                <i class="fas fa-history text-warning h5 mb-0"></i>
+        <div class="alert border-0 shadow-sm rounded-4 mb-4 d-flex align-items-center bg-white" style="border-left: 5px solid #ef4444 !important;">
+            <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+                <i class="fas fa-shield-halved text-danger h5 mb-0"></i>
             </div>
-            <div class="small fw-500">
-                <strong>View-Only Mode:</strong> Today's attendance window is closed. Changes can no longer be saved.
+            <div>
+                <strong class="text-dark d-block">View-Only Mode</strong>
+                <span class="text-muted small">The attendance window closed at 9:00 AM. Please contact the Mess Manager for manual overrides.</span>
             </div>
         </div>
     }
@@ -43,76 +88,77 @@
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="TeacherId" />
 
-        <div class="row g-3">
+        <div class="row g-4">
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="card h-100 p-3 border-0">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="rounded-4 bg-primary bg-opacity-10 p-3 text-primary">
-                                <i class="fas fa-coffee fa-lg"></i>
+                <div class="card attendance-card h-100 p-3 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="icon-shape bg-purple-light text-purple">
+                                <i class="fas fa-mug-hot fa-lg"></i>
                             </div>
                             <div class="form-check form-switch m-0">
-                                @* FIXED: Attribute passed as a variable to avoid RZ1031 *@
-                                <input asp-for="HadBreakfast" class="form-check-input h4 mb-0" type="checkbox" role="switch" disabled="@disabledAttr" style="cursor: pointer;">
+                                <input asp-for="HadBreakfast" class="form-check-input h4 mb-0 shadow-none" type="checkbox" role="switch" disabled="@disabledAttr" style="width: 3rem; height: 1.5rem; cursor: pointer;">
                             </div>
                         </div>
-                        <h5 class="fw-bold mb-1 text-dark-emphasis">Breakfast</h5>
-                        <p class="text-muted small mb-0">Morning meal session</p>
+                        <h5 class="fw-800 mb-1 text-dark-emphasis">Breakfast</h5>
+                        <p class="text-muted small mb-0 fw-500">Morning session enrollment</p>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="card h-100 p-3 border-0">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="rounded-4 bg-success bg-opacity-10 p-3 text-success">
-                                <i class="fas fa-utensils fa-lg"></i>
+                <div class="card attendance-card h-100 p-3 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="icon-shape bg-success bg-opacity-10 text-success">
+                                <i class="fas fa-sun fa-lg"></i>
                             </div>
                             <div class="form-check form-switch m-0">
-                                <input asp-for="HadLunch" class="form-check-input h4 mb-0" type="checkbox" role="switch" disabled="@disabledAttr" style="cursor: pointer;">
+                                <input asp-for="HadLunch" class="form-check-input h4 mb-0 shadow-none" type="checkbox" role="switch" disabled="@disabledAttr" style="width: 3rem; height: 1.5rem; cursor: pointer;">
                             </div>
                         </div>
-                        <h5 class="fw-bold mb-1 text-dark-emphasis">Lunch</h5>
-                        <p class="text-muted small mb-0">Mid-day meal session</p>
+                        <h5 class="fw-800 mb-1 text-dark-emphasis">Lunch</h5>
+                        <p class="text-muted small mb-0 fw-500">Afternoon session enrollment</p>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                <div class="card h-100 p-3 border-0">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="rounded-4 bg-warning bg-opacity-10 p-3 text-warning">
-                                <i class="fas fa-cloud-moon fa-lg"></i>
+                <div class="card attendance-card h-100 p-3 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="icon-shape bg-warning bg-opacity-10 text-warning">
+                                <i class="fas fa-moon fa-lg"></i>
                             </div>
                             <div class="form-check form-switch m-0">
-                                <input asp-for="HadDinner" class="form-check-input h4 mb-0" type="checkbox" role="switch" disabled="@disabledAttr" style="cursor: pointer;">
+                                <input asp-for="HadDinner" class="form-check-input h4 mb-0 shadow-none" type="checkbox" role="switch" disabled="@disabledAttr" style="width: 3rem; height: 1.5rem; cursor: pointer;">
                             </div>
                         </div>
-                        <h5 class="fw-bold mb-1 text-dark-emphasis">Dinner</h5>
-                        <p class="text-muted small mb-0">Evening meal session</p>
+                        <h5 class="fw-800 mb-1 text-dark-emphasis">Dinner</h5>
+                        <p class="text-muted small mb-0 fw-500">Evening session enrollment</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-12 mt-3" data-aos="fade-up" data-aos-delay="400">
-                <div class="card p-3 border-0">
-                    <div class="card-body p-2">
-                        <label asp-for="SkipReason" class="form-label fw-bold small opacity-75 mb-2">Leave / Skip Reason (Optional)</label>
-                        <textarea asp-for="SkipReason" class="form-control bg-light border-0 rounded-3"
-                                  rows="2" placeholder="e.g. Out for official duty..." readonly="@readonlyAttr"></textarea>
-                    </div>
+            <div class="col-12 mt-2" data-aos="fade-up" data-aos-delay="400">
+                <div class="card attendance-card p-4 border-0 shadow-sm">
+                    <label asp-for="SkipReason" class="form-label fw-800 small text-uppercase ls-1 opacity-50 mb-3">
+                        <i class="fas fa-pen-nib me-2"></i> Leave / Skip Reason (Optional)
+                    </label>
+                    <textarea asp-for="SkipReason" class="form-control bg-light border-0 rounded-4 py-3 px-4 fw-500 shadow-inner"
+                              rows="3" placeholder="If you're skipping a meal, let us know why..." readonly="@readonlyAttr"
+                              style="resize: none;"></textarea>
                 </div>
             </div>
         </div>
 
         @if (canEdit)
         {
-            <div class="mt-4 text-end" data-aos="fade-up" data-aos-delay="500">
-                <button type="submit" id="attendanceSubmit" class="btn btn-primary px-5 py-2 fw-bold shadow-sm">
+            <div class="mt-5 text-center" data-aos="fade-up" data-aos-delay="500">
+                <button type="submit" id="attendanceSubmit" class="btn text-white rounded-pill px-5 py-3 fw-800 shadow-lg hover-lift transition-all"
+                        style="background: var(--primary-gradient); border: none; min-width: 250px;">
                     <span class="spinner-border spinner-border-sm me-2 d-none" role="status"></span>
-                    Update Attendance
+                    <i class="fas fa-save me-2"></i> SAVE ATTENDANCE
                 </button>
             </div>
         }
@@ -128,8 +174,10 @@
                     const btn = document.getElementById('attendanceSubmit');
                     if(btn) {
                         const spinner = btn.querySelector('.spinner-border');
+                        const icon = btn.querySelector('.fa-save');
                         btn.classList.add('disabled');
                         if (spinner) spinner.classList.remove('d-none');
+                        if (icon) icon.classList.add('d-none');
                     }
                 });
             }

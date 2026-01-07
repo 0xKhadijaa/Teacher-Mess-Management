@@ -27,11 +27,11 @@
             @foreach (var bill in Model)
             {
                 <div class="col-md-6" data-aos="fade-up">
-                    <div class="card border-0 shadow-sm transition-all hover-lift h-100" style="border-radius: 20px; background: var(--glass-bg); backdrop-filter: blur(10px);">
+                    <div class="card border-0 shadow-sm transition-all hover-lift h-100" style="border-radius: 20px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4);">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h5 class="fw-800 mb-1 text-primary">@bill.BillingPeriodStart.ToString("MMMM yyyy")</h5>
+                                    <h5 class="fw-800 mb-1" style="color: var(--primary-purple) !important;">@bill.BillingPeriodStart.ToString("MMMM yyyy")</h5>
                                     <div class="text-muted small fw-600">
                                         <i class="fas fa-university me-1 opacity-50"></i> Dept: @bill.TeacherDepartment
                                     </div>
@@ -74,21 +74,22 @@
                                 <span class="h4 fw-800 text-dark mb-0">₹@bill.TotalAmount</span>
                             </div>
 
-                            @* FIXED: Restored exact Action names and Controllers from your original logic *@
                             <div class="d-flex flex-wrap gap-2">
                                 <a asp-controller="Teacher" asp-action="DownloadBill" asp-route-id="@bill.BillId"
-                                   class="btn btn-sm btn-white border rounded-pill px-3 fw-bold shadow-sm flex-grow-1">
+                                   class="btn btn-sm btn-white border rounded-pill px-3 fw-bold shadow-sm flex-grow-1 hover-lift">
                                     <i class="fas fa-file-pdf me-1 text-danger"></i> PDF
                                 </a>
 
                                 @if (!bill.IsPaid)
                                 {
                                     <a asp-controller="Teacher" asp-action="PayBillDemo" asp-route-id="@bill.BillId"
-                                       class="btn btn-sm btn-primary rounded-pill px-3 fw-bold shadow-sm flex-grow-1">
+                                       class="btn btn-sm text-white rounded-pill px-3 fw-bold shadow-sm flex-grow-1 hover-lift"
+                                       style="background: var(--primary-gradient); border: none;">
                                         <i class="fas fa-credit-card me-1"></i> Pay Demo
                                     </a>
+
                                     <a asp-controller="Teacher" asp-action="ReportBillIssue" asp-route-billId="@bill.BillId"
-                                       class="btn btn-sm btn-outline-warning rounded-pill px-3 fw-bold flex-grow-1">
+                                       class="btn btn-sm btn-outline-warning rounded-pill px-3 fw-bold flex-grow-1 hover-lift">
                                         <i class="fas fa-bug me-1"></i> Issue
                                     </a>
                                 }

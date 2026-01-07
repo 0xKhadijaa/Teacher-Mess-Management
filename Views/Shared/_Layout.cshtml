@@ -12,22 +12,17 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
         :root {
+            --primary-purple: #6366f1;
             --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             --glass-bg: rgba(255, 255, 255, 0.75);
             --glass-border: rgba(255, 255, 255, 0.3);
             --bg-app: #f3f4f6;
             --text-main: #111827;
             --accent-glow: 0 4px 20px 0 rgba(99, 102, 241, 0.1);
-        }
-
-        [data-bs-theme="dark"] {
-            --glass-bg: rgba(15, 23, 42, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --bg-app: #020617;
-            --text-main: #f8fafc;
         }
 
         body {
@@ -37,16 +32,15 @@
             min-height: 100vh;
         }
 
-        /* --- COMPACT GLASS NAV --- */
         .navbar {
             backdrop-filter: blur(15px);
             background: var(--glass-bg) !important;
             border: 1px solid var(--glass-border);
-            margin: 8px 15px; /* Reduced from 15px 25px */
+            margin: 8px 15px;
             border-radius: 15px;
             box-shadow: var(--accent-glow);
             z-index: 1050;
-            padding: 0.4rem 1rem; /* Compact padding */
+            padding: 0.4rem 1rem;
         }
 
         .navbar-brand {
@@ -55,12 +49,47 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-size: 1.3rem;
+            letter-spacing: 0.5px;
         }
 
-        /* --- TIGHT SIDEBAR --- */
+        .top-nav-link {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+            .top-nav-link:hover {
+                color: var(--primary-purple);
+                background: rgba(99, 102, 241, 0.05);
+            }
+
+        .notification-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(99, 102, 241, 0.08);
+            color: var(--primary-purple);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+            .notification-btn:hover {
+                background: var(--primary-gradient);
+                color: white;
+                transform: translateY(-2px);
+            }
+
         .sidebar-container {
             position: sticky;
-            top: 75px; /* Reduced to sit higher */
+            top: 75px;
             height: calc(100vh - 90px);
             padding: 0 10px 0 15px;
         }
@@ -79,7 +108,7 @@
             margin-bottom: 2px;
             font-weight: 600;
             color: var(--text-main) !important;
-            padding: 8px 15px; /* Compact padding */
+            padding: 8px 15px;
             font-size: 0.9rem;
             transition: 0.2s ease;
         }
@@ -95,12 +124,6 @@
                 box-shadow: 0 4px 15px -5px rgba(168, 85, 247, 0.4);
             }
 
-        /* --- CONTENT AREA --- */
-        .main-shell {
-            margin-top: 5px;
-        }
-        /* Minimized gap below nav */
-
         .sidebar-label {
             font-size: 0.6rem;
             text-transform: uppercase;
@@ -110,17 +133,12 @@
             margin: 1rem 0 0.5rem 0.8rem;
         }
 
-        .theme-switch {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: #f59e0b;
+        .fw-800 {
+            font-weight: 800;
+        }
+
+        .fw-900 {
+            font-weight: 900;
         }
     </style>
 </head>
@@ -132,37 +150,55 @@
                 <i class="fas fa-bolt-lightning me-2"></i>MESSLY
             </a>
 
-            <div class="ms-auto d-flex align-items-center">
-                <div class="theme-switch me-3" onclick="toggleTheme()">
-                    <i class="fas fa-sparkles" id="theme-icon"></i>
-                </div>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">
+                <i class="fas fa-bars-staggered text-purple"></i>
+            </button>
 
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <div class="dropdown">
-                        <button class="btn border-0 d-flex align-items-center gap-2 p-1 rounded-pill bg-white bg-opacity-10 pe-3" data-bs-toggle="dropdown">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 0.8rem;">
-                                @User.Identity.Name.Substring(0, 1).ToUpper()
-                            </div>
-                            <span class="fw-bold small d-none d-md-inline">@User.Identity.Name</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2 rounded-4 p-2">
-                            <li>
-                                <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="dropdown-item text-danger rounded-3 py-2">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                }
-                else
-                {
-                    <a asp-controller="Account" asp-action="Login" class="btn btn-sm fw-bold text-primary me-2">Login</a>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-primary rounded-pill px-3">Join</a>
-                }
+            <div class="collapse navbar-collapse" id="topNavbar">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link top-nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link top-nav-link" asp-controller="Contact" asp-action="Index">Contact Us</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-2">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Notifications" asp-action="Index" class="notification-btn me-1 text-decoration-none">
+                            <i class="fas fa-bell"></i>
+                        </a>
+                    }
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="dropdown">
+                            <button class="btn border-0 d-flex align-items-center gap-2 p-1 rounded-pill bg-white bg-opacity-10 pe-3" data-bs-toggle="dropdown">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-800 shadow-sm" style="width: 32px; height: 32px; font-size: 0.8rem; background: var(--primary-gradient) !important;">
+                                    @User.Identity.Name.Substring(0, 1).ToUpper()
+                                </div>
+                                <span class="fw-bold small d-none d-md-inline">@User.Identity.Name</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2 rounded-4 p-2 animate__animated animate__fadeIn">
+                                <li>
+                                    <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="dropdown-item text-danger rounded-3 py-2 fw-700">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-sm fw-800 text-purple px-3">Login</a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-sm text-white rounded-pill px-3 fw-800" style="background: var(--primary-gradient); border:none;">Join Now</a>
+                    }
+                </div>
             </div>
         </div>
     </nav>
@@ -175,35 +211,35 @@
             {
                 <aside class="col-md-3 col-lg-2 d-none d-md-block sidebar-container">
                     <div class="sidebar">
-                        <div class="sidebar-label">Navigation</div>
+                        <div class="sidebar-label">Main Navigation</div>
                         <nav class="nav flex-column">
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
                                asp-controller="Home" asp-action="Index">
-                                <i class="fas fa-th-large"></i> Home
+                                <i class="fas fa-house-chimney me-2"></i> Home
                             </a>
 
                             @if (User.IsInRole("Teacher"))
                             {
-                                <div class="sidebar-label">Faculty</div>
-                                <a class="nav-link" asp-controller="Teacher" asp-action="Attendance"><i class="fas fa-calendar-check"></i> Attendance</a>
-                                <a class="nav-link" asp-controller="Teacher" asp-action="MyBills"><i class="fas fa-wallet"></i> My Bills</a>
-                                <a class="nav-link" asp-controller="Teacher" asp-action="Menu"><i class="fas fa-utensils"></i> Menu</a>
+                                <div class="sidebar-label">Faculty Hub</div>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="Attendance"><i class="fas fa-calendar-check me-2"></i> Attendance</a>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="MyBills"><i class="fas fa-file-invoice-dollar me-2"></i> My Bills</a>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="Menu"><i class="fas fa-plate-wheat me-2"></i> Weekly Menu</a>
                             }
 
                             @if (User.IsInRole("MessManager"))
                             {
-                                <div class="sidebar-label">Kitchen</div>
-                                <a class="nav-link" asp-controller="Menu" asp-action="Index"><i class="fas fa-clipboard-list"></i> Menu Manager</a>
-                                <a class="nav-link" asp-controller="Teacher" asp-action="AllAttendance"><i class="fas fa-users"></i> All Attendance</a>
+                                <div class="sidebar-label">Management</div>
+                                <a class="nav-link" asp-controller="Menu" asp-action="Index"><i class="fas fa-utensils me-2"></i> Menu Planner</a>
+                                <a class="nav-link" asp-controller="Teacher" asp-action="AllAttendance"><i class="fas fa-users-viewfinder me-2"></i> Attendance Log</a>
                             }
 
                             @if (User.IsInRole("Admin"))
                             {
-                                <div class="sidebar-label">Admin</div>
-                                <a class="nav-link" asp-controller="Admin" asp-action="Dashboard"><i class="fas fa-chart-line"></i> Analytics</a>
-                                <a class="nav-link" asp-controller="Admin" asp-action="Users"><i class="fas fa-user-shield"></i> Users</a>
-                                <a class="nav-link" asp-controller="Admin" asp-action="Bills"><i class="fas fa-receipt"></i> Billing</a>
-                                <a class="nav-link" asp-controller="Settings" asp-action="Index"><i class="fas fa-cog"></i> Settings</a>
+                                <div class="sidebar-label">System Admin</div>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Dashboard"><i class="fas fa-chart-pie me-2"></i> Analytics</a>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Users"><i class="fas fa-user-gear me-2"></i> User Directory</a>
+                                <a class="nav-link" asp-controller="Admin" asp-action="Bills"><i class="fas fa-vault me-2"></i> Billing Hub</a>
+                                <a class="nav-link" asp-controller="Settings" asp-action="Index"><i class="fas fa-sliders me-2"></i> Configuration</a>
                             }
                         </nav>
                     </div>
@@ -222,20 +258,6 @@
 
     <script>
         if (typeof AOS !== 'undefined') AOS.init({ duration: 600, once: true });
-
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-bs-theme', theme);
-            localStorage.setItem('theme', theme);
-            const icon = document.getElementById('theme-icon');
-            if (icon) icon.className = theme === 'dark' ? 'fas fa-sun text-warning' : 'fas fa-sparkles text-warning';
-        }
-
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-bs-theme');
-            applyTheme(current === 'dark' ? 'light' : 'dark');
-        }
-
-        applyTheme(localStorage.getItem('theme') || 'light');
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

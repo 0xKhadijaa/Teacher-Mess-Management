@@ -1,111 +1,96 @@
 ﻿@model MessManagementSystem.Models.Shared.MenuItem
-
 @{
-    ViewData["Title"] = "Mess Menu";
+    ViewData["Title"] = "Today's Menu";
+
+    // Dynamic Time-Based Highlighting Logic
+    var currentHour = DateTime.Now.Hour;
+
+    bool isBreakfastTime = currentHour < 10;
+    bool isLunchTime = currentHour >= 10 && currentHour < 16;
+    bool isDinnerTime = currentHour >= 16;
+
+    // Helper function for Card Styling
+    string GetCardStyle(bool isActive) => isActive
+        ? "background: var(--primary-gradient) !important; color: white !important; shadow-lg scale-105"
+        : "background: white; shadow-sm";
+
+    // Helper function for Icon Box Styling
+    string GetIconBoxStyle(bool isActive, string fallbackColor) => isActive
+        ? "background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); color: white !important;"
+        : $"background: {fallbackColor};";
 }
 
-<style>
-    /* Premium Hover & Shadow Logic */
-    .menu-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.08); /* Soft initial shadow */
-    }
-
-        .menu-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.15); /* Purple-tinted glow shadow */
-            border-color: rgba(99, 102, 241, 0.3);
-        }
-
-    .icon-box {
-        transition: transform 0.3s ease;
-    }
-
-    .menu-card:hover .icon-box {
-        transform: scale(1.1) rotate(5deg);
-    }
-</style>
-
-<div class="container-fluid py-1">
-    <div class="d-flex align-items-center justify-content-between mb-3" data-aos="fade-down">
+<div class="container py-4">
+    <div class="mb-4 d-flex justify-content-between align-items-center" data-aos="fade-down">
         <div>
-            <h3 class="fw-800 mb-0 text-dark-emphasis">Today's Menu</h3>
-            <p class="text-muted small mb-0">Mess Hall &bull; @Model.Date.ToString("dddd, dd MMM")</p>
+            <h3 class="fw-800 mb-0 text-dark-emphasis">Daily Feast</h3>
+            <p class="text-muted small mb-0"><i class="far fa-calendar-alt me-1"></i> @Model.Date.ToString("dddd, dd MMMM yyyy")</p>
         </div>
-        <div class="d-none d-sm-block">
-            <a asp-action="Index" asp-controller="Home" class="btn btn-sm btn-light rounded-pill border fw-bold px-3">
-                <i class="fas fa-arrow-left me-1"></i> Dashboard
-            </a>
+
+        <div class="bg-primary bg-opacity-10 text-primary p-2 px-4 rounded-pill small fw-800 border border-primary border-opacity-20"
+             style="color: var(--primary-purple) !important; border-color: rgba(99, 102, 241, 0.2) !important;">
+            <i class="fas fa-certificate me-2"></i> STANDARD RATE ACTIVE
         </div>
     </div>
 
-    <div class="row g-3">
-        <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
-            <div class="card menu-card border-0 h-100 overflow-hidden" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(10px);">
-                <div class="p-3 d-flex align-items-center gap-3 border-bottom border-opacity-10" style="background: rgba(99, 102, 241, 0.04);">
-                    <div class="icon-box bg-primary bg-opacity-10 p-2 rounded-3 text-primary">
-                        <i class="fas fa-mug-saucer"></i>
-                    </div>
-                    <h6 class="fw-800 mb-0 text-uppercase small" style="letter-spacing: 1px;">Breakfast</h6>
+    <div class="row g-4 align-items-stretch">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card h-100 border-0 shadow-sm p-4 hover-lift transition-all @(isBreakfastTime ? "z-index-10" : "")"
+                 style="border-radius: 28px; @GetCardStyle(isBreakfastTime)">
+                <div class="rounded-circle d-flex align-items-center justify-content-center mb-4 shadow-sm"
+                     style="width: 60px; height: 60px; @GetIconBoxStyle(isBreakfastTime, "rgba(245, 158, 11, 0.1)")">
+                    <i class="fas fa-mug-hot h4 mb-0 @(isBreakfastTime ? "text-white" : "text-warning")"></i>
                 </div>
-                <div class="card-body p-4 text-center">
-                    <h4 class="fw-700 text-dark-emphasis mb-0">@Model.Breakfast</h4>
-                    <span class="badge mt-3 bg-light text-muted border-0 fw-500 rounded-pill px-3 py-2">
-                        <i class="far fa-clock me-1"></i> 07:30 - 09:00 AM
-                    </span>
+                <h5 class="fw-800 mb-2 @(isBreakfastTime ? "text-white" : "text-dark")">Breakfast</h5>
+                <p class="small text-uppercase ls-1 mb-3 @(isBreakfastTime ? "text-white opacity-75" : "text-muted opacity-50")">07:00 - 09:00</p>
+                <div class="p-3 rounded-4 @(isBreakfastTime ? "bg-white bg-opacity-10 border border-white border-opacity-20" : "bg-light border")">
+                    <h6 class="fw-600 mb-0 @(isBreakfastTime ? "text-white" : "text-dark-emphasis")">@Model.Breakfast</h6>
                 </div>
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="card menu-card border-0 h-100 overflow-hidden" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(10px);">
-                <div class="p-3 d-flex align-items-center gap-3 border-bottom border-opacity-10" style="background: rgba(34, 197, 94, 0.04);">
-                    <div class="icon-box bg-success bg-opacity-10 p-2 rounded-3 text-success">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h6 class="fw-800 mb-0 text-uppercase small" style="letter-spacing: 1px;">Lunch</h6>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="card h-100 border-0 shadow-sm p-4 hover-lift transition-all @(isLunchTime ? "z-index-10" : "")"
+                 style="border-radius: 28px; @GetCardStyle(isLunchTime)">
+                <div class="rounded-circle d-flex align-items-center justify-content-center mb-4 shadow-sm"
+                     style="width: 60px; height: 60px; @GetIconBoxStyle(isLunchTime, "rgba(99, 102, 241, 0.1)")">
+                    <i class="fas fa-sun h4 mb-0 @(isLunchTime ? "text-white" : "text-primary")"></i>
                 </div>
-                <div class="card-body p-4 text-center">
-                    <h4 class="fw-700 text-dark-emphasis mb-0">@Model.Lunch</h4>
-                    <span class="badge mt-3 bg-light text-muted border-0 fw-500 rounded-pill px-3 py-2">
-                        <i class="far fa-clock me-1"></i> 01:00 - 02:30 PM
-                    </span>
+                <h5 class="fw-800 mb-2 @(isLunchTime ? "text-white" : "text-dark")">Lunch Special</h5>
+                <p class="small text-uppercase ls-1 mb-3 @(isLunchTime ? "text-white opacity-75" : "text-muted opacity-50")">13:00 - 15:00</p>
+                <div class="p-3 rounded-4 @(isLunchTime ? "bg-white bg-opacity-10 border border-white border-opacity-20" : "bg-light border")">
+                    <h6 class="fw-600 mb-0 @(isLunchTime ? "text-white" : "text-dark-emphasis")">@Model.Lunch</h6>
                 </div>
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
-            <div class="card menu-card border-0 h-100 overflow-hidden" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(10px);">
-                <div class="p-3 d-flex align-items-center gap-3 border-bottom border-opacity-10" style="background: rgba(245, 158, 11, 0.04);">
-                    <div class="icon-box bg-warning bg-opacity-10 p-2 rounded-3 text-warning">
-                        <i class="fas fa-moon"></i>
-                    </div>
-                    <h6 class="fw-800 mb-0 text-uppercase small" style="letter-spacing: 1px;">Dinner</h6>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="card h-100 border-0 shadow-sm p-4 hover-lift transition-all @(isDinnerTime ? "z-index-10" : "")"
+                 style="border-radius: 28px; @GetCardStyle(isDinnerTime)">
+                <div class="rounded-circle d-flex align-items-center justify-content-center mb-4 shadow-sm"
+                     style="width: 60px; height: 60px; @GetIconBoxStyle(isDinnerTime, "rgba(59, 130, 246, 0.1)")">
+                    <i class="fas fa-moon h4 mb-0 @(isDinnerTime ? "text-white" : "text-info")"></i>
                 </div>
-                <div class="card-body p-4 text-center">
-                    <h4 class="fw-700 text-dark-emphasis mb-0">@Model.Dinner</h4>
-                    <span class="badge mt-3 bg-light text-muted border-0 fw-500 rounded-pill px-3 py-2">
-                        <i class="far fa-clock me-1"></i> 08:00 - 09:30 PM
-                    </span>
+                <h5 class="fw-800 mb-2 @(isDinnerTime ? "text-white" : "text-dark")">Dinner</h5>
+                <p class="small text-uppercase ls-1 mb-3 @(isDinnerTime ? "text-white opacity-75" : "text-muted opacity-50")">20:00 - 22:00</p>
+                <div class="p-3 rounded-4 @(isDinnerTime ? "bg-white bg-opacity-10 border border-white border-opacity-20" : "bg-light border")">
+                    <h6 class="fw-600 mb-0 @(isDinnerTime ? "text-white" : "text-dark-emphasis")">@Model.Dinner</h6>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-12 mt-2" data-aos="fade-up" data-aos-delay="400">
-            <div class="card border-0 shadow-sm p-3" style="border-radius: 20px; background: var(--primary-gradient);">
-                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 text-white">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="bg-white bg-opacity-20 p-2 rounded-circle">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <p class="mb-0 small fw-500">Don't forget to update your attendance before the 09:00 AM cutoff.</p>
-                    </div>
-                    <a asp-action="Attendance" asp-controller="Teacher" class="btn btn-white bg-white text-primary rounded-pill px-4 fw-800 shadow-sm border-0">
-                        Mark Attendance <i class="fas fa-arrow-right ms-2"></i>
-                    </a>
-                </div>
-            </div>
+    <div class="mt-5 text-center p-5 border-0 shadow-sm position-relative overflow-hidden"
+         style="border-radius: 35px; background: #fff;">
+        <div class="position-relative" style="z-index: 2;">
+            <h4 class="fw-800 text-dark-emphasis mb-2">Ready for your meal?</h4>
+            <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">Please ensure your attendance is marked before the 9:00 AM cutoff to help us maintain zero food waste.</p>
+
+            <a asp-action="Attendance" class="btn text-white rounded-pill px-5 py-3 fw-800 shadow-lg hover-lift transition-all"
+               style="background: var(--primary-gradient); border: none;">
+                MARK ATTENDANCE <i class="fas fa-arrow-right ms-2"></i>
+            </a>
         </div>
+        <i class="fas fa-clock position-absolute end-0 bottom-0 opacity-05" style="font-size: 10rem; transform: translate(20%, 20%); color: var(--primary-purple);"></i>
     </div>
 </div>

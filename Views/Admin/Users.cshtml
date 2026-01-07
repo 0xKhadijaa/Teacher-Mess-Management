@@ -4,27 +4,73 @@
     var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>>;
 }
 
+<style>
+    /* Purple Theme Overrides */
+    .text-purple {
+        color: var(--primary-purple) !important;
+    }
+
+    .bg-purple-light {
+        background: rgba(99, 102, 241, 0.1) !important;
+    }
+
+    .nav-pills .nav-link.active {
+        background: var(--primary-gradient) !important;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-purple-gradient {
+        background: var(--primary-gradient) !important;
+        border: none !important;
+        color: white !important;
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+    }
+
+        .btn-purple-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
+            color: white !important;
+        }
+
+    .avatar-purple {
+        background: var(--primary-gradient);
+        color: white;
+        font-weight: 800;
+        box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(99, 102, 241, 0.02) !important;
+    }
+
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+</style>
+
 <div class="container-fluid py-2">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div data-aos="fade-right">
-            <h2 class="fw-800 mb-0 text-dark-emphasis">
-                <i class="fas fa-users-gear me-2 text-primary"></i> Access Control
+            <h2 class="fw-900 mb-0 text-dark-emphasis">
+                <i class="fas fa-users-gear me-2 text-purple"></i> Access Control
             </h2>
-            <p class="text-muted small mb-0">Manage system permissions and account statuses for all campus members.</p>
+            <p class="text-muted small mb-0 fw-600">Manage system permissions and account statuses for all campus members.</p>
         </div>
-        <a asp-action="CreateUser" class="btn btn-primary px-4 rounded-pill fw-bold shadow-sm transition-all hover-lift" data-aos="fade-left">
-            <i class="fas fa-plus-circle me-1"></i> Add System Member
+        <a asp-action="CreateUser" class="btn btn-purple-gradient px-4 py-2 rounded-pill fw-900 transition-all shadow-lg" data-aos="fade-left">
+            <i class="fas fa-plus-circle me-1"></i> ADD SYSTEM MEMBER
         </a>
     </div>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success border-0 shadow-sm rounded-4 animate__animated animate__slideInDown mb-4">
-            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+        <div class="alert border-0 shadow-sm rounded-4 mb-4 bg-success bg-opacity-10 text-success d-flex align-items-center animate__animated animate__slideInDown">
+            <i class="fas fa-check-circle me-3 h5 mb-0"></i>
+            <span class="small fw-700">@TempData["Success"]</span>
         </div>
     }
 
-    <div class="card border-0 shadow-sm mb-4" style="border-radius: 20px; background: var(--glass-bg);">
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 20px; background: var(--glass-bg); backdrop-filter: blur(10px);">
         <div class="card-body p-2">
             <ul class="nav nav-pills nav-fill small fw-800 text-uppercase ls-1" id="userTabs" role="tablist">
                 <li class="nav-item">
@@ -43,16 +89,16 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 24px; background: var(--glass-bg);" data-aos="fade-up">
+    <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(15px);" data-aos="fade-up">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0" id="userTable">
-                <thead style="background: rgba(99, 102, 241, 0.04);">
+                <thead style="background: rgba(99, 102, 241, 0.05);">
                     <tr>
-                        <th class="ps-4 py-3 border-0 small text-uppercase fw-800 opacity-50">Profile Info</th>
-                        <th class="py-3 border-0 small text-uppercase fw-800 opacity-50">Department</th>
-                        <th class="py-3 border-0 small text-uppercase fw-800 opacity-50">Permission Level</th>
-                        <th class="py-3 border-0 small text-uppercase fw-800 opacity-50 text-center">Status</th>
-                        <th class="pe-4 py-3 border-0 small text-uppercase fw-800 opacity-50 text-end">Management</th>
+                        <th class="ps-4 py-4 border-0 small text-uppercase fw-800 opacity-50 ls-1">Profile Info</th>
+                        <th class="py-4 border-0 small text-uppercase fw-800 opacity-50 ls-1">Department</th>
+                        <th class="py-4 border-0 small text-uppercase fw-800 opacity-50 ls-1">Permission Level</th>
+                        <th class="py-4 border-0 small text-uppercase fw-800 opacity-50 ls-1 text-center">Status</th>
+                        <th class="pe-4 py-4 border-0 small text-uppercase fw-800 opacity-50 ls-1 text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody class="border-top-0">
@@ -64,50 +110,54 @@
                         <tr class="transition-all user-row" data-roles="@roleData">
                             <td class="ps-4 py-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                        <span class="fw-800">@user.FullName.Substring(0, 1)</span>
+                                    <div class="avatar-purple rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                                        <span>@user.FullName.Substring(0, 1).ToUpper()</span>
                                     </div>
                                     <div>
                                         <div class="fw-800 text-dark-emphasis">@user.FullName</div>
-                                        <div class="small text-muted">@user.Email</div>
+                                        <div class="small text-muted fw-500">@user.Email</div>
                                     </div>
                                 </div>
                             </td>
                             <td class="py-3">
-                                <span class="badge rounded-pill bg-light text-dark px-3 py-2 fw-600 border">
+                                <span class="badge rounded-pill bg-white text-dark px-3 py-2 fw-700 border border-light shadow-sm">
                                     @user.Department
                                 </span>
                             </td>
                             <td class="py-3">
                                 @foreach (var role in roles)
                                 {
-                                    var roleClass = role == "Admin" ? "bg-danger" : (role == "MessManager" ? "bg-warning text-dark" : "bg-primary");
-                                    <span class="badge rounded-pill @roleClass bg-opacity-10 @(role == "MessManager" ? "text-warning" : "text-primary") px-3 py-1 fw-700 me-1" style="font-size: 0.7rem;">
-                                        @role
+                                    var roleClass = role == "Admin" ? "bg-danger" : (role == "MessManager" ? "bg-warning" : "bg-purple-light");
+                                    var textClass = role == "Admin" ? "text-danger" : (role == "MessManager" ? "text-warning" : "text-purple");
+
+                                    <span class="badge rounded-pill @roleClass bg-opacity-10 @textClass px-3 py-1 fw-800 me-1 ls-1" style="font-size: 0.65rem;">
+                                        @role.ToUpper()
                                     </span>
                                 }
                             </td>
                             <td class="py-3 text-center">
                                 @if (user.IsActive)
                                 {
-                                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2 fw-800">
-                                        <i class="fas fa-check-circle me-1 small"></i> Active
+                                    <span class="badge rounded-pill bg-success bg-opacity-10 text-success px-3 py-2 fw-800 border border-success border-opacity-10">
+                                        <i class="fas fa-check-circle me-1 small"></i> ACTIVE
                                     </span>
                                 }
                                 else
                                 {
-                                    <span class="badge rounded-pill bg-light text-muted px-3 py-2 fw-800">
-                                        <i class="fas fa-lock me-1 small"></i> Suspended
+                                    <span class="badge rounded-pill bg-light text-muted px-3 py-2 fw-800 border">
+                                        <i class="fas fa-lock me-1 small"></i> SUSPENDED
                                     </span>
                                 }
                             </td>
                             <td class="pe-4 py-3 text-end">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-sm btn-light border rounded-circle hover-lift" style="width: 35px; height: 35px;">
-                                        <i class="fas fa-pencil-alt text-primary small"></i>
+                                    <a asp-action="EditUser" asp-route-id="@user.Id"
+                                       class="btn btn-sm btn-light rounded-circle shadow-sm border-0 d-flex align-items-center justify-content-center hover-lift"
+                                       style="width: 38px; height: 38px;">
+                                        <i class="fas fa-pencil-alt text-purple small"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-light border rounded-circle hover-lift js-delete-user"
-                                            data-user-id="@user.Id" data-user-email="@user.Email" style="width: 35px; height: 35px;">
+                                    <button type="button" class="btn btn-sm btn-light rounded-circle shadow-sm border-0 d-flex align-items-center justify-content-center hover-lift js-delete-user"
+                                            data-user-id="@user.Id" data-user-email="@user.Email" style="width: 38px; height: 38px;">
                                         <i class="fas fa-trash-alt text-danger small"></i>
                                     </button>
                                 </div>
@@ -120,28 +170,9 @@
     </div>
 </div>
 
-<style>
-    .ls-1 {
-        letter-spacing: 1px;
-    }
-
-    .nav-pills .nav-link.active {
-        background: var(--primary-gradient);
-        color: white !important;
-    }
-
-    .nav-pills .nav-link {
-        transition: 0.3s ease;
-    }
-
-    .table tbody tr:hover {
-        background-color: rgba(99, 102, 241, 0.02);
-    }
-</style>
-
 @section Scripts {
     <script>
-        // Real-time Client-side Filter
+        // Client-side Filter
         function filterUsers(roleFilter) {
             const rows = document.querySelectorAll('.user-row');
             rows.forEach(row => {
@@ -154,7 +185,7 @@
             });
         }
 
-        // AJAX Delete Logic
+        // AJAX Delete with Purple Spinner
         document.querySelectorAll('.js-delete-user').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var id = this.getAttribute('data-user-id');
@@ -163,7 +194,7 @@
 
                 var row = this.closest('tr');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin small"></i>';
+                btn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-purple small"></i>';
 
                 fetch('@Url.Action("DeleteUser", "Admin")', {
                     method: 'POST',
@@ -175,6 +206,7 @@
                     body: 'id=' + encodeURIComponent(id)
                 }).then(res => res.json()).then(data => {
                     if (data.success) {
+                        row.style.transform = 'scale(0.95)';
                         row.style.opacity = '0';
                         setTimeout(() => row.remove(), 300);
                     } else {

@@ -1,26 +1,60 @@
 ﻿@model MessManagementSystem.Models.Shared.Bill
 
 @{
-    ViewData["Title"] = "Digital Payment Demo";
+    ViewData["Title"] = "Secure Checkout";
 }
 
+<style>
+    /* Card input focus override */
+    .form-control:focus {
+        border-color: var(--primary-purple) !important;
+        box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.1) !important;
+    }
+
+    .virtual-card {
+        background: var(--primary-gradient);
+        height: 240px;
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s ease;
+    }
+
+        .virtual-card:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+            box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.5) !important;
+        }
+
+    .glass-inner {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .text-purple {
+        color: var(--primary-purple) !important;
+    }
+</style>
+
 <div class="container-fluid py-2">
-    <div class="mb-4" data-aos="fade-down">
-        <h2 class="fw-800 mb-0 text-dark-emphasis">Secure Checkout</h2>
-        <p class="text-muted small">Complete your payment for the billing cycle of @Model.BillingPeriodStart.ToString("MMMM yyyy")</p>
+    <div class="mb-5 text-center text-md-start" data-aos="fade-down">
+        <h2 class="fw-800 mb-0 text-dark-emphasis">
+            <i class="fas fa-shield-check me-2 text-purple"></i> Secure Checkout
+        </h2>
+        <p class="text-muted small">Settling invoice for the cycle of <span class="text-purple fw-700">@Model.BillingPeriodStart.ToString("MMMM yyyy")</span></p>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-xl-9 col-lg-11">
-            <div class="card border-0 shadow-lg" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(20px);">
+        <div class="col-xl-10 col-lg-12">
+            <div class="card border-0 shadow-lg" style="border-radius: 30px; background: var(--glass-bg); backdrop-filter: blur(20px);">
                 <div class="card-body p-4 p-lg-5">
 
-                    <div class="alert border-0 rounded-4 mb-5 d-flex align-items-center py-3 bg-white bg-opacity-50 shadow-sm">
-                        <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3">
-                            <i class="fas fa-flask text-primary"></i>
+                    <div class="alert border-0 rounded-4 mb-5 d-flex align-items-center py-3 bg-white shadow-sm border-start border-primary border-5">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="fas fa-microchip text-purple"></i>
                         </div>
                         <div class="small fw-600">
-                            <span class="text-primary">Demo Environment:</span> This is a simulated payment gateway. No actual funds will be moved.
+                            <span class="text-purple fw-800">Sandbox Mode:</span> This is a simulated encrypted gateway. No actual transaction will occur on your bank account.
                         </div>
                     </div>
 
@@ -30,82 +64,86 @@
 
                         <div class="row g-5">
                             <div class="col-md-5 order-2 order-md-1" data-aos="fade-right">
-                                <div class="p-4 rounded-4 text-white position-relative overflow-hidden shadow-lg mb-4"
-                                     style="background: var(--primary-gradient); height: 220px;">
+                                <div class="virtual-card p-4 text-white shadow-lg mb-5">
                                     <div class="position-relative" style="z-index: 2;">
-                                        <div class="d-flex justify-content-between align-items-start mb-4">
-                                            <i class="fas fa-sim-card fa-2x opacity-50"></i>
-                                            <i class="fab fa-visa fa-3x"></i>
+                                        <div class="d-flex justify-content-between align-items-start mb-5">
+                                            <div class="p-2 rounded-3 glass-inner">
+                                                <i class="fas fa-sim-card fa-2x opacity-75"></i>
+                                            </div>
+                                            <i class="fab fa-cc-visa fa-3x"></i>
                                         </div>
-                                        <h4 class="fw-bold mb-3" style="letter-spacing: 2px;">•••• •••• •••• 4444</h4>
-                                        <div class="d-flex justify-content-between align-items-end">
+                                        <h3 class="fw-bold mb-4" style="letter-spacing: 4px; font-family: 'Courier New', Courier, monospace;">
+                                            **** **** **** 4444
+                                        </h3>
+                                        <div class="d-flex justify-content-between align-items-end mt-4">
                                             <div>
-                                                <small class="opacity-50 d-block text-uppercase" style="font-size: 0.6rem;">Card Holder</small>
-                                                <span class="fw-bold">@User.Identity.Name</span>
+                                                <small class="opacity-50 d-block text-uppercase ls-1" style="font-size: 0.6rem;">Card Holder</small>
+                                                <span class="fw-bold text-uppercase">@User.Identity.Name</span>
                                             </div>
                                             <div class="text-end">
-                                                <small class="opacity-50 d-block text-uppercase" style="font-size: 0.6rem;">Expiry</small>
-                                                <span class="fw-bold">12/30</span>
+                                                <small class="opacity-50 d-block text-uppercase ls-1" style="font-size: 0.6rem;">Expires</small>
+                                                <span class="fw-bold">12 / 30</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <i class="fas fa-bolt-lightning position-absolute end-0 bottom-0 opacity-10" style="font-size: 10rem; transform: translate(30%, 30%);"></i>
+                                    <i class="fas fa-shield-halved position-absolute end-0 bottom-0 opacity-10" style="font-size: 12rem; transform: translate(20%, 20%);"></i>
                                 </div>
 
-                                <div class="card bg-light border-0 p-3 rounded-4">
-                                    <h6 class="fw-800 small text-uppercase opacity-50 mb-3">Order Summary</h6>
-                                    <div class="d-flex justify-content-between mb-2 small">
-                                        <span class="text-muted">Monthly Bill</span>
-                                        <span class="fw-bold text-dark">₹@((Model.TotalAmount - Model.PreviousDues).ToString("N2"))</span>
+                                <div class="p-4 rounded-4 bg-white border border-light shadow-sm">
+                                    <h6 class="fw-800 small text-uppercase ls-1 text-muted mb-4">Payment Summary</h6>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted fw-600">Base Bill</span>
+                                        <span class="fw-700">₹@((Model.TotalAmount - Model.PreviousDues).ToString("N2"))</span>
                                     </div>
-                                    <div class="d-flex justify-content-between mb-3 small">
-                                        <span class="text-muted">Previous Dues</span>
-                                        <span class="fw-bold text-dark">₹@Model.PreviousDues.ToString("N2")</span>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <span class="text-muted fw-600">Arrears</span>
+                                        <span class="fw-700 text-danger">₹@Model.PreviousDues.ToString("N2")</span>
                                     </div>
-                                    <hr class="opacity-10">
+                                    <hr class="opacity-10 my-3">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fw-800">Total Payable</span>
-                                        <span class="h4 fw-800 text-primary mb-0">₹@Model.TotalAmount.ToString("N2")</span>
+                                        <span class="fw-900 text-dark">Amount to Pay</span>
+                                        <span class="h3 fw-900 text-purple mb-0">₹@Model.TotalAmount.ToString("N2")</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-7 order-1 order-md-2" data-aos="fade-left">
-                                <h5 class="fw-800 mb-4">Payment Information</h5>
+                                <h5 class="fw-800 mb-4 text-dark-emphasis">Billing Details</h5>
 
                                 <div class="mb-4">
-                                    <label class="form-label fw-bold small opacity-75">Cardholder Name (Demo)</label>
+                                    <label class="form-label fw-800 small text-uppercase ls-1 opacity-50">Cardholder Name</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white border-end-0 rounded-start-3"><i class="fas fa-user text-muted small"></i></span>
-                                        <input class="form-control border-start-0 rounded-end-3 py-2" placeholder="Enter name on card" />
+                                        <span class="input-group-text bg-light border-0 rounded-start-3"><i class="fas fa-signature text-purple"></i></span>
+                                        <input type="text" class="form-control bg-light border-0 py-3 rounded-end-3" placeholder="Exact name as on card" required />
                                     </div>
                                 </div>
 
                                 <div class="mb-4">
-                                    <label class="form-label fw-bold small opacity-75">Card Number (Demo)</label>
+                                    <label class="form-label fw-800 small text-uppercase ls-1 opacity-50">Card Number</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white border-end-0 rounded-start-3"><i class="fas fa-credit-card text-muted small"></i></span>
-                                        <input class="form-control border-start-0 rounded-end-3 py-2" placeholder="0000 0000 0000 0000" />
+                                        <span class="input-group-text bg-light border-0 rounded-start-3"><i class="fas fa-credit-card text-purple"></i></span>
+                                        <input type="text" class="form-control bg-light border-0 py-3 rounded-end-3" placeholder="4444 0000 1111 2222" required />
                                     </div>
                                 </div>
 
                                 <div class="row g-3 mb-5">
                                     <div class="col-6">
-                                        <label class="form-label fw-bold small opacity-75">Expiry Date</label>
-                                        <input class="form-control rounded-3 py-2" placeholder="MM/YY" />
+                                        <label class="form-label fw-800 small text-uppercase ls-1 opacity-50">Expiry Date</label>
+                                        <input type="text" class="form-control bg-light border-0 py-3 rounded-3" placeholder="MM / YY" required />
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label fw-bold small opacity-75">CVV</label>
-                                        <input class="form-control rounded-3 py-2" placeholder="123" />
+                                        <label class="form-label fw-800 small text-uppercase ls-1 opacity-50">CVV</label>
+                                        <input type="password" class="form-control bg-light border-0 py-3 rounded-3" placeholder="***" maxlength="3" required />
                                     </div>
                                 </div>
 
-                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
-                                    <a asp-action="MyBills" class="text-decoration-none small fw-bold text-muted hover-primary">
-                                        <i class="fas fa-arrow-left me-2"></i> Cancel & Return
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-4 pt-3 border-top mt-4">
+                                    <a asp-action="MyBills" class="text-decoration-none small fw-800 text-muted hover-lift">
+                                        <i class="fas fa-chevron-left me-2"></i> ABORT PAYMENT
                                     </a>
-                                    <button type="submit" class="btn btn-primary px-5 py-2 fw-bold shadow-lg transition-all rounded-pill">
-                                        Confirm Payment ₹@Model.TotalAmount.ToString("N0")
+                                    <button type="submit" class="btn text-white rounded-pill px-5 py-3 fw-900 shadow-lg hover-lift transition-all flex-grow-1 flex-md-grow-0"
+                                            style="background: var(--primary-gradient); border: none; min-width: 250px;">
+                                        PROCESS PAYMENT ₹@Model.TotalAmount.ToString("N0")
                                     </button>
                                 </div>
                             </div>
@@ -113,6 +151,14 @@
                     </form>
 
                 </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <p class="text-muted small">
+                    <i class="fas fa-lock me-1"></i> SSL Encrypted Demo Gateway
+                    <span class="mx-2 opacity-25">|</span>
+                    Verified by <span class="fw-800 text-purple">Messly Security</span>
+                </p>
             </div>
         </div>
     </div>

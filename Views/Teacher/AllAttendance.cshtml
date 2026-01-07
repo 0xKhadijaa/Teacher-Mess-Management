@@ -1,18 +1,45 @@
 ﻿@model List<MessManagementSystem.Models.Shared.Attendance>
 
 @{
-    ViewData["Title"] = "Faculty Attendance";
+    ViewData["Title"] = "Master Attendance";
     var canEdit = ViewBag.CanEdit ?? false;
     var today = DateOnly.FromDateTime(DateTime.Today);
     var disabledAttr = canEdit ? null : "disabled";
 }
 
+<style>
+    /* Purple Switch Logic */
+    .form-check-input:checked {
+        background-color: var(--primary-purple) !important;
+        border-color: var(--primary-purple) !important;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(99, 102, 241, 0.02);
+        transition: 0.2s ease-in-out;
+    }
+
+    .avatar-circle {
+        width: 38px;
+        height: 38px;
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.85rem;
+        box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+    }
+</style>
+
 <div class="container-fluid py-2">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div data-aos="fade-right">
             <h2 class="fw-800 mb-0 text-dark-emphasis">Faculty Attendance</h2>
-            <p class="text-muted small mb-0">
-                <i class="fas fa-users-viewfinder me-1 text-primary"></i> Master View
+            <p class="text-muted small mb-0 fw-600">
+                <i class="fas fa-users-rectangle me-1 text-primary"></i> Master Console
                 <span class="mx-2 opacity-25">|</span>
                 <i class="fas fa-calendar-check me-1 text-primary"></i> @today.ToString("dd MMM yyyy")
             </p>
@@ -21,8 +48,9 @@
         @if (canEdit)
         {
             <div data-aos="fade-left">
-                <button type="submit" form="attendanceForm" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm fw-bold transition-all">
-                    <i class="fas fa-save me-2"></i> Save All Changes
+                <button type="submit" form="attendanceForm" class="btn text-white px-5 py-2 rounded-pill shadow-lg fw-800 hover-lift transition-all"
+                        style="background: var(--primary-gradient); border: none;">
+                    <i class="fas fa-check-double me-2"></i> SAVE ALL RECORDS
                 </button>
             </div>
         }
@@ -32,23 +60,23 @@
     {
         <div class="alert border-0 shadow-sm rounded-4 mb-4 bg-success bg-opacity-10 text-success d-flex align-items-center animate__animated animate__fadeIn">
             <i class="fas fa-check-circle me-3 h5 mb-0"></i>
-            <span class="small fw-600">@TempData["Success"]</span>
+            <span class="small fw-700">@TempData["Success"]</span>
         </div>
     }
 
-    <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 24px;" data-aos="fade-up">
+    <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(10px);" data-aos="fade-up">
         <form id="attendanceForm" asp-action="AllAttendance" method="post">
             <input type="hidden" name="Date" value="@today" />
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead style="background: rgba(99, 102, 241, 0.05);">
+                    <thead style="background: rgba(99, 102, 241, 0.04);">
                         <tr>
-                            <th class="ps-4 py-3 border-0 small text-uppercase fw-800 opacity-50">Teacher Detail</th>
-                            <th class="py-3 border-0 text-center small text-uppercase fw-800 opacity-50">Breakfast</th>
-                            <th class="py-3 border-0 text-center small text-uppercase fw-800 opacity-50">Lunch</th>
-                            <th class="py-3 border-0 text-center small text-uppercase fw-800 opacity-50">Dinner</th>
-                            <th class="pe-4 py-3 border-0 small text-uppercase fw-800 opacity-50">@(canEdit ? "Notes" : "")</th>
+                            <th class="ps-4 py-3 border-0 small text-uppercase fw-800 opacity-50 ls-1">Faculty Member</th>
+                            <th class="py-3 border-0 text-center small text-uppercase fw-800 opacity-50 ls-1">Breakfast</th>
+                            <th class="py-3 border-0 text-center small text-uppercase fw-800 opacity-50 ls-1">Lunch</th>
+                            <th class="py-3 border-0 text-center small text-uppercase fw-800 opacity-50 ls-1">Dinner</th>
+                            <th class="pe-4 py-3 border-0 small text-uppercase fw-800 opacity-50 ls-1 text-end">Remarks</th>
                         </tr>
                     </thead>
                     <tbody class="border-top-0">
@@ -59,55 +87,49 @@
                                     <input type="hidden" name="[@i].Id" value="@Model[i].Id" />
                                     <input type="hidden" name="[@i].TeacherId" value="@Model[i].TeacherId" />
                                     <div class="d-flex align-items-center">
-                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold text-primary" style="width: 35px; height: 35px; font-size: 0.8rem;">
+                                        <div class="avatar-circle me-3">
                                             @(Model[i].Teacher?.FullName?.Substring(0, 1).ToUpper() ?? "T")
                                         </div>
                                         <div>
-                                            <span class="fw-700 d-block text-dark-emphasis">@Model[i].Teacher?.FullName</span>
-                                            <span class="text-muted" style="font-size: 0.75rem;">@Model[i].Teacher?.Email</span>
+                                            <span class="fw-800 d-block text-dark-emphasis mb-0" style="font-size: 0.95rem;">@Model[i].Teacher?.FullName</span>
+                                            <span class="text-muted small fw-500">@Model[i].Teacher?.Email</span>
                                         </div>
                                     </div>
                                 </td>
 
-                                @* Breakfast Toggle *@
                                 <td class="text-center">
                                     <div class="form-check form-switch d-inline-block">
                                         <input class="form-check-input" type="checkbox" name="[@i].HadBreakfast" value="true"
-                                               @(Model[i].HadBreakfast ? "checked" : "") disabled="@disabledAttr" />
-                                        @if (!canEdit && Model[i].HadBreakfast)
-                                        {
-                                            <span class="d-none">✅</span>
-                                        }
+                                               @(Model[i].HadBreakfast ? "checked" : "") disabled="@disabledAttr" style="width: 2.5rem; height: 1.25rem; cursor: pointer;" />
                                     </div>
                                 </td>
 
-                                @* Lunch Toggle *@
                                 <td class="text-center">
                                     <div class="form-check form-switch d-inline-block">
                                         <input class="form-check-input" type="checkbox" name="[@i].HadLunch" value="true"
-                                               @(Model[i].HadLunch ? "checked" : "") disabled="@disabledAttr" />
+                                               @(Model[i].HadLunch ? "checked" : "") disabled="@disabledAttr" style="width: 2.5rem; height: 1.25rem; cursor: pointer;" />
                                     </div>
                                 </td>
 
-                                @* Dinner Toggle *@
                                 <td class="text-center">
                                     <div class="form-check form-switch d-inline-block">
                                         <input class="form-check-input" type="checkbox" name="[@i].HadDinner" value="true"
-                                               @(Model[i].HadDinner ? "checked" : "") disabled="@disabledAttr" />
+                                               @(Model[i].HadDinner ? "checked" : "") disabled="@disabledAttr" style="width: 2.5rem; height: 1.25rem; cursor: pointer;" />
                                     </div>
                                 </td>
 
-                                <td class="pe-4 py-3">
+                                <td class="pe-4 py-3 text-end">
                                     @if (canEdit)
                                     {
                                         <input type="hidden" name="[@i].Date" value="@today" />
-                                        <input name="[@i].SkipReason" class="form-control form-control-sm border-0 bg-light rounded-3"
+                                        <input name="[@i].SkipReason" class="form-control form-control-sm border-0 bg-light rounded-pill px-3 fw-500"
+                                               style="font-size: 0.75rem; width: 150px; display: inline-block;"
                                                value="@Model[i].SkipReason" placeholder="Add note..." />
                                     }
                                     else if (!string.IsNullOrEmpty(Model[i].SkipReason))
                                     {
-                                        <span class="badge rounded-pill bg-light text-muted fw-normal p-2 px-3 border border-opacity-10">
-                                            <i class="fas fa-info-circle me-1"></i> @Model[i].SkipReason
+                                        <span class="badge rounded-pill bg-light text-muted fw-700 p-2 px-3 border border-opacity-10" style="font-size: 0.7rem;">
+                                            <i class="fas fa-comment-dots me-1 text-primary"></i> @Model[i].SkipReason
                                         </span>
                                     }
                                 </td>
@@ -119,9 +141,19 @@
         </form>
     </div>
 
-    <div class="mt-4 text-center">
-        <a asp-action="Menu" class="btn btn-sm btn-link text-decoration-none text-muted fw-bold">
-            <i class="fas fa-chevron-left me-1"></i> Back to Weekly Menu
+    <div class="mt-5 text-center">
+        <a asp-action="Menu" class="text-decoration-none text-primary fw-800 small ls-1 hover-lift d-inline-block">
+            <i class="fas fa-arrow-left me-2"></i> RETURN TO MENU
         </a>
     </div>
 </div>
+
+<style>
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-3px);
+    }
+</style>

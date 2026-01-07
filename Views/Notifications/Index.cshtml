@@ -5,11 +5,49 @@
     var unreadCount = Model?.Count(n => !n.IsRead) ?? 0;
 }
 
+<style>
+    /* Purple Theme Overrides */
+    .nav-pills .nav-link.active {
+        background: var(--primary-gradient) !important;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .badge-purple {
+        background-color: var(--primary-purple) !important;
+        color: white;
+    }
+
+    .notification-item {
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+        .notification-item.is-unread {
+            border-left-color: var(--primary-purple);
+        }
+
+        .notification-item:hover {
+            background-color: rgba(99, 102, 241, 0.02) !important;
+            transform: translateX(5px);
+        }
+
+    .text-purple {
+        color: var(--primary-purple) !important;
+    }
+
+    /* Override checkbox color to purple */
+    .form-check-input:checked {
+        background-color: var(--primary-purple) !important;
+        border-color: var(--primary-purple) !important;
+    }
+</style>
+
 <div class="container-fluid py-1">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
         <div data-aos="fade-right">
-            <h3 class="fw-800 mb-0 text-dark-emphasis">Inbox</h3>
-            <p class="text-muted small mb-0">You have <span class="text-primary fw-bold">@unreadCount unread</span> messages</p>
+            <h3 class="fw-900 mb-0 text-dark-emphasis">Inbox</h3>
+            <p class="text-muted small mb-0">You have <span class="text-purple fw-800">@unreadCount unread</span> notifications</p>
         </div>
 
         <div class="d-flex gap-2" data-aos="fade-left">
@@ -17,16 +55,16 @@
             {
                 if (isAdmin)
                 {
-                    <button type="submit" form="deleteSelectedForm" class="btn btn-danger btn-sm px-3 rounded-pill fw-bold shadow-sm"
-                            onclick="return confirm('Delete selected?');">
-                        <i class="fas fa-trash-alt me-1"></i> Delete
+                    <button type="submit" form="deleteSelectedForm" class="btn btn-danger btn-sm px-4 rounded-pill fw-800 shadow-sm"
+                            onclick="return confirm('Delete selected notifications?');">
+                        <i class="fas fa-trash-alt me-2"></i> Delete Selected
                     </button>
                 }
                 else
                 {
                     <form asp-action="MarkAllRead" method="post">
-                        <button type="submit" class="btn btn-primary bg-primary bg-opacity-10 text-primary border-0 btn-sm px-3 rounded-pill fw-bold">
-                            <i class="fas fa-check-double me-1"></i> Mark All Read
+                        <button type="submit" class="btn text-white btn-sm px-4 rounded-pill fw-800 shadow-sm" style="background: var(--primary-gradient); border:none;">
+                            <i class="fas fa-check-double me-2"></i> Mark All Read
                         </button>
                     </form>
                 }
@@ -34,21 +72,21 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm mb-3" style="border-radius: 15px; background: var(--glass-bg);">
-        <div class="card-body p-1">
-            <ul class="nav nav-pills nav-fill small fw-bold">
+    <div class="card border-0 shadow-sm mb-4" style="border-radius: 20px; background: var(--glass-bg); backdrop-filter: blur(10px);">
+        <div class="card-body p-2">
+            <ul class="nav nav-pills nav-fill small fw-800">
                 <li class="nav-item">
-                    <a class="nav-link active rounded-pill py-2" href="#" onclick="filterNotifications('all')">All</a>
+                    <a class="nav-link active rounded-pill py-2" href="#" onclick="filterNotifications('all', this)">All Activity</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-muted rounded-pill py-2" href="#" onclick="filterNotifications('unread')">
+                    <a class="nav-link text-muted rounded-pill py-2" href="#" onclick="filterNotifications('unread', this)">
                         Unread @if(unreadCount > 0){
-                        <span class="badge bg-primary ms-1">@unreadCount</span>
+                        <span class="badge rounded-pill bg-white text-purple ms-1">@unreadCount</span>
                                                 }
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-muted rounded-pill py-2" href="#" onclick="filterNotifications('read')">History</a>
+                    <a class="nav-link text-muted rounded-pill py-2" href="#" onclick="filterNotifications('read', this)">Archive</a>
                 </li>
             </ul>
         </div>
@@ -57,76 +95,85 @@
     @if (Model == null || !Model.Any())
     {
         <div class="text-center py-5" data-aos="fade-up">
-            <i class="fas fa-smile fa-3x text-muted opacity-25 mb-3"></i>
-            <h5 class="text-muted fw-600">All caught up!</h5>
+            <div class="bg-light d-inline-flex p-4 rounded-circle mb-3 opacity-50">
+                <i class="fas fa-bell-slash fa-3x text-muted"></i>
+            </div>
+            <h5 class="text-muted fw-800">All caught up!</h5>
+            <p class="small text-muted">Check back later for new updates.</p>
         </div>
     }
     else
     {
-        <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 20px; background: var(--glass-bg);">
-            <div class="list-group list-group-flush">
-                @foreach (var n in Model.OrderByDescending(n => n.CreatedAt))
-                {
-                    <div class="list-group-item p-3 border-bottom transition-all notification-item @(n.IsRead ? "is-read" : "is-unread bg-white")"
-                         data-status="@(n.IsRead ? "read" : "unread")"
-                         style="border-color: rgba(0,0,0,0.05) !important;">
+        <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 25px; background: var(--glass-bg);">
+            <form id="deleteSelectedForm" asp-action="DeleteSelected" method="post">
+                <div class="list-group list-group-flush">
+                    @foreach (var n in Model.OrderByDescending(n => n.CreatedAt))
+                    {
+                        <div class="list-group-item p-4 border-bottom notification-item @(n.IsRead ? "is-read opacity-75" : "is-unread bg-white shadow-sm")"
+                             data-status="@(n.IsRead ? "read" : "unread")"
+                             style="border-color: rgba(0,0,0,0.03) !important;">
 
-                        <div class="d-flex align-items-center gap-3">
-                            @if (isAdmin)
-                            {
-                                <input class="form-check-input mt-0" type="checkbox" name="selectedIds" value="@n.Id" form="deleteSelectedForm">
-                            }
+                            <div class="d-flex align-items-center gap-4">
+                                @if (isAdmin)
+                                {
+                                    <input class="form-check-input flex-shrink-0" type="checkbox" name="selectedIds" value="@n.Id" style="width: 1.2rem; height: 1.2rem; cursor: pointer;">
+                                }
 
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width: 40px; height: 40px; background: @(n.IsRead ? "rgba(0,0,0,0.04)" : "rgba(99, 102, 241, 0.1)"); color: @(n.IsRead ? "#999" : "var(--primary-purple)")">
-                                <i class="fas fa-@(n.IsRead ? "envelope-open" : "envelope")"></i>
+                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                     style="width: 48px; height: 48px; background: @(n.IsRead ? "rgba(0,0,0,0.05)" : "rgba(99, 102, 241, 0.1)"); color: @(n.IsRead ? "#adb5bd" : "var(--primary-purple)")">
+                                    <i class="fas fa-@(n.IsRead ? "envelope-open" : "bolt") fa-lg"></i>
+                                </div>
+
+                                <div class="flex-grow-1 min-width-0">
+                                    <a href="@Url.Action("Details", "Notifications", new { id = n.Id })" class="text-decoration-none">
+                                        <div class="d-flex justify-content-between align-items-start mb-1">
+                                            <h6 class="fw-800 mb-0 text-truncate @(n.IsRead ? "text-muted" : "text-dark-emphasis")" style="font-size: 1rem;">@n.Title</h6>
+                                            <small class="text-muted fw-600 flex-shrink-0 ms-3" style="font-size: 0.75rem;">
+                                                <i class="far fa-clock me-1"></i> @n.CreatedAt.ToString("HH:mm")
+                                            </small>
+                                        </div>
+                                        <p class="mb-0 small text-muted text-truncate fw-500">@n.Message</p>
+                                    </a>
+                                </div>
+
+                                @if (!isAdmin && !n.IsRead)
+                                {
+                                    <form asp-action="MarkRead" method="post" class="ms-2">
+                                        <input type="hidden" name="id" value="@n.Id" />
+                                        <button type="submit" class="btn btn-sm btn-light rounded-circle shadow-sm border-0" style="width: 35px; height: 35px;">
+                                            <i class="fas fa-check text-purple"></i>
+                                        </button>
+                                    </form>
+                                }
                             </div>
-
-                            <div class="flex-grow-1 min-width-0">
-                                <a href="@Url.Action("Details", "Notifications", new { id = n.Id })" class="text-decoration-none text-dark">
-                                    <div class="d-flex justify-content-between">
-                                        <h6 class="fw-700 mb-0 text-truncate @(n.IsRead ? "text-muted" : "text-dark")">@n.Title</h6>
-                                        <small class="text-muted flex-shrink-0 ms-2" style="font-size: 0.7rem;">@n.CreatedAt.ToString("HH:mm")</small>
-                                    </div>
-                                    <p class="mb-0 small text-muted text-truncate">@n.Message</p>
-                                </a>
-                            </div>
-
-                            @if (!isAdmin && !n.IsRead)
-                            {
-                                <form asp-action="MarkRead" method="post" class="ms-2">
-                                    <input type="hidden" name="id" value="@n.Id" />
-                                    <button type="submit" class="btn btn-sm btn-link text-primary p-0"><i class="fas fa-check"></i></button>
-                                </form>
-                            }
                         </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
+            </form>
         </div>
     }
 </div>
 
 @section Scripts {
     <script>
-        function filterNotifications(filter) {
+        function filterNotifications(filter, element) {
             // Update UI tabs
             document.querySelectorAll('.nav-link').forEach(el => {
-                el.classList.remove('active', 'text-white');
+                el.classList.remove('active');
                 el.classList.add('text-muted');
             });
-            event.currentTarget.classList.add('active');
-            event.currentTarget.classList.remove('text-muted');
+            element.classList.add('active');
+            element.classList.remove('text-muted');
 
             // Filter Logic
             const items = document.querySelectorAll('.notification-item');
             items.forEach(item => {
                 if (filter === 'all') {
-                    item.style.display = 'block';
+                    item.classList.remove('d-none');
                 } else if (filter === 'unread') {
-                    item.style.display = item.dataset.status === 'unread' ? 'block' : 'none';
+                    item.dataset.status === 'unread' ? item.classList.remove('d-none') : item.classList.add('d-none');
                 } else if (filter === 'read') {
-                    item.style.display = item.dataset.status === 'read' ? 'block' : 'none';
+                    item.dataset.status === 'read' ? item.classList.remove('d-none') : item.classList.add('d-none');
                 }
             });
         }

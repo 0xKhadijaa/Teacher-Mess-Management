@@ -2,56 +2,96 @@
     ViewData["Title"] = "Login";
 }
 
+<style>
+    /* Force Purple Theme Overrides */
+    .text-purple {
+        color: var(--primary-purple) !important;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-purple) !important;
+        box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.1) !important;
+    }
+
+    .btn-purple-gradient {
+        background: var(--primary-gradient) !important;
+        border: none !important;
+        color: white !important;
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        transition: all 0.3s ease;
+    }
+
+        .btn-purple-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
+            color: white !important;
+        }
+
+    .bg-app {
+        background-color: #ffffff;
+    }
+
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+</style>
+
 <div class="container-fluid px-0">
     <div class="row g-0">
         <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center vh-100" style="background: var(--primary-gradient);">
             <div class="text-center text-white p-5" data-aos="zoom-in">
                 <i class="fas fa-bolt-lightning display-2 mb-4"></i>
-                <h1 class="fw-800 display-4">Messly</h1>
-                <p class="lead opacity-75">Smart faculty dining management system.</p>
+                <h1 class="fw-900 display-4 ls-1">Messly</h1>
+                <p class="lead opacity-75 fw-500">Smart faculty dining management system.</p>
             </div>
         </div>
 
         <div class="col-lg-6 d-flex align-items-start align-items-lg-center justify-content-center bg-app pt-5 pt-lg-0">
             <div class="p-4 p-md-5 w-100" style="max-width: 480px;" data-aos="fade-up">
-                <div class="mb-4">
-                    <h2 class="fw-800 mb-1">Faculty Login</h2>
-                    <p class="text-muted small">Sign in to manage your meals and bills.</p>
+                <div class="mb-5">
+                    <h2 class="fw-900 mb-1 text-dark-emphasis">Faculty Login</h2>
+                    <p class="text-muted small fw-600">Sign in to manage your meals and bills.</p>
                 </div>
 
                 <form method="post" asp-action="Login" asp-controller="Account">
+                    @Html.AntiForgeryToken()
+
                     @if (!ViewData.ModelState.IsValid)
                     {
-                        <div class="alert alert-danger border-0 rounded-4 small py-2 mb-3">
-                            <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="alert border-0 rounded-4 small py-2 mb-4 shadow-sm" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                            <div asp-validation-summary="All" class="fw-600"></div>
                         </div>
                     }
 
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small opacity-75">Email</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0 rounded-start-3"><i class="fas fa-envelope text-muted small"></i></span>
-                            <input name="email" type="email" class="form-control border-start-0 rounded-end-3 py-2" placeholder="name@dept.edu" required />
-                        </div>
-                    </div>
-
                     <div class="mb-4">
-                        <div class="d-flex justify-content-between mb-1">
-                            <label class="form-label fw-bold small opacity-75 mb-0">Password</label>
-                            <a asp-action="ForgotPassword" asp-controller="Account" class="small text-decoration-none fw-bold text-primary">Forgot?</a>
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0 rounded-start-3"><i class="fas fa-lock text-muted small"></i></span>
-                            <input name="password" type="password" class="form-control border-start-0 rounded-end-3 py-2" placeholder="••••••••" required />
+                        <label class="form-label fw-800 small text-uppercase opacity-50 ls-1 mb-2">Email Address</label>
+                        <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                            <span class="input-group-text bg-white border-0 px-3"><i class="fas fa-envelope text-purple opacity-50"></i></span>
+                            <input name="email" type="email" class="form-control border-0 py-3 fw-600" placeholder="name@dept.edu" required />
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm mb-4 fw-bold">Sign In</button>
+                    <div class="mb-5">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-800 small text-uppercase opacity-50 ls-1 mb-0">Password</label>
+                            <a asp-action="ForgotPassword" asp-controller="Account" class="small text-decoration-none fw-800 text-purple hover-lift">Forgot Password?</a>
+                        </div>
+                        <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                            <span class="input-group-text bg-white border-0 px-3"><i class="fas fa-lock text-purple opacity-50"></i></span>
+                            <input name="password" type="password" class="form-control border-0 py-3 fw-600" placeholder="••••••••" required />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-purple-gradient w-100 py-3 rounded-pill fw-900 mb-4 shadow-lg">
+                        SIGN IN <i class="fas fa-arrow-right ms-2 small"></i>
+                    </button>
                 </form>
 
-                <div class="text-center pt-3 border-top border-opacity-10">
-                    <p class="text-muted small mb-2">New here?</p>
-                    <a asp-action="Register" asp-controller="Account" class="btn btn-outline-secondary w-100 rounded-3 py-2 small fw-bold">Create Account</a>
+                <div class="text-center pt-4 border-top border-opacity-10">
+                    <p class="text-muted small fw-600 mb-3">Don't have an account yet?</p>
+                    <a asp-action="Register" asp-controller="Account" class="btn btn-light w-100 rounded-pill py-2 small fw-800 text-purple border-0 shadow-sm transition-all hover-lift">
+                        CREATE NEW ACCOUNT
+                    </a>
                 </div>
             </div>
         </div>

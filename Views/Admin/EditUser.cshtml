@@ -6,103 +6,38 @@
     var userRoles = ViewBag.UserRoles as IList<string> ?? new List<string>();
 }
 
-<div class="container-fluid py-4">
-    <div class="mb-4" data-aos="fade-down">
-        <h2 class="fw-800 mb-0 text-dark-emphasis">
-            <i class="fas fa-user-edit me-2 text-primary"></i> Modify Profile
-        </h2>
-        <p class="text-muted small">Update account details, adjust permissions, or reset credentials for <span class="text-primary fw-700">@Model.FullName</span>.</p>
-    </div>
-
-    <div class="row justify-content-center">
-        <div class="col-xl-10">
-            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(20px);">
-                <div class="card-body p-4 p-md-5">
-                    <form asp-action="EditUser" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="id" value="@Model.Id" />
-
-                        <div class="row g-4">
-                            <div class="col-md-6 border-end border-white border-opacity-50">
-                                <h5 class="fw-800 mb-4 text-primary small text-uppercase ls-1">1. User Identity</h5>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-700 small opacity-75">Full Name</label>
-                                    <input type="text" name="fullName" value="@Model.FullName" class="form-control bg-light border-0 py-3 rounded-3 fw-600" />
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label fw-700 small opacity-75">Department</label>
-                                    <input type="text" name="department" value="@Model.Department" class="form-control bg-light border-0 py-3 rounded-3 fw-600" />
-                                </div>
-
-                                <div class="mt-4">
-                                    <div class="form-check form-switch p-0 d-flex align-items-center gap-3">
-                                        <label class="form-check-label fw-800 small text-uppercase opacity-75 mb-0" style="cursor: pointer;">Status:</label>
-                                        <input type="checkbox" name="isActive" class="form-check-input ms-0" style="width: 3.5rem; height: 1.75rem; cursor: pointer;" @(Model.IsActive ? "checked" : "") />
-                                        <span class="small fw-700 @(Model.IsActive ? "text-success" : "text-danger")">
-                                            @(Model.IsActive ? "Account Active" : "Account Suspended")
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <h5 class="fw-800 mb-4 text-primary small text-uppercase ls-1">2. Security & Roles</h5>
-
-                                <div class="mb-4">
-                                    <label class="form-label fw-700 small opacity-75">Assigned System Roles</label>
-                                    <select name="roles" class="form-select bg-light border-0 rounded-3 py-2" multiple style="height: 110px;">
-                                        @foreach (var r in allRoles)
-                                        {
-                                            <option value="@r" selected="@(userRoles.Contains(r))" class="py-2 px-3">@r</option>
-                                        }
-                                    </select>
-                                    <small class="text-muted mt-2 d-block" style="font-size: 0.7rem;">
-                                        <i class="fas fa-info-circle me-1"></i> Multi-select: <strong>Cmd/Ctrl + Click</strong>
-                                    </small>
-                                </div>
-
-                                <div class="p-3 rounded-4 bg-white bg-opacity-50 border border-white">
-                                    <label class="form-label fw-700 small text-warning text-uppercase ls-1 mb-2">
-                                        <i class="fas fa-key me-1"></i> Reset Password
-                                    </label>
-                                    <input type="password" name="newPassword" class="form-control bg-light border-0 py-2 rounded-3" placeholder="Enter new password to reset" />
-                                    <p class="text-muted mb-0 mt-2" style="font-size: 0.65rem;">Leave empty to keep current password.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="my-5 opacity-10">
-
-                        <div class="d-flex flex-column flex-md-row justify-content-end gap-3">
-                            <a asp-action="Users" class="btn btn-light rounded-pill px-4 py-2 fw-bold text-muted">
-                                <i class="fas fa-times me-2"></i> Discard
-                            </a>
-                            <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-800 shadow-lg hover-lift">
-                                <i class="fas fa-save me-2"></i> Save Changes
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <style>
-    .ls-1 {
-        letter-spacing: 1px;
+    /* Purple Theme Overrides */
+    .text-purple {
+        color: var(--primary-purple) !important;
     }
 
-    .form-control:focus, .form-select:focus {
-        background-color: #fff !important;
-        box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.2);
+    .btn-purple-gradient {
+        background: var(--primary-gradient) !important;
+        border: none !important;
+        color: white !important;
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
     }
+
+        .btn-purple-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
+        }
 
     .form-check-input:checked {
-        background-color: var(--primary-purple);
-        border-color: var(--primary-purple);
+        background-color: var(--primary-purple) !important;
+        border-color: var(--primary-purple) !important;
+    }
+
+    .baddie-input:focus {
+        background-color: #fff !important;
+        border-color: var(--primary-purple) !important;
+        box-shadow: 0 10px 25px -10px rgba(99, 102, 241, 0.25) !important;
+        outline: none;
+    }
+
+    .ls-1 {
+        letter-spacing: 1px;
     }
 
     /* Multi-select custom scrollbar */
@@ -115,3 +50,88 @@
         border-radius: 10px;
     }
 </style>
+
+<div class="container-fluid py-4">
+    <div class="mb-4" data-aos="fade-down">
+        <h2 class="fw-800 mb-0 text-dark-emphasis">
+            <i class="fas fa-user-edit me-2 text-purple"></i> Modify Profile
+        </h2>
+        <p class="text-muted small">Update account details, adjust permissions, or reset credentials for <span class="text-purple fw-800">@Model.FullName</span>.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5);">
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="EditUser" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+
+                        <div class="row g-5">
+                            <div class="col-md-6 border-end border-white border-opacity-50">
+                                <h5 class="fw-800 mb-4 text-purple small text-uppercase ls-1"><i class="fas fa-id-badge me-2"></i> 1. User Identity</h5>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-800 small opacity-50 text-uppercase ls-1">Full Name</label>
+                                    <input type="text" name="fullName" value="@Model.FullName" class="form-control bg-white border-0 py-3 px-4 rounded-3 shadow-sm baddie-input fw-600" />
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-800 small opacity-50 text-uppercase ls-1">Department</label>
+                                    <input type="text" name="department" value="@Model.Department" class="form-control bg-white border-0 py-3 px-4 rounded-3 shadow-sm baddie-input fw-600" />
+                                </div>
+
+                                <div class="mt-5 p-3 rounded-4 bg-white bg-opacity-40 border border-white">
+                                    <div class="form-check form-switch p-0 d-flex align-items-center gap-3">
+                                        <label class="form-check-label fw-800 small text-uppercase opacity-75 mb-0" style="cursor: pointer;">Account Status:</label>
+                                        <input type="checkbox" name="isActive" class="form-check-input ms-0" style="width: 3.5rem; height: 1.75rem; cursor: pointer;" @(Model.IsActive ? "checked" : "") />
+                                        <span class="small fw-800 @(Model.IsActive ? "text-success" : "text-danger")">
+                                            @(Model.IsActive ? "ACTIVE" : "SUSPENDED")
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h5 class="fw-800 mb-4 text-purple small text-uppercase ls-1"><i class="fas fa-shield-halved me-2"></i> 2. Security & Roles</h5>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-800 small opacity-50 text-uppercase ls-1">Assigned System Roles</label>
+                                    <select name="roles" class="form-select bg-white border-0 rounded-3 py-2 shadow-sm baddie-input" multiple style="height: 110px;">
+                                        @foreach (var r in allRoles)
+                                        {
+                                            <option value="@r" selected="@(userRoles.Contains(r))" class="py-2 px-3 fw-600">@r</option>
+                                        }
+                                    </select>
+                                    <div class="mt-2 d-flex align-items-center gap-2">
+                                        <i class="fas fa-info-circle text-purple small"></i>
+                                        <small class="text-muted fw-600" style="font-size: 0.7rem;">Hold <strong>Ctrl</strong> to select multiple.</small>
+                                    </div>
+                                </div>
+
+                                <div class="p-4 rounded-4 bg-warning bg-opacity-10 border border-warning border-opacity-20 shadow-sm">
+                                    <label class="form-label fw-800 small text-warning text-uppercase ls-1 mb-2">
+                                        <i class="fas fa-key me-1"></i> Force Password Reset
+                                    </label>
+                                    <input type="password" name="newPassword" class="form-control bg-white border-0 py-2 px-3 rounded-3 shadow-sm baddie-input" placeholder="Enter new password" />
+                                    <p class="text-muted mb-0 mt-2" style="font-size: 0.65rem; font-weight: 500;">Leave blank to maintain current password.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-5 opacity-10">
+
+                        <div class="d-flex flex-column flex-md-row justify-content-end gap-3">
+                            <a asp-action="Users" class="btn btn-light rounded-pill px-4 py-2 fw-800 text-muted border-0">
+                                <i class="fas fa-times me-2"></i> DISCARD
+                            </a>
+                            <button type="submit" class="btn btn-purple-gradient rounded-pill px-5 py-3 fw-900 transition-all">
+                                <i class="fas fa-save me-2"></i> SAVE CHANGES
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

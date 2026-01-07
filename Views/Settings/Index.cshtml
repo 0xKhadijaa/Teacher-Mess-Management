@@ -7,7 +7,7 @@
 <div class="container-fluid py-2">
     <div class="mb-4" data-aos="fade-down">
         <h2 class="fw-800 mb-0 text-dark-emphasis">
-            <i class="fas fa-sliders-h me-2 text-primary"></i> System Configuration
+            <i class="fas fa-sliders-h me-2" style="color: var(--primary-purple) !important;"></i> System Configuration
         </h2>
         <p class="text-muted small">Update global parameters for meal calculations and billing utilities.</p>
     </div>
@@ -17,12 +17,11 @@
 
         <div class="row g-4">
             <div class="col-xl-9 col-lg-10">
-                <div class="card border-0 shadow-sm animate__animated animate__fadeIn" style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(20px);">
+                <div class="card border-0 shadow-lg animate__animated animate__fadeIn" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.5);">
                     <div class="card-body p-4 p-md-5">
                         <div class="row g-4">
                             @for (var i = 0; i < Model.Count; i++)
                             {
-                                // FIXED: Removed the @{ } block here because we are already in C# mode inside the @for loop
                                 var label = Model[i].Key switch
                                 {
                                     "MealRate" => "Meal Rate",
@@ -39,7 +38,7 @@
                                 <div class="col-md-6" data-aos="fade-up" data-aos-delay="@(i * 100)">
                                     <div class="p-3 rounded-4 border border-white bg-white bg-opacity-50 shadow-sm transition-all hover-lift">
                                         <label class="form-label fw-800 small text-uppercase opacity-50 mb-3" style="letter-spacing: 1px;">
-                                            <i class="fas fa-@icon me-2 text-primary"></i> @label
+                                            <i class="fas fa-@icon me-2" style="color: var(--primary-purple) !important;"></i> @label
                                         </label>
 
                                         <div class="input-group">
@@ -54,10 +53,10 @@
                                         </div>
 
                                         <div class="mt-3 d-flex align-items-center gap-2">
-                                            <div class="bg-primary bg-opacity-10 p-1 px-2 rounded-pill">
-                                                <i class="fas fa-circle-info text-primary" style="font-size: 0.7rem;"></i>
+                                            <div class="bg-primary bg-opacity-10 p-1 px-2 rounded-pill" style="background-color: rgba(99, 102, 241, 0.1) !important;">
+                                                <i class="fas fa-circle-info" style="font-size: 0.7rem; color: var(--primary-purple) !important;"></i>
                                             </div>
-                                            <span class="small text-muted fw-500">
+                                            <span class="small text-muted fw-600">
                                                 @(Model[i].Key == "MealRate" ? "Sets the price for a single meal." : "Standard monthly service fee.")
                                             </span>
                                         </div>
@@ -69,19 +68,20 @@
                         <div class="mt-5 p-4 rounded-4 bg-warning bg-opacity-10 border border-warning border-opacity-20 d-flex gap-3">
                             <i class="fas fa-triangle-exclamation text-warning h4 mb-0"></i>
                             <div>
-                                <h6 class="fw-800 text-warning mb-1">Important Note</h6>
-                                <p class="small text-muted mb-0">Changes to these settings will affect all <strong>future</strong> bill generation. Previously generated bills will not be modified to maintain financial integrity.</p>
+                                <h6 class="fw-800 text-warning mb-1">Financial Integrity Note</h6>
+                                <p class="small text-muted mb-0">Changes to these settings will affect all <strong>future</strong> bill generation. Previously generated bills will not be modified.</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-footer bg-transparent border-top border-opacity-10 p-4">
                         <div class="d-flex flex-column flex-sm-row justify-content-end gap-3">
-                            <a href="javascript:history.back()" class="btn btn-light rounded-pill px-4 py-2 fw-bold text-muted">
-                                <i class="fas fa-times me-2"></i> Cancel
+                            <a href="javascript:history.back()" class="btn btn-light rounded-pill px-4 py-2 fw-800 text-muted border-0">
+                                <i class="fas fa-times me-2"></i> CANCEL
                             </a>
-                            <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-bold shadow-lg transition-all">
-                                <i class="fas fa-save me-2"></i> Save Changes
+                            <button type="submit" class="btn text-white rounded-pill px-5 py-2 fw-900 shadow-lg hover-lift transition-all" 
+                                    style="background: var(--primary-gradient); border: none;">
+                                <i class="fas fa-save me-2"></i> SAVE CONFIGURATION
                             </button>
                         </div>
                     </div>
@@ -90,6 +90,20 @@
         </div>
     </form>
 </div>
+
+<style>
+    .fw-900 { font-weight: 900; }
+    
+    /* Input focus override for Purple */
+    input:focus {
+        border-color: var(--primary-purple) !important;
+        box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.1) !important;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-3px);
+    }
+</style>
 
 @section Scripts {
     <script>
@@ -100,13 +114,19 @@
                 }
             });
 
+            // FIXED: Added Javascript logic for Purple border focus
             input.addEventListener('focus', function() {
-                this.closest('.p-3').style.borderColor = 'var(--primary-purple)';
+                this.closest('.p-3').style.borderColor = '#6366f1'; 
                 this.closest('.p-3').style.boxShadow = '0 10px 20px -10px rgba(99, 102, 241, 0.2)';
             });
 
             input.addEventListener('blur', function() {
-                this.closest('.p-3').style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                this.closest('.p-3').style.borderColor = 'white';
+                this.closest('.p-3').style.boxShadow = 'none';
+            });
+        });
+    </script>
+}
                 this.closest('.p-3').style.boxShadow = 'none';
             });
         });

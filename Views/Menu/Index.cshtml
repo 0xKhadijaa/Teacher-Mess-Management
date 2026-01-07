@@ -2,78 +2,141 @@
 
 @{
     ViewData["Title"] = "Manage Menu";
+
+    // Logic to ensure Monday is always the first card shown
+    var sortedMenu = Model.OrderBy(x => ((int)x.Date.DayOfWeek + 6) % 7).ToList();
 }
 
-<div class="container-fluid py-1">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2" data-aos="fade-down">
+<style>
+    .menu-card {
+        border-radius: 30px;
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.04);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1) !important;
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+    .day-badge {
+        font-size: 0.65rem;
+        letter-spacing: 1.5px;
+        padding: 6px 12px;
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--primary-purple);
+        border-radius: 10px;
+    }
+
+    .meal-icon-container {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    /* Minimalist Scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary-purple);
+        border-radius: 10px;
+    }
+</style>
+
+<div class="container-fluid py-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3" data-aos="fade-down">
         <div>
-            <h3 class="fw-800 mb-0 text-dark-emphasis">Weekly Planner</h3>
+            <h2 class="fw-900 mb-1 text-dark-emphasis">Weekly Planner</h2>
             <p class="text-muted small mb-0">
-                <i class="fas fa-calendar-week me-1 text-primary"></i> 7-Day Menu Cycle
-                <span class="mx-2 opacity-25">|</span>
-                <span class="text-primary fw-600">Active Period: @Model.FirstOrDefault()?.Date.ToString("MMM dd") - @Model.LastOrDefault()?.Date.ToString("MMM dd")</span>
+                <i class="fas fa-calendar-alt me-1 text-primary"></i>
+                Master Schedule: <span class="fw-700 text-dark">@sortedMenu.FirstOrDefault()?.Date.ToString("MMM dd") — @sortedMenu.LastOrDefault()?.Date.ToString("MMM dd")</span>
             </p>
+        </div>
+        <div class="d-none d-md-block">
+            <span class="badge bg-white border text-muted px-3 py-2 rounded-pill shadow-sm">
+                <i class="fas fa-circle text-success me-2 small"></i>System Online
+            </span>
         </div>
     </div>
 
-    <div class="row g-3">
-        @foreach (var item in Model)
+    <div class="row g-4">
+        @foreach (var item in sortedMenu)
         {
-            <div class="col-12 col-md-6 col-xl-4" data-aos="fade-up">
-                <div class="card border-0 shadow-sm h-100 transition-all hover-lift"
-                     style="border-radius: 24px; background: var(--glass-bg); backdrop-filter: blur(10px);">
+            var isToday = item.Date == DateOnly.FromDateTime(DateTime.Today);
 
-                    <div class="p-4 border-bottom border-opacity-10 d-flex justify-content-between align-items-center"
-                         style="background: rgba(99, 102, 241, 0.03);">
+            <div class="col-12 col-md-6 col-xl-4 col-xxl-3" data-aos="fade-up">
+                <div class="card menu-card h-100 shadow-sm @(isToday ? "border-primary border-opacity-25" : "")">
+
+                    <div class="p-4 pb-0 d-flex justify-content-between align-items-start">
                         <div>
-                            <h5 class="fw-800 mb-0 text-dark-emphasis">@item.Date.ToString("dddd")</h5>
-                            <small class="text-muted fw-600">@item.Date.ToString("dd MMMM, yyyy")</small>
+                            <h4 class="fw-900 mb-0 @(isToday ? "text-primary" : "text-dark")">@item.Date.ToString("dddd")</h4>
+                            <p class="text-muted small fw-600 mb-0">@item.Date.ToString("MMM dd, yyyy")</p>
                         </div>
-                        <div class="bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill small fw-800">
-                            DAY @(Model.IndexOf(item) + 1)
-                        </div>
+                        @if (isToday)
+                        {
+                            <span class="badge bg-primary text-white rounded-pill px-3 py-1 shadow-sm small">TODAY</span>
+                        }
+                        else
+                        {
+                            <span class="day-badge fw-900 text-uppercase">Day @((sortedMenu.IndexOf(item) + 1))</span>
+                        }
                     </div>
 
                     <div class="card-body p-4">
-                        <div class="d-flex flex-column gap-3">
-                            <div class="d-flex gap-3">
-                                <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
-                                    <i class="fas fa-mug-saucer text-primary small"></i>
+                        <div class="vstack gap-4">
+
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="meal-icon-container bg-warning bg-opacity-10 text-warning">
+                                    <i class="fas fa-coffee"></i>
                                 </div>
-                                <div>
-                                    <small class="text-uppercase fw-800 opacity-50 d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Breakfast</small>
-                                    <span class="fw-600 text-dark-emphasis">@item.Breakfast</span>
+                                <div class="overflow-hidden">
+                                    <small class="text-uppercase fw-800 opacity-40 d-block ls-1" style="font-size: 0.6rem;">Breakfast</small>
+                                    <span class="fw-700 text-dark-emphasis text-truncate d-block">@item.Breakfast</span>
                                 </div>
                             </div>
 
-                            <div class="d-flex gap-3">
-                                <div class="bg-success bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
-                                    <i class="fas fa-utensils text-success small"></i>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="meal-icon-container bg-primary bg-opacity-10 text-primary">
+                                    <i class="fas fa-utensils"></i>
                                 </div>
-                                <div>
-                                    <small class="text-uppercase fw-800 opacity-50 d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Lunch</small>
-                                    <span class="fw-600 text-dark-emphasis">@item.Lunch</span>
+                                <div class="overflow-hidden">
+                                    <small class="text-uppercase fw-800 opacity-40 d-block ls-1" style="font-size: 0.6rem;">Lunch</small>
+                                    <span class="fw-700 text-dark-emphasis text-truncate d-block">@item.Lunch</span>
                                 </div>
                             </div>
 
-                            <div class="d-flex gap-3">
-                                <div class="bg-warning bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
-                                    <i class="fas fa-moon text-warning small"></i>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="meal-icon-container bg-dark bg-opacity-10 text-dark">
+                                    <i class="fas fa-moon"></i>
                                 </div>
-                                <div>
-                                    <small class="text-uppercase fw-800 opacity-50 d-block mb-1" style="font-size: 0.65rem; letter-spacing: 0.5px;">Dinner</small>
-                                    <span class="fw-600 text-dark-emphasis">@item.Dinner</span>
+                                <div class="overflow-hidden">
+                                    <small class="text-uppercase fw-800 opacity-40 d-block ls-1" style="font-size: 0.6rem;">Dinner</small>
+                                    <span class="fw-700 text-dark-emphasis text-truncate d-block">@item.Dinner</span>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
-                    <div class="card-footer bg-transparent border-top border-opacity-10 p-3">
+                    <div class="p-4 pt-0">
                         <a asp-action="Edit"
                            asp-route-id="@item.Id"
                            asp-route-date="@item.Date.ToString("yyyy-MM-dd")"
-                           class="btn btn-primary w-100 rounded-pill fw-bold py-2 shadow-sm transition-all hover-lift">
-                            <i class="fas fa-pen-to-square me-2"></i> Edit Menu
+                           class="btn text-white w-100 rounded-pill fw-800 py-2 shadow-lg transition-all hover-lift"
+                           style="background: var(--primary-gradient); border: none; font-size: 0.85rem;">
+                            <i class="fas fa-edit me-2"></i> MODIFY PLAN
                         </a>
                     </div>
                 </div>

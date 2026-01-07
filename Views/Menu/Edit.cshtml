@@ -6,17 +6,18 @@
 
 <div class="container-fluid py-2">
     <div class="mb-4 text-center text-md-start" data-aos="fade-down">
-        <h2 class="fw-800 mb-0 text-dark-emphasis">
-            <i class="fas fa-edit me-2 text-primary"></i> Edit Daily Menu
+        <h2 class="fw-900 mb-0 text-dark-emphasis">
+            <i class="fas fa-calendar-plus me-2 text-primary" style="color: var(--primary-purple) !important;"></i> Edit Daily Plan
         </h2>
         <p class="text-muted small">
-            Updating schedule for <span class="text-primary fw-bold">@Model.Date.ToString("dddd, dd MMMM yyyy")</span>
+            Tailoring the experience for <span class="fw-800" style="color: var(--primary-purple);">@Model.Date.ToString("dddd, dd MMMM yyyy")</span>
         </p>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-lg-7 col-xl-6">
-            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp" style="border-radius: 28px; background: var(--glass-bg); backdrop-filter: blur(20px);">
+            <div class="card border-0 shadow-lg animate__animated animate__fadeInUp"
+                 style="border-radius: 35px; background: var(--glass-bg); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.5);">
 
                 <div class="card-body p-4 p-md-5">
                     <form asp-action="Edit" method="post" id="editMenuForm">
@@ -25,69 +26,84 @@
                         <input type="hidden" asp-for="Date" />
 
                         <div class="mb-4" data-aos="fade-up" data-aos-delay="100">
-                            <label asp-for="Breakfast" class="form-label fw-800 small text-uppercase opacity-50 mb-2" style="letter-spacing: 1px;">
-                                <i class="fas fa-coffee me-2 text-primary"></i> Breakfast Selection
+                            <label asp-for="Breakfast" class="form-label fw-800 small text-uppercase opacity-50 mb-2 ls-1">
+                                <i class="fas fa-coffee me-2" style="color: var(--primary-purple) !important;"></i> Breakfast Selection
                             </label>
-                            <input asp-for="Breakfast" class="form-control bg-light border-0 py-3 px-3 fw-600 rounded-4 transition-all"
+                            <input asp-for="Breakfast" class="form-control bg-white border-0 py-3 px-4 fw-600 rounded-4 shadow-sm transition-all custom-input"
                                    placeholder="e.g. Omelette, Toast & Juice" />
-                            <span asp-validation-for="Breakfast" class="text-danger small mt-1 d-block fw-500"></span>
+                            <span asp-validation-for="Breakfast" class="text-danger small mt-1 d-block fw-600"></span>
                         </div>
 
                         <div class="mb-4" data-aos="fade-up" data-aos-delay="200">
-                            <label asp-for="Lunch" class="form-label fw-800 small text-uppercase opacity-50 mb-2" style="letter-spacing: 1px;">
-                                <i class="fas fa-utensils me-2 text-success"></i> Lunch Selection
+                            <label asp-for="Lunch" class="form-label fw-800 small text-uppercase opacity-50 mb-2 ls-1">
+                                <i class="fas fa-utensils me-2" style="color: var(--primary-purple) !important;"></i> Lunch Selection
                             </label>
-                            <input asp-for="Lunch" class="form-control bg-light border-0 py-3 px-3 fw-600 rounded-4 transition-all"
-                                   placeholder="e.g. Chicken Biryani & Salad" />
-                            <span asp-validation-for="Lunch" class="text-danger small mt-1 d-block fw-500"></span>
+                            <input asp-for="Lunch" class="form-control bg-white border-0 py-3 px-4 fw-600 rounded-4 shadow-sm transition-all custom-input"
+                                   placeholder="e.g. Chicken Biryani & Raita" />
+                            <span asp-validation-for="Lunch" class="text-danger small mt-1 d-block fw-600"></span>
                         </div>
 
                         <div class="mb-5" data-aos="fade-up" data-aos-delay="300">
-                            <label asp-for="Dinner" class="form-label fw-800 small text-uppercase opacity-50 mb-2" style="letter-spacing: 1px;">
-                                <i class="fas fa-moon me-2 text-warning"></i> Dinner Selection
+                            <label asp-for="Dinner" class="form-label fw-800 small text-uppercase opacity-50 mb-2 ls-1">
+                                <i class="fas fa-cloud-moon me-2" style="color: var(--primary-purple) !important;"></i> Dinner Selection
                             </label>
-                            <input asp-for="Dinner" class="form-control bg-light border-0 py-3 px-3 fw-600 rounded-4 transition-all"
-                                   placeholder="e.g. Grilled Fish & Steamed Veg" />
-                            <span asp-validation-for="Dinner" class="text-danger small mt-1 d-block fw-500"></span>
+                            <input asp-for="Dinner" class="form-control bg-white border-0 py-3 px-4 fw-600 rounded-4 shadow-sm transition-all custom-input"
+                                   placeholder="e.g. Daal Makhani & Naan" />
+                            <span asp-validation-for="Dinner" class="text-danger small mt-1 d-block fw-600"></span>
                         </div>
 
                         <div class="d-grid gap-3">
-                            <button type="submit" class="btn btn-primary py-3 rounded-pill fw-800 shadow-lg transition-all hover-lift">
-                                <i class="fas fa-save me-2"></i> Update Menu Plan
+                            <button type="submit" class="btn text-white py-3 rounded-pill fw-900 shadow-lg hover-lift transition-all"
+                                    style="background: var(--primary-gradient); border: none; letter-spacing: 0.5px;">
+                                <i class="fas fa-save me-2"></i> UPDATE PLAN
                             </button>
-                            <a asp-action="Index" class="btn btn-light py-2 rounded-pill fw-bold text-muted small">
-                                <i class="fas fa-times me-1"></i> Cancel Changes
+                            <a asp-action="Index" class="btn btn-light py-2 rounded-pill fw-800 text-muted small hover-lift border-0">
+                                <i class="fas fa-times me-1"></i> DISCARD CHANGES
                             </a>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <div class="mt-4 text-center opacity-75" data-aos="fade-up" data-aos-delay="400">
-                <p class="small text-muted">
-                    <i class="fas fa-info-circle me-1"></i> Changes are reflected immediately on Teacher dashboards.
-                </p>
+            <div class="mt-4 text-center" data-aos="fade-up" data-aos-delay="400">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-2 bg-white rounded-pill shadow-sm border border-light">
+                    <i class="fas fa-bolt text-warning small"></i>
+                    <p class="small text-muted mb-0 fw-600">Changes go live on all teacher dashboards instantly.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    .fw-900 {
+        font-weight: 900;
+    }
+
+    .ls-1 {
+        letter-spacing: 1px;
+    }
+
+    /* Custom Baddie Input styling */
+    .custom-input {
+        background-color: rgba(255,255,255,0.6) !important;
+        border: 2px solid transparent !important;
+    }
+
+        .custom-input:focus {
+            background-color: #fff !important;
+            border-color: var(--primary-purple) !important;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.2) !important;
+            transform: scale(1.01);
+        }
+
+    .hover-lift:hover {
+        transform: translateY(-3px);
+    }
+</style>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-        // Subtle focus effects
-        document.querySelectorAll('.form-control').forEach(input => {
-            input.addEventListener('focus', function() {
-                this.style.backgroundColor = '#fff';
-                this.style.boxShadow = '0 10px 20px -10px rgba(99, 102, 241, 0.2)';
-            });
-            input.addEventListener('blur', function() {
-                this.style.backgroundColor = '';
-                this.style.boxShadow = 'none';
-            });
-        });
-    </script>
 }
